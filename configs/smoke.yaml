@@ -1,0 +1,31 @@
+# Configuración mínima para probar el pipeline completo en pocos minutos (CPU).
+# Hereda de default.yaml y escribe en directorios separados (ignorados por git).
+base: default.yaml
+
+paths:
+  results_dir: reports/results_smoke
+  models_dir: models_smoke
+  figures_dir: reports/figures_smoke
+
+training:
+  max_epochs: 3
+  patience: 2
+  min_epochs: 1
+
+tuning:
+  n_trials: 2
+  startup_trials: 2
+  pruner_startup_trials: 1
+  space:
+    hidden_size: [8, 16]
+    num_layers: [1, 1]
+    dropout: [0.0, 0.1]
+    lr: [1.0e-3, 3.0e-3]
+    weight_decay: [1.0e-6, 1.0e-4]
+    batch_size: [256, 256]
+
+evaluation:
+  seeds: [0, 1]
+
+final:
+  seeds: [0]

@@ -1,0 +1,125 @@
+# Configuración principal del proyecto oilcast.
+# Todos los parámetros del pipeline (datos, ventanas, particiones, HPO, evaluación y modelo
+# de producción) se leen de aquí; el código no contiene números mágicos dispersos.
+
+seed: 42
+
+paths:
+  results_dir: reports/results
+  models_dir: models
+  figures_dir: reports/figures
+
+data:
+  start_date: "2000-01-01"
+  timeout_s: 30
+  retries: 3
+  # FRED (sin clave): id de la serie -> nombre interno
+  fred:
+    DCOILBRENTEU: brent        # objetivo
+    DCOILWTICO: wti
+    DHHNGSP: gas
+    ECBDFR: ecb_rate
+    DEXUSEU: usd_per_eur
+    DEXCHUS: cny_per_usd
+    VIXCLS: vix
+  # Yahoo Finance: futuros con OHLCV y series de solo cierre
+  yahoo_ohlcv:
+    "BZ=F": brent_fut
+    "CL=F": wti_fut
+  yahoo_close:
+    "HG=F": copper
+    "GC=F": gold
+    "DX-Y.NYB": dxy
+  # Cesta OPEP (opcional, best-effort). Si la web no responde se continúa sin ella.
+  opec_url: https://www.opec.org/basket/basketDayArchives.xml
+
+features:
+  window: 60                     # días de entrada a la red (igual para RNN, LSTM y GRU)
+  # Variables que pueden faltar al principio de la muestra (valen 0 tras escalar y llevan un
+  # canal <nombre>_disp que indica si hay dato). Vacío en la configuración principal.
+  optional: []
+  clip_quantiles: [0.005, 0.995] # recorte de entradas con umbrales ajustados solo en train
+  vol_windows: [21, 63]
+  ma_windows: [63, 252]
+  momentum_window: 252
+  rate_change_window: 21
+  volume_window: 63
+
+targets:
+  horizons: [5, 63, 252]         # días hábiles del Brent
+  quantiles: [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95]
+  # true = la red aprende desviaciones respecto a la media del entrenamiento y no se le
+  # devuelve esa media: no puede proyectar al futuro la tendencia del periodo de entrenamiento.
+  remove_drift: true             # adoptado en la ronda 2
+  intervals:                     # nivel nominal -> par de cuantiles
+    "80": [0.10, 0.90]
+    "50": [0.25, 0.75]
+
+splits:
+  test_start: "2022-01-01"
+  # Bloques de validación de 2 años para la CV walk-forward (expanding window, purgada)
+  cv_blocks:
+    - ["2014-01-01", "2016-01-01"]
+    - ["2016-01-01", "2018-01-01"]
+    - ["2018-01-01", "2020-01-01"]
+    - ["2020-01-01", "2022-01-01"]
+  # Reentrenos de la evaluación walk-forward. Los anteriores a test_start solo generan
+  # predicciones fuera de muestra para calibrar el intervalo (conformal); nunca se reportan.
+  calibration_refits: ["2014-01-01", "2016-01-01", "2018-01-01", "2020-01-01"]
+  test_refit_every_years: 1
+
+architectures: [rnn, lstm, gru]
+
+training:
+  max_epochs: 150
+  patience: 15
+  min_epochs: 5
+  grad_clip: 1.0
+  eval_batch_size: 4096
+  num_threads: 2                 # hilos CPU por proceso (se lanzan varios en paralelo)
+
+tuning:
+  # Configuración adoptada tras los experimentos (docs/experimento-ampliado.md y
+  # docs/experimento-ronda2.md): 80 trials y espacio ampliado, igual para las tres redes.
+  n_trials: 80                   # mismo presupuesto para las tres arquitecturas
+  startup_trials: 15             # trials aleatorios de TPE antes de modelar
+  pruner_startup_trials: 10
+  space:
+    hidden_size: [16, 32, 64, 128, 256]
+    num_layers: [1, 3]
+    dropout: [0.0, 0.5]
+    lr: [1.0e-4, 3.0e-3]
+    weight_decay: [1.0e-6, 1.0e-2]
+    batch_size: [64, 128, 256]
+
+evaluation:
+  seeds: [0, 1, 2, 3, 4]
+  # Residuos fuera de muestra usados por la calibración conformal: null = todos los ya
+  # realizados (ventana expansiva). Con h=252 los objetivos se solapan casi por completo, así que
+  # una ventana móvil de pocos años equivaldría a muy pocas observaciones independientes.
+  conformal_window: null
+  conformal_min_scores: 100
+  # Recalibración del centro: el valor central se multiplica por un factor en [0, 1] estimado
+  # con los errores ya conocidos en cada fecha (0 = ingenuo mientras haya menos de
+  # center_min_scores errores conocidos).
+  recalibrate_center: true       # adoptado en la ronda 2
+  center_min_scores: 100
+  dm_loss: squared               # pérdida para Diebold-Mariano (squared | absolute)
+
+final:
+  architecture: auto             # auto = la elegida en reports/results/selection.json
+  seeds: [0, 1, 2, 3, 4]
+  stale_after_days: 30           # la app sugiere reentrenar pasado este plazo
+
+app:
+  data_ttl_s: 3600
+  history_years_default: 5
+
+# Red de la aplicación, fijada antes de ver el test con la regla de docs/experimento-ronda2.md.
+selection:
+  arch: rnn
+  rule: >-
+    regla fijada antes de ejecutar la ronda 2 (docs/experimento-ronda2.md): se elige la
+    combinación de configuración y red con mayor mejora media del MAE frente al ingenuo en las
+    predicciones anteriores a 2022 (reentrenos de 2014 a 2020), sin mirar el test. Ganó la RNN
+    simple entrenada sin deriva y con recalibración del centro (+3,8 % antes de 2022).
