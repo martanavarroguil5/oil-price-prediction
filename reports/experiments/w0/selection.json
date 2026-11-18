@@ -1,0 +1,12 @@
+{
+  "best_w0": "lstm",
+  "selected": "app",
+  "criterion": "mean pre-2022 MAE skill vs naive",
+  "development_skill": {
+    "app": 0.03818370601981299,
+    "gru": -0.002152134676226695,
+    "lstm": 0.0028230326248210127,
+    "naive": 0.0,
+    "rnn": -0.005897056416644027
+  }
+}
