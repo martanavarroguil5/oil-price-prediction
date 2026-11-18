@@ -1,6 +1,16 @@
 # Experimentos de predicción del Brent
 
-La aplicación utiliza una RNN simple para los tres horizontes. En la evaluación con orígenes desde 2022, esta red obtuvo menor error absoluto medio que la LSTM económica a 5 y 63 sesiones. A 252 sesiones, la LSTM económica consiguió **15,45 USD/barril de MAE**, frente a **16,50** del ingenuo y **17,63** de la RNN de la aplicación. La conservamos como candidata anual. El ingenuo, que pronostica el último precio conocido, obtuvo menor error cuadrático medio a ese plazo. [Comparativa de la aplicación](../reports/comparativa.md) · [Evaluación económica](../reports/results/experiments/economic_v2/resultado.md)
+## Decisión para la entrega
+
+La app utiliza **una familia, RNN simple W1**, con un conjunto de pesos entrenado para cada plazo. W0 y W1 ajustan la magnitud de las predicciones usando solo errores ya observados. W1 también retira la deriva media aprendida durante el entrenamiento.
+
+| Pregunta | Resultado | Uso en la entrega |
+|---|---|---|
+| ¿Qué familia elegir con los datos disponibles antes de 2022? | La RNN W1 redujo el MAE un **3,82 %** de media frente al ingenuo. Dentro de W0 ganó la LSTM con **+0,28 %**. Cada plazo recibió un tercio del peso. | Elección de la familia integrada en la app. |
+| ¿Qué dio el menor MAE después, entre la app y las tres W0? | A 5 sesiones ganó la app (**3,951 USD/barril**), a 63 la GRU W0 (**11,099**) y a 252 la LSTM W0 (**16,084**). La GRU W0 consiguió la mayor mejora media de ese grupo (**+1,33 %**, frente al **−0,65 %** de la app). | Comparación retrospectiva por familia, año y horizonte. |
+| ¿Qué aportó una variante económica a un año? | En las mismas 971 emisiones, la LSTM económica obtuvo **15,447 USD/barril** de MAE frente a **16,502** del ingenuo. Su RMSE fue mayor, **23,51** frente a **22,53**. | Experimento complementario para estudiar el plazo anual. |
+
+El resultado global depende del periodo. En desarrollo, gran parte de la ventaja de la app procedía del horizonte anual. En test el error anual de la app creció y la mayor ventaja de la GRU W0 apareció a 63 sesiones. El desglose completo permite comprobarlo año a año. [Criterio de selección](repeticion-w0-familias.md) · [W0 frente a la app y al ingenuo](../reports/results/experiments/w0_familias/resultado.md) · [Evaluación económica](../reports/results/experiments/economic_v2/resultado.md)
 
 ## Qué se probó y qué se decidió
 

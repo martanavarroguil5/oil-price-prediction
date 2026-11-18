@@ -100,8 +100,6 @@ los p-valores del test de Diebold-Mariano > 0,1).
 - **El intervalo del 80 %** de la combinación elegida cubre el 79 % / 88 % / 90 % de los casos;
   a 3 y 12 meses es más ancho que el del ingenuo.
 
-### Pendiente para adoptarla
+### Modelo integrado
 
-Medir parámetros y tiempo de entrenamiento (`oilcast timing`), reentrenar el modelo de producción
-con la configuración W1 y RNN simple, y actualizar la aplicación, `reports/comparativa.md`, el
-README y la presentación. Siguiendo la regla, no se harán más rondas de ajuste mirando el test.
+La aplicación utiliza la RNN simple W1 seleccionada en esta ronda para los tres plazos. Los pesos por horizonte, los tiempos de entrenamiento y las métricas están publicados. La repetición posterior de W0 confirmó la elección en desarrollo y permitió comparar qué redes fueron más precisas en cada año posterior. [Pesos y metadatos](../models/) · [Comparativa de la aplicación](../reports/comparativa.md) · [Repetición de W0](../reports/results/experiments/w0_familias/resultado.md)

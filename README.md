@@ -34,19 +34,11 @@ Configuración adoptada tras dos rondas de experimentos (ver «Experimentos de m
 de búsqueda por red y horizonte, entrenamiento **sin deriva** y **recalibración del centro**
 hacia el ingenuo según el acierto pasado.
 
-**Modelo elegido para la app: RNN simple.** Se fijó antes de ver el test con la regla de
-[`docs/experimento-ronda2.md`](docs/experimento-ronda2.md): mayor mejora media frente al ingenuo
-en las predicciones anteriores a 2022 (+3,8 %). En el test la GRU queda algo mejor en conjunto
-(0,984 × MAE del ingenuo frente a 1,007), pero cambiar la elección después de ver el test sería
-elegir mirando el examen.
+**La app utiliza la RNN simple W1 en los tres horizontes**, con pesos específicos para 5, 63 y 252 sesiones. Para elegir una familia se dio el mismo peso a la mejora porcentual del MAE de cada horizonte frente al ingenuo. Con precios objetivo conocidos antes de 2022, la RNN W1 mejoró un **3,82 %** de media. La mejor familia W0 en ese periodo fue la LSTM (**0,28 %**). [Regla de selección](docs/experimento-ronda2.md)
 
-**Dónde aporta valor**: la RNN simple mejora al ingenuo a 5 días (+0,9 % de MAE) y a 63 días
-(+4,0 %), positiva en 4 de 5 años en ambos casos, y **no** a 252 días (−6,8 %). Ninguna
-diferencia es estadísticamente significativa (Diebold-Mariano p > 0,1). Es lo esperable para el
-crudo (casi un paseo aleatorio, con dos shocks geopolíticos en el test), y la app lo comunica
-explícitamente. Detalle, estabilidad, resultados por año y figuras en
-[`reports/comparativa.md`](reports/comparativa.md) y `notebooks/02_comparativa_modelos.ipynb`;
-la configuración original queda archivada en `reports/results/experiments/v0_original/`.
+En la comparación posterior de la app con las tres W0, la **GRU W0** obtuvo la mejor media conjunta desde 2022 (**+1,33 %** frente al ingenuo, frente al **−0,65 %** de la app). A 63 sesiones fue también la más precisa, con **11,099 USD/barril** de MAE frente a **11,469** de la app y **11,944** del ingenuo. A 5 sesiones ganó la app y a 252 ganó la LSTM W0 entre estas opciones. El periodo desde 2022 ya se había examinado y se utiliza para describir el comportamiento posterior de la familia elegida. [Comparación anual de W0 y la app](reports/results/experiments/w0_familias/resultado.md)
+
+En el test, la RNN W1 redujo el MAE frente al ingenuo un **0,89 %** a 5 sesiones y un **3,98 %** a 63. A 252 sesiones su MAE fue **un 6,82 % mayor**. El informe recoge los errores por año, el acierto direccional, los intervalos y los contrastes estadísticos. [Comparativa de la app](reports/comparativa.md) · [Registro de experimentos](docs/registro-experimentos.md)
 
 ![Mejora frente al ingenuo](reports/figures/mejora_vs_ingenuo.png)
 
