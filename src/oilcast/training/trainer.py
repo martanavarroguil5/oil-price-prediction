@@ -87,16 +87,25 @@ def predict_scaled(
     return torch.cat(out).float().cpu().numpy()
 
 
+def quantile_objective(model, x, target, q):
+    return pinball_loss(model(x), target, q)
+
+
 @torch.no_grad()
 def _loss_on(
-    model: nn.Module, data: PreparedData, idx: torch.Tensor, q: torch.Tensor, batch_size: int
+    model: nn.Module,
+    data: PreparedData,
+    idx: torch.Tensor,
+    q: torch.Tensor,
+    batch_size: int,
+    objective,
 ) -> float:
     model.eval()
     total = 0.0
     for i in range(0, len(idx), batch_size):
         b = idx[i : i + batch_size]
-        pred = model(gather_windows(data.features, b, data.window))
-        total += pinball_loss(pred, data.y[b], q).item() * len(b)
+        loss = objective(model, gather_windows(data.features, b, data.window), data.y[b], q)
+        total += loss.item() * len(b)
     return total / len(idx)
 
 
@@ -112,6 +121,7 @@ def fit(
     val_idx: np.ndarray | None = None,
     on_epoch: Callable[[int, int], None] | None = None,
     model_factory: Callable[[str, int, HParams, int], nn.Module] = build_model,
+    objective: Callable = quantile_objective,
 ) -> FitResult:
     """Train one network. With ``val_idx`` it early-stops on validation pinball loss and
     restores the best epoch; without it, it trains exactly ``epochs`` epochs."""
@@ -135,7 +145,7 @@ def fit(
         perm = tr[torch.randperm(len(tr), generator=gen).to(device)]
         for i in range(0, len(perm), hp.batch_size):
             b = perm[i : i + hp.batch_size]
-            loss = pinball_loss(model(gather_windows(data.features, b, data.window)), data.y[b], q)
+            loss = objective(model, gather_windows(data.features, b, data.window), data.y[b], q)
             opt.zero_grad(set_to_none=True)
             loss.backward()
             nn.utils.clip_grad_norm_(model.parameters(), tcfg["grad_clip"])
@@ -144,7 +154,7 @@ def fit(
             on_epoch(epoch, epochs)
         if va is None:
             continue
-        v = _loss_on(model, data, va, q, tcfg["eval_batch_size"])
+        v = _loss_on(model, data, va, q, tcfg["eval_batch_size"], objective)
         if best_val is None or v < best_val - 1e-6:
             best_val, best_epoch = v, epoch
             best_state = copy.deepcopy(model.state_dict())
