@@ -1,0 +1,94 @@
+{
+  "scope": "saved predictions, planned temporal splits, metric reconstruction and year sensitivity",
+  "limitations": [
+    "not a new independent test",
+    "no reconstruction of publication timestamps or historical data vintages"
+  ],
+  "checks": [
+    {
+      "model": "rnn",
+      "horizon": 5,
+      "n_test": 1218,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 9,
+      "price_target_roundtrip_max_usd": 5.949662764237473e-05
+    },
+    {
+      "model": "lstm",
+      "horizon": 5,
+      "n_test": 1218,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 9,
+      "price_target_roundtrip_max_usd": 5.949662764237473e-05
+    },
+    {
+      "model": "gru",
+      "horizon": 5,
+      "n_test": 1218,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 9,
+      "price_target_roundtrip_max_usd": 5.949662764237473e-05
+    },
+    {
+      "model": "rnn",
+      "horizon": 63,
+      "n_test": 1160,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 9,
+      "price_target_roundtrip_max_usd": 0.00017565149027376492
+    },
+    {
+      "model": "lstm",
+      "horizon": 63,
+      "n_test": 1160,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 9,
+      "price_target_roundtrip_max_usd": 0.00017565149027376492
+    },
+    {
+      "model": "gru",
+      "horizon": 63,
+      "n_test": 1160,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 9,
+      "price_target_roundtrip_max_usd": 0.00017565149027376492
+    },
+    {
+      "model": "rnn",
+      "horizon": 252,
+      "n_test": 971,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 8,
+      "price_target_roundtrip_max_usd": 0.0002920766401786068
+    },
+    {
+      "model": "lstm",
+      "horizon": 252,
+      "n_test": 971,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 8,
+      "price_target_roundtrip_max_usd": 0.0002920766401786068
+    },
+    {
+      "model": "gru",
+      "horizon": 252,
+      "n_test": 971,
+      "purged_cv_folds": 4,
+      "purged_refit_blocks": 8,
+      "price_target_roundtrip_max_usd": 0.0002920766401786068
+    }
+  ],
+  "input_sha256": {
+    "data/processed/brent_dataset.csv": "b2f35ec53e5785334a6192b71963df1b92f0cc97279fb03c1dd7ea40129e089e",
+    "reports/results/comparison.csv": "a7ab17f5a37c8a2dc183376c057b0b6e19c853be65186162be4e61fc618d8e42",
+    "reports/results/predictions/rnn_h5_ensemble.csv": "4e8e423aefde4afa69b8383ae232fd996907318f27ba97bfa17ad0d33701d736",
+    "reports/results/predictions/lstm_h5_ensemble.csv": "3b8f7b30dd0506ac56d424b9e64e939c7ed8b6bebb7649535df90cc9f1f1a0e6",
+    "reports/results/predictions/gru_h5_ensemble.csv": "33bad20a64293f8b2b8cff953d3cb716ed9237362b1a92dc1773ec9abe0547ec",
+    "reports/results/predictions/rnn_h63_ensemble.csv": "ce0579f399f8afa282cc0fb9577815379d90cd1fd1b0475486c8d70c1d2ccaf6",
+    "reports/results/predictions/lstm_h63_ensemble.csv": "c60115663dd070659e3ee70589493927d8bc7afff59fe3741a572f17152e3b09",
+    "reports/results/predictions/gru_h63_ensemble.csv": "cf76b119c478ab3260d61edc9532f35a961fd2a40b9c6fc0bbf5d76ae90e5bc6",
+    "reports/results/predictions/rnn_h252_ensemble.csv": "3ec5684724937284e30f5e19e23f1b98977ce9f761590127725364c02e302042",
+    "reports/results/predictions/lstm_h252_ensemble.csv": "dae709de275e56bfa0fc88ccebe408e9990bb6d75d127dfc6081cddf3f134a3b",
+    "reports/results/predictions/gru_h252_ensemble.csv": "c656c84510ad3828c38c57c4e6b9b7d9562525dbe64af8f2df35782aced4f3be"
+  }
+}

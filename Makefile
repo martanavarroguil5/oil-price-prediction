@@ -3,7 +3,7 @@ PY      := poetry run python
 OILCAST := $(PY) -m oilcast
 CONFIG  ?= configs/default.yaml
 
-.PHONY: help install data download build tune evaluate timing summarize train-final report \
+.PHONY: help install data download build tune evaluate baselines returns diagnostics improve-intervals timing summarize train-final report \
         forecast app test lint format smoke notebooks
 
 help:  ## Muestra esta ayuda
@@ -25,6 +25,18 @@ tune:  ## Búsqueda de hiperparámetros (9 estudios, en serie)
 
 evaluate:  ## Evaluación walk-forward en test
 	$(OILCAST) -c $(CONFIG) evaluate
+
+baselines:  ## Modelos sencillos y selección por horizonte, con protocolo separado
+	$(OILCAST) -c configs/baselines.yaml baselines
+
+returns:  ## Exporta los errores en rentabilidad simple, sin reentrenar
+	$(OILCAST) -c $(CONFIG) returns
+
+diagnostics:  ## Velas OHLC y violines de errores de los modelos guardados
+	$(OILCAST) -c $(CONFIG) diagnostics
+
+improve-intervals:  ## Calibración experimental elegida en desarrollo, sin cambiar las medianas
+	$(OILCAST) -c configs/intervals.yaml improve-intervals
 
 timing:  ## Tiempos de entrenamiento comparables
 	$(OILCAST) -c $(CONFIG) timing

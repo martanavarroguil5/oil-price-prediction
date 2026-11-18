@@ -1,0 +1,19 @@
+base: default.yaml
+
+interval_study:
+  output_dir: reports/experiments/intervals
+  development_start: "2016-01-01"
+  min_scores: 100
+  min_skill80: 0.02
+  coverage_tolerance: 0.03
+  max_winkler50_ratio: 1.02
+  bootstrap_samples: 1000
+  bootstrap_seed: 42
+  candidates:
+    - {name: current, kind: current, window: null}
+    - {name: cqr_504, kind: cqr, window: 504}
+    - {name: cqr_1260, kind: cqr, window: 1260}
+    - {name: scaled_expanding, kind: scaled, window: null}
+    - {name: scaled_1260, kind: scaled, window: 1260}
+    - {name: residual_expanding, kind: residual, window: null}
+    - {name: residual_1260, kind: residual, window: 1260}

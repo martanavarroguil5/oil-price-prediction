@@ -21,11 +21,14 @@ import torch
 from oilcast.config import Config
 from oilcast.data.dataset import build_dataset, load_dataset
 from oilcast.data.download import download_all
+from oilcast.evaluation.returns import return_comparison
 from oilcast.explain.events import cycle_markers
 from oilcast.explain.narrative import explain
 from oilcast.features.engineering import compute_features
 from oilcast.inference.forecaster import Forecaster
+from oilcast.inference.interval_preview import interval_preview
 from oilcast.paths import Paths
+from oilcast.replay import replay_case, replay_dates
 from oilcast.training.final import spec_from_metadata, train_final
 
 log = logging.getLogger(__name__)
@@ -42,7 +45,8 @@ def snapshot(cfg: Config, paths: Paths) -> dict:
     vol = compute_features(df, cfg)["rv_21"].dropna()
     vol_pct = float((vol <= vol.iloc[-1]).mean()) if len(vol) else None
     forecasts = {}
-    for h, fc in model.forecast(df, cfg).items():
+    current_forecasts = model.forecast(df, cfg)
+    for h, fc in current_forecasts.items():
         explanation = explain(fc, meta["spec"]["horizons"][str(h)], meta["arch_label"], vol_pct)
         forecasts[h] = {
             "price": fc.median,
@@ -83,6 +87,13 @@ def snapshot(cfg: Config, paths: Paths) -> dict:
         "rule": meta["spec"]["selection_rule"],
         "testStart": cfg["splits"]["test_start"],
         "comparison": records(paths.results / "comparison.csv"),
+        "returnMetrics": return_comparison(paths),
+        "intervalStudy": interval_preview(paths, current_forecasts, meta["arch"]),
+        "diagnostics": (
+            json.loads((paths.figures / "diagnostics.json").read_text(encoding="utf-8"))
+            if (paths.figures / "diagnostics.json").exists()
+            else None
+        ),
         "years": records(paths.results / "metrics_by_year.csv"),
         "architecture": records(paths.results / "timing.csv"),
     }
@@ -117,9 +128,19 @@ class Observatory:
     def state(self):
         with self.lock:
             files = [self.paths.dataset_csv, self.paths.models / "metadata.json"]
+            files.append(self.paths.figures / "diagnostics.json")
+            files += [
+                self.paths.reports / "experiments/intervals" / filename
+                for filename in ("app.json", "decision.json")
+            ]
             files += [
                 self.paths.results / name
                 for name in ("comparison.csv", "timing.csv", "metrics_by_year.csv")
+            ]
+            files += [
+                self.paths.results / "predictions" / f"{arch}_h{h}_ensemble.csv"
+                for arch in ("rnn", "lstm", "gru")
+                for h in (5, 63, 252)
             ]
             key = tuple(f.stat().st_mtime_ns if f.exists() else None for f in files)
             if key != self.cache_key:
@@ -208,6 +229,11 @@ class Observatory:
 def handler(observatory: Observatory):
     static = observatory.paths.root / "app" / "static"
     figure_names = {"mejora_vs_ingenuo.png", "mejora_por_anio.png", "predicciones_test.png"}
+    figure_names |= {"brent_velas.png", "violines_precio.png", "violines_retorno.png"}
+    figure_names |= {f"dispersion_{arch}.png" for arch in ("rnn", "lstm", "gru")}
+    figure_names |= {
+        f"violines_{unit}_h{h}.png" for unit in ("precio", "retorno") for h in (5, 63, 252)
+    }
 
     class Handler(BaseHTTPRequestHandler):
         def send_content(self, status, body, kind):
@@ -236,6 +262,31 @@ def handler(observatory: Observatory):
                 if route == "/api/job":
                     with observatory.lock:
                         return self.send_json(observatory.job.copy())
+                if route.startswith("/api/replay/"):
+                    parts = route.strip("/").split("/")
+                    if (
+                        len(parts) not in {4, 5, 6}
+                        or parts[2] not in {"rnn", "lstm", "gru"}
+                        or parts[3] not in {"5", "63", "252"}
+                        or (len(parts) == 6 and parts[5] != "reveal")
+                    ):
+                        return self.send_error(404)
+                    try:
+                        if len(parts) == 4:
+                            return self.send_json(
+                                replay_dates(observatory.paths, parts[2], int(parts[3]))
+                            )
+                        return self.send_json(
+                            replay_case(
+                                observatory.paths,
+                                parts[2],
+                                int(parts[3]),
+                                parts[4],
+                                reveal=len(parts) == 6,
+                            )
+                        )
+                    except ValueError as exc:
+                        return self.send_json({"error": str(exc)}, 404)
                 if route.startswith("/api/validation/"):
                     parts = route.split("/")
                     if (

@@ -11,7 +11,18 @@ Se eligió una familia para los tres horizontes con el promedio de las mejoras p
 | Combinaciones a 63 sesiones | Mezclar las ramas directa y económica, entrenarlas por separado o ponderarlas por aciertos recientes dejó errores mayores que los **11,469** de la app. Añadir mercados diarios llevó la GRU a **12,134**. | Mantener estas variantes como experimentos. |
 | Afinado de la GRU W0 | La candidata recalibrada obtuvo **11,302** de MAE frente a **11,099** de la original. La red afinada por sí sola obtuvo **11,195**. | Conservar la GRU W0 original como referencia trimestral. |
 | W0 con las tres familias y el mismo presupuesto | Entre la app y las tres W0, en test ganó la app a 5 sesiones, la GRU W0 a 63 y la LSTM W0 a 252. La GRU W0 tuvo la mejor media posterior del grupo (**+1,33 %** frente al ingenuo). | Documentar los ganadores por plazo y mantener la elección realizada en desarrollo. |
+| Modelos sencillos y elección por horizonte (18/11/2026) | Ridge y reversión a la media no superaron a la RNN de la app a 5 ni a 63 sesiones en el contraste histórico. A 252, la reversión de 252 sesiones mejoró el MAE un **11,37 %** después de 2022, pero lo empeoró un **5,37 %** en desarrollo. La regla por plazo eligió ingenuo, ingenuo y RNN. | No sustituir el modelo publicado. Conservar esta comparación retrospectiva y confirmar cualquier cambio con resultados futuros. |
+| Calibración de intervalos (18/11/2026) | Siete variantes elegidas con una regla previa en desarrollo. Para RNN a 252 sesiones, Winkler pasó de **128,91** a **110,75** (**+14,08 %** de mejora), con anchura de **113,94** a **81,80 USD/barril** y cobertura de **89,7 %** a **83,9 %**. Su intervalo orientativo de mejora incluye cero. | Integrar una comparación experimental y el cálculo actual en Validación, conservar los intervalos publicados en el simulador y publicar también los casos que empeoran. |
 
 La ventaja más importante de la app en desarrollo se encontraba a 252 sesiones (**+13,52 %** frente al ingenuo). En test pasó a **−6,82 %**. A 63 sesiones la GRU W0 obtuvo una reducción del MAE de **7,07 %** frente al ingenuo. Esos resultados explican por qué la familia elegida para los tres horizontes y la red con menor error trimestral son distintas. [Comparación de variantes en desarrollo y test](../reports/experiments/seleccion.csv) · [Resultados anuales de W0](../reports/experiments/w0/resultado.md) · [Resultados del modelo económico](../reports/experiments/economico.csv)
 
 Se conserva también una previsión trimestral emitida con el último precio disponible del 11 de noviembre de 2026. Quedó registrada junto al ingenuo y dos correcciones antes de conocer el precio objetivo. [Previsión y regla de evaluación](../reports/results/prospectivo/2026-11-17-63d.json)
+
+La comparación con modelos sencillos contrasta también el **error absoluto**, alineado con
+el MAE: para la RNN de la app a 63 sesiones, el p-valor DM es **0,019** y el intervalo
+orientativo por bloques para la mejora es **[+0,95 %, +7,81 %]**. El informe original usa
+error cuadrático (p = 0,118); son hipótesis sobre pérdidas distintas. Esta evidencia más
+favorable para el MAE sigue siendo retrospectiva y no está corregida por la exploración
+previa ni las comparaciones múltiples.
+[Protocolo de modelos sencillos](experimento-baselines.md) ·
+[Resultados completos](../reports/experiments/baselines/resultado.md)

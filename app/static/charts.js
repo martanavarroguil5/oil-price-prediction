@@ -1,4 +1,5 @@
 import Chart from "./vendor/chart.js";
+import { scatterData } from "./scatter-stats.js";
 
 const mint = "#83ebc4",
   amber = "#efb671",
@@ -28,7 +29,7 @@ export function removeCharts() {
   instances.clear();
 }
 
-function paint(id, datasets, { origin, click, period = 12 } = {}) {
+function paint(id, datasets, { origin, originLabel = "ÚLTIMO DATO", click, period = 12 } = {}) {
   const canvas = document.getElementById(id);
   instances.get(id)?.destroy();
   const chart = new Chart(canvas, {
@@ -120,7 +121,7 @@ function paint(id, datasets, { origin, click, period = 12 } = {}) {
               ctx.font = "9px Plex, monospace";
               ctx.fillStyle = "#a8b8b2";
               ctx.textAlign = "right";
-              ctx.fillText("ÚLTIMO DATO", px - 5, a.top + 7);
+              ctx.fillText(originLabel, px - 5, a.top + 7);
               ctx.restore();
             },
           },
@@ -159,41 +160,29 @@ export function historyChart(state, h, months, ma50, ma200) {
         ),
       );
   });
-  const fc = Object.entries(state.forecasts)
-    .filter(([key]) => Number(key) <= h)
-    .sort((a, b) => Number(a[0]) - Number(b[0]))
-    .map((p) => p[1]);
-  const anchor = xy(last[0], last[1]),
-    curve = (fn) => [anchor, ...fc.map((f) => xy(f.date, fn(f)))];
-  data.push(
-    trace(
-      "Límite inferior 80 %",
-      curve((f) => f.intervals["80"][0]),
-      "#a3835c",
-      { borderWidth: 0.75 },
-    ),
-  );
-  data.push(
-    trace(
-      "Límite superior 80 %",
-      curve((f) => f.intervals["80"][1]),
-      "#b29568",
-      { fill: "-1", backgroundColor: "#d99d5024", borderWidth: 0.75 },
-    ),
-  );
-  data.push(
-    trace(
-      "Previsión central",
-      curve((f) => f.price),
-      amber,
-      {
-        borderDash: [5, 4],
-        pointRadius: (c) => (c.dataIndex === fc.length ? 4 : 0),
-        pointBackgroundColor: amber,
-      },
-    ),
-  );
+  const fc = state.forecasts[h], anchor = xy(last[0], last[1]);
+  data.push(...forecastPoints(fc.date, fc.price, fc.intervals["80"], last));
   paint("history-chart", data, { origin: anchor.x, period: months || 300 });
+}
+
+
+function forecastPoints(target, median, interval, last) {
+  return [
+    trace("Precio sin cambios", [xy(last[0], last[1]), xy(target, last[1])], gray,
+      { borderDash: [3, 5], borderWidth: 1 }),
+    trace("Límites nominales 80 % al vencimiento", interval.map(p => xy(target, p)), amber,
+      { borderWidth: 3, pointRadius: 3, pointStyle: "rectRot" }),
+    trace("Mediana al vencimiento", [xy(target, median)], amber,
+      { type: "scatter", pointRadius: 6, pointHoverRadius: 8, showLine: false }),
+  ];
+}
+export function replayChart(record) {
+  const data = [trace("Brent hasta el origen", record.history.map(r => xy(r[0], r[1])), mint)];
+  data.push(...forecastPoints(record.targetDate, record.median, record.interval,
+    [record.origin, record.price]));
+  if (record.outcome) data.push(trace("Brent observado después", record.outcome.future.map(r =>
+    xy(r[0], r[1])), "#a7acff", { borderWidth: 2 }));
+  paint("replay-chart", data, { origin: Date.parse(record.origin), originLabel: "ORIGEN", period: 24 });
 }
 
 export function validationChart(rows, name) {
@@ -220,6 +209,31 @@ export function validationChart(rows, name) {
     ],
     { period: 48 },
   );
+}
+
+export function scatterChart(rows, name, unit, compare) {
+  const result = scatterData(rows, unit);
+  const values = [...result.points.flatMap(p=>[p.x,p.y]), ...(compare ? result.naive.map(p=>p.y) : [])];
+  const low = Math.min(...values), high = Math.max(...values), pad = Math.max((high-low)*.06, .5);
+  const min = low-pad, max = high+pad, label = unit === "retorno" ? "p. p." : "USD/barril";
+  const sets = [{label:name,data:result.points,backgroundColor:"#83ebc480",pointRadius:2.2,pointHoverRadius:5,order:1},
+    {type:"line",label:"Predicción perfecta · y = x",data:[{x:min,y:min},{x:max,y:max}],
+      borderColor:"#d7c396",borderDash:[5,5],borderWidth:1.2,pointRadius:0,order:0}];
+  if (compare) sets.push({label:"Ingenuo",data:result.naive,backgroundColor:"#8c9ba64d",pointRadius:2,pointHoverRadius:4,order:2});
+  instances.get("scatter-chart")?.destroy();
+  const axis = title => ({type:"linear",min,max,title:{display:true,text:title+" ("+label+")",color:"#b9cbc7",font:{size:11}},
+    grid:{color:"#28353b"},border:{color:"#324049"},ticks:{maxTicksLimit:6,font:{family:"Plex",size:9},
+      callback:v=>Number(v).toLocaleString("es-ES",{maximumFractionDigits:1})}});
+  const chart = new Chart(document.getElementById("scatter-chart"),{type:"scatter",data:{datasets:sets},options:{
+    responsive:true,maintainAspectRatio:false,animation:false,parsing:false,
+    scales:{x:axis("Real observado"),y:axis("Predicción")},
+    plugins:{legend:{display:false},tooltip:{backgroundColor:"#1d2c31",callbacks:{
+      title:items=>items[0].raw.date ? date(Date.parse(items[0].raw.date),{day:"numeric",month:"short",year:"numeric"}) : "Referencia ideal",
+      label:item=>item.dataset.label+": real "+fmt.format(item.parsed.x)+" · previsto "+fmt.format(item.parsed.y)+" "+label,
+    }}},
+  }});
+  instances.set("scatter-chart",chart);
+  return result;
 }
 
 export function cycleChart(state, showAuto, open) {

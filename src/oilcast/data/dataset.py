@@ -2,12 +2,14 @@
 
 Rules (see notebook 01 for the evidence behind them):
 
-* The calendar is the set of dates on which FRED/EIA actually publishes a Brent spot price.
-  The target is never filled: Brent holidays and the publication lag are simply absent rows.
-* Every other series is aligned to that calendar carrying forward its last *available* value
-  (as of each Brent date). Never backward-filled, so no future value leaks into the past.
-* Physically impossible values for log-transformed inputs (WTI at -36.98 $/bbl on 2020-04-20,
-  non-positive futures prices, zero futures volume) are set to NaN before the forward fill.
+* The calendar uses Brent observation dates with a recorded spot price, not publication
+  timestamps. The target is never filled. The latest observations may be absent because
+  of publication lag; historical release timestamps and vintages are not reconstructed.
+* Other series carry forward the last value dated on or before each Brent observation.
+  There is no backward fill. This is observation-date alignment, not proof of intraday
+  availability of every source at the forecast issue time.
+* Values unsuitable for the chosen log features (including the genuine negative WTI
+  observation on 2020-04-20, non-positive futures prices and zero volume) become NaN.
   Genuine Brent extremes (2008, 2020, 2022, 2026) are kept: they are real prices.
 """
 
@@ -35,7 +37,7 @@ def load_raw(paths: Paths, name: str) -> pd.DataFrame | None:
 
 
 def align_to_calendar(series: pd.Series, calendar: pd.DatetimeIndex) -> pd.Series:
-    """Value of ``series`` as of each calendar date (last observation on or before it)."""
+    """Last observation dated on or before each date; does not model release timestamps."""
     s = series.dropna()
     s = s[~s.index.duplicated(keep="last")]
     return s.reindex(s.index.union(calendar)).ffill().reindex(calendar)

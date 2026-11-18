@@ -1,6 +1,9 @@
+import { renderMarketViews } from "./market-views.js";
+import { bindDecisions, renderDecisions, renderReturns, renderReplay, cancelReplay } from "./decisions.js";
 import {
   historyChart,
   validationChart,
+  scatterChart,
   cycleChart,
   removeCharts,
 } from "./charts.js";
@@ -77,7 +80,6 @@ let state,
   arch = "rnn",
   validationNet = "rnn",
   current = "",
-  preview,
   lab,
   serial = 0,
   timer,
@@ -96,9 +98,9 @@ function syncHorizons() {
     choices(
       box,
       [
-        [5, "5 días"],
-        [63, "63 días"],
-        [252, "252 días"],
+        [5, "1 semana"],
+        [63, "3 meses"],
+        [252, "1 año"],
       ],
       h,
       (value) => {
@@ -156,10 +158,8 @@ function forecastView() {
     },
   );
   historyChart(state, h, months, $("ma50").checked, $("ma200").checked);
-  $("mini-title").textContent = state.model.arch_label;
-  $("mini-spec").textContent =
-    state.model.window + " días de entrada · " + state.features + " variables";
-  if (!preview) preview = createScene($("preview-stage"), state.model.arch);
+  renderDecisions(state, h);
+  renderMarketViews(state, h);
 }
 function pauseIcon(playing) {
   $("pause").innerHTML = icon(playing ? "pause" : "play");
@@ -228,7 +228,7 @@ const columns = [
   ["r2", "R²", (v) => format(v, 3)],
   ["skill_mae", "Mejora MAE", (v) => signed(v * 100, 1) + " %"],
   ["skill_rmse", "Mejora RMSE", (v) => signed(v * 100, 1) + " %"],
-  ["dm_pvalue", "p DM", (v) => format(v, 3)],
+  ["dm_pvalue", "p DM (MSE)", (v) => format(v, 3)],
   ["dir_acc", "Dirección", (v) => format(v * 100, 1) + " %"],
   ["coverage80", "Cobertura 80 %", (v) => format(v * 100, 1) + " %"],
   ["n_params", "Parámetros", (v) => format(v, 0)],
@@ -240,6 +240,8 @@ async function validationView() {
   const header = el("tr");
   header.append(...columns.map((c) => el("th", c[1])));
   $("table-head").replaceChildren(header);
+  renderReturns(state, h);
+  renderMarketViews(state, h);
   const rows = state.comparison.filter((r) => r.horizon === h);
   $("table-body").replaceChildren(
     ...rows.map((r) => {
@@ -293,6 +295,8 @@ async function validationView() {
   const key = validationNet + "/" + h;
   $("val-status").textContent = "Cargando predicciones…";
   $("validation-chart").style.visibility = "hidden";
+  $("scatter-chart").style.visibility = "hidden";
+  $("scatter-r2").textContent = $("scatter-r2-naive").textContent = "—";
   try {
     if (!seriesCache.has(key))
       seriesCache.set(key, await get("/api/validation/" + key));
@@ -300,6 +304,7 @@ async function validationView() {
     const data = seriesCache.get(key);
     if (!data.length) throw Error("No hay predicciones realizadas.");
     validationChart(data, names[validationNet]);
+    renderScatter(data);
     $("validation-chart").style.visibility = "visible";
     $("val-status").textContent =
       format(data.length, 0) +
@@ -311,6 +316,19 @@ async function validationView() {
     if (tick === serial) $("val-status").textContent = e.message;
   }
 }
+function renderScatter(data) {
+  $("scatter-chart").style.visibility = "visible";
+  const unit = $("scatter-unit").value;
+  const result = scatterChart(data, names[validationNet], unit, $("scatter-naive").checked);
+  $("scatter-r2").textContent = result.metrics.r2 == null ? "—" : format(result.metrics.r2, 3);
+  $("scatter-r2").className = result.metrics.r2 < 0 ? "amber" : "mint";
+  $("scatter-r2-naive").textContent = result.baseline.r2 == null ? "—" : format(result.baseline.r2, 3);
+  $("scatter-error").textContent = names[validationNet]+" · "+h+" sesiones. MAE: "+format(result.metrics.mae,2)+
+    (unit === "precio" ? " USD/barril" : " puntos porcentuales")+". RMSE: "+format(result.metrics.rmse,2)+".";
+  $("scatter-download").hidden = !state.diagnostics;
+  if (state.diagnostics) $("scatter-download").href = "/figures/dispersion_"+validationNet+".png?v="+state.diagnostics.fingerprint;
+}
+
 function cycleView() {
   const show = $("auto-events").checked,
     events = state.events
@@ -342,18 +360,18 @@ function renderPage(reset = true) {
   if (!state) return;
   if (current === "observatorio") forecastView();
   if (current === "redes") labView(reset);
+  if (current === "replay") renderReplay();
   if (current === "validacion") validationView();
   if (current === "ciclos") cycleView();
 }
 function route() {
   const next = location.hash.slice(1);
-  const active = ["redes", "validacion", "ciclos"].includes(next)
+  const active = ["redes", "validacion", "ciclos", "replay"].includes(next)
     ? next
     : "observatorio";
   if (active === current) return;
-  preview?.dispose();
+  cancelReplay();
   lab?.dispose();
-  preview = null;
   lab = null;
   removeCharts();
   serial++;
@@ -368,7 +386,8 @@ function route() {
   document.title =
     "Estrato · " +
     {
-      observatorio: "Observatorio del Brent",
+      observatorio: "Decisiones sobre el Brent",
+      replay: "Prueba histórica",
       redes: "Redes 3D",
       validacion: "Validación",
       ciclos: "Ciclo histórico",
@@ -444,6 +463,9 @@ async function operate(action) {
     busy(false);
   }
 }
+bindDecisions({ state: () => state, horizon: () => h, selectHorizon: value => {
+  h = value; syncHorizons(); renderPage(false);
+} });
 $("refresh").onclick = () => operate("refresh");
 $("retrain").onclick = () => operate("retrain");
 $("open-data").onclick = () => {
@@ -475,6 +497,11 @@ $("validation-net").onchange = (e) => {
   validationView();
 };
 $("auto-events").onchange = cycleView;
+$("scatter-unit").onchange = $("scatter-naive").onchange = () => {
+  const data = seriesCache.get(validationNet+"/"+h);
+  if (data) renderScatter(data);
+};
+$("violin-unit").onchange = () => { if (state) renderMarketViews(state, h); };
 document.querySelector(".skip").onclick = (event) => {
   event.preventDefault();
   $("main").focus();

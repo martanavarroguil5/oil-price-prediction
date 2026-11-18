@@ -1,0 +1,10 @@
+base: default.yaml
+
+# Protocolo fijado en docs/experimento-baselines.md antes de calcular resultados.
+baselines:
+  output_dir: reports/experiments/baselines
+  mean_reversion_windows: [63, 252]
+  ridge_alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
+  simplicity_tolerance: 0.01  # diferencia en MAE / MAE ingenuo
+  bootstrap_samples: 1000
+  bootstrap_seed: 42

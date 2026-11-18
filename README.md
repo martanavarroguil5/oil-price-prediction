@@ -11,7 +11,45 @@ poetry install
 make app
 ```
 
-Abre [el observatorio](http://127.0.0.1:8501). La primera previsión utiliza los datos incluidos y funciona sin conexión. En **Datos y modelo** se puede actualizar la serie y generar otra previsión con los pesos existentes. El reentrenamiento es una acción independiente. La pestaña **Validación** permite elegir red y plazo para comparar el precio observado, el pronóstico y el ingenuo en las mismas fechas.
+Abre [el observatorio](http://127.0.0.1:8501). La primera previsión utiliza los datos incluidos y funciona sin conexión. En **Datos y modelo** se puede actualizar la serie y generar otra previsión con los pesos existentes. El reentrenamiento es una acción independiente.
+
+**Decisiones** traduce las previsiones a un presupuesto en USD: volumen equivalente,
+precio de referencia, coste adicional y porcentaje de compra al inicio. Compara comprar
+todo al precio de referencia, esperar al final del plazo o repartir entre ambos momentos.
+Incluye un escenario manual y permite guardar el resumen. Son cálculos bajo supuestos;
+no se recomienda una estrategia ni se afirma que esas políticas tengan una ventaja histórica.
+
+**Prueba histórica** permite recorrer todos los orígenes guardados de las tres redes y
+revelar después el resultado. Antes de revelar, la respuesta de la aplicación no incluye
+el precio posterior ni observaciones futuras. Se advierte que es una evaluación retrospectiva.
+
+**Validación** compara precio, pronóstico e ingenuo en las mismas fechas, e incluye una
+tabla en rentabilidad simple: `precio futuro / precio de origen - 1`. Sus errores se
+expresan en puntos porcentuales y el ingenuo predice un cambio del 0 %. Las redes ya
+aprenden rentabilidades logarítmicas; esta tabla añade otra unidad de evaluación.
+`poetry run python -m oilcast returns` exporta esa comparación a `reports/rentabilidad.csv`.
+[Guía de demostración](docs/guia-demostracion.md)
+[Mejoras implementadas y siguientes pasos](docs/mejoras-implementadas.md)
+
+**Velas y violines.** En Decisiones se muestran 90 sesiones de velas OHLC y volumen del
+futuro continuo Brent `BZ=F`, con sus fechas propias; no son velas del Brent spot. En
+Validación se pueden consultar los violines de errores a cada plazo, en dólares o en
+puntos porcentuales de rentabilidad, junto a cobertura, anchura y puntuación de Winkler
+de los intervalos. `make diagnostics` (o `poetry run python -m oilcast diagnostics`)
+regenera los PNG y sus metadatos con los datos y predicciones locales guardados.
+En Validación se incluye también la dispersión observado–predicho, con la diagonal ideal,
+referencia ingenua y R² de las predicciones originales. Puede verse en precio o rentabilidad.
+Las figuras de dispersión de los tres plazos se descargan por red.
+Las figuras incluyen el periodo utilizado; tras actualizar datos o resultados deben
+regenerarse para reflejar los cambios. No se descarga ni se reentrena al generarlas.
+
+**Calibración experimental de intervalos.** `make improve-intervals` compara siete
+procedimientos con una regla fijada en desarrollo, sin reentrenar redes ni modificar sus
+medianas. En Validación, **Calibración, a prueba** muestra el método publicado frente al
+elegido, las métricas históricas y ambos intervalos para la previsión actual. El simulador
+conserva los intervalos publicados: el experimento no los sustituye automáticamente.
+Para reproducirlo en Windows: `.venv\Scripts\python.exe -m oilcast -c configs/intervals.yaml improve-intervals`.
+[Protocolo](docs/experimento-intervalos.md) · [Resultados](reports/experiments/intervals/resultado.md)
 
 ## Qué modelo se utiliza
 
@@ -29,7 +67,7 @@ En la comparación posterior de la app con las tres redes W0, la **GRU W0** gan�
 
 ## Datos y validación
 
-Los datos diarios proceden de la EIA vía FRED y de Yahoo Finance. El calendario conserva las sesiones con precio Brent observado desde 2000 y alinea las demás series con la información disponible en cada fecha. La cesta OPEP quedó fuera por falta de acceso a la serie. El cuaderno de exploración documenta los huecos, el WTI negativo y el tratamiento de extremos. [Exploración y limpieza](notebooks/01_eda_y_limpieza.ipynb)
+Los datos diarios proceden de la EIA vía FRED y de Yahoo Finance. El calendario conserva las sesiones con precio Brent observado desde 2000 y alinea las demás series con su última observación fechada hasta ese día. No se reconstruyen todos los instantes de publicación ni versiones históricas: es una limitación de la evaluación operativa. La cesta OPEP quedó fuera por falta de acceso a la serie. El cuaderno de exploración documenta los huecos, el WTI negativo y el tratamiento de extremos. [Exploración y limpieza](notebooks/01_eda_y_limpieza.ipynb) · [Auditoría y decisión de cierre](docs/auditoria-final.md)
 
 Las tres redes reciben las mismas 60 sesiones y 20 variables. Se compararon con 80 ensayos por red y horizonte, cuatro bloques de validación cronológica y cinco semillas. En cada corte solo se entrena con objetivos ya realizados. La salida incluye la mediana y los intervalos de predicción. [Cuaderno de comparación](notebooks/02_comparativa_modelos.ipynb)
 
@@ -56,3 +94,12 @@ make report
 ```
 
 `make tune` repite la búsqueda de hiperparámetros. `make test` ejecuta las pruebas y `make help` enumera los comandos disponibles. La práctica pide además una presentación de hasta cinco diapositivas de contenido. Su elaboración sigue pendiente.
+
+## Comparación con modelos sencillos
+
+`make baselines` compara las redes guardadas con regresión Ridge y reversión a la media,
+con una elección por horizonte basada en objetivos anteriores a 2022. Publica las métricas,
+la incertidumbre por bloques y los resultados por año en un directorio independiente.
+En Windows se puede ejecutar `.venv\Scripts\python.exe -m oilcast -c configs/baselines.yaml baselines`.
+Es una comparación retrospectiva; el periodo desde 2022 ya se había consultado.
+[Protocolo](docs/experimento-baselines.md) · [Resultados](reports/experiments/baselines/resultado.md)

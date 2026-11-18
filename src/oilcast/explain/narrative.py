@@ -53,21 +53,23 @@ def reliability_text(
         head = (
             f"En el periodo de prueba ({period}), la red {arch_label} acertó más que la regla "
             f"«el precio no cambia»: redujo el error medio un {_pct(skill, False)} y la "
-            "diferencia es estadísticamente significativa."
+            "diferencia en error cuadrático es significativa en el contraste original. "
+            "Es una evaluación retrospectiva, no una garantía de precisión futura."
         )
     elif skill > 0:
         level = "mejora no concluyente"
         head = (
             f"En el periodo de prueba ({period}), la red {arch_label} redujo el error medio un "
             f"{_pct(skill, False)} frente a suponer que el precio no cambia, pero la mejora "
-            "no es estadísticamente concluyente: tome la cifra central como orientativa."
+            "no queda confirmada por el contraste original sobre error cuadrático. "
+            "Ese contraste no evalúa directamente el MAE. Tome la cifra central como orientativa."
         )
     else:
         level = "no mejora al ingenuo"
         head = (
             f"En el periodo de prueba ({period}), la red {arch_label} no mejoró a la regla «el "
             f"precio no cambia» (su error medio fue un {_pct(-skill, False)} mayor). A este "
-            "horizonte la cifra central no aporta más que el precio actual: tómela solo como "
+            "horizonte la cifra central no mostró ventaja sobre el precio actual: tómela como "
             "referencia y fíjese sobre todo en el rango, que indica cuánto podría moverse el "
             "precio."
         )
@@ -128,8 +130,9 @@ def explain(
         f"A {HORIZON_NAMES.get(fc.horizon, f'{fc.horizon} días hábiles')}, hacia el "
         f"{_date(fc.target_date)}, el modelo sitúa el Brent en torno a "
         f"{_money(fc.median)}/barril: {move} respecto al último precio publicado "
-        f"({_money(fc.last_price)} el {_date(fc.origin_date)}). Con una probabilidad aproximada "
-        f"del 80 %, el precio estaría entre {_money(lo)} y {_money(hi)}."
+        f"({_money(fc.last_price)} el {_date(fc.origin_date)}). El intervalo nominal del 80 % "
+        f"va de {_money(lo)} a {_money(hi)}. Su cobertura histórica se indica a continuación; "
+        "no garantiza el resultado de esta previsión."
     )
     reliability, level = reliability_text(
         fc.horizon,

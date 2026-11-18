@@ -87,6 +87,33 @@ def timing() -> None:
 
 
 @app.command()
+def baselines() -> None:
+    """Compara modelos sencillos por horizonte (usar -c configs/baselines.yaml)."""
+    from oilcast.evaluation.baselines import run_baselines
+
+    cfg, paths = _ctx()
+    if "baselines" not in cfg:
+        raise typer.BadParameter("Usa -c configs/baselines.yaml para esta comparación")
+    run_baselines(cfg, paths)
+
+
+@app.command("returns")
+def returns_report() -> None:
+    """Exporta errores en rentabilidad simple (puntos porcentuales), sin reentrenar."""
+    import pandas as pd
+
+    from oilcast.evaluation.returns import return_comparison
+
+    _, paths = _ctx()
+    output = paths.reports / "rentabilidad.csv"
+    rows = return_comparison(paths)
+    if not rows:
+        raise typer.BadParameter("No hay predicciones guardadas para evaluar")
+    pd.DataFrame(rows).to_csv(output, index=False)
+    typer.echo(f"Comparación en rentabilidad: {output}")
+
+
+@app.command()
 def summarize() -> None:
     """Calcula métricas, tabla comparativa y elige la arquitectura de producción."""
     from oilcast.evaluation.summary import summarize as run
@@ -149,6 +176,28 @@ def report() -> None:
     from oilcast.evaluation.report import build_report
 
     build_report(*_ctx())
+
+
+@app.command()
+def diagnostics() -> None:
+    """Genera velas de futuros y violines de errores con las predicciones guardadas."""
+    from oilcast.evaluation.diagnostics import build_diagnostics
+
+    _, paths = _ctx()
+    build_diagnostics(paths)
+    typer.echo(f"Velas y violines: {paths.figures}")
+
+
+@app.command("improve-intervals")
+def improve_intervals() -> None:
+    """Evalúa mejoras de intervalos (-c configs/intervals.yaml), sin reentrenar redes."""
+    from oilcast.evaluation.interval_study import run_interval_study
+
+    cfg, paths = _ctx()
+    if "interval_study" not in cfg:
+        raise typer.BadParameter("Usa -c configs/intervals.yaml")
+    decision = run_interval_study(cfg, paths)
+    typer.echo(str(decision["selected"]))
 
 
 @app.command("download-extra")

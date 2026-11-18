@@ -1,5 +1,6 @@
 /herramientas/
 .venv/
+/.venv-cache/
 .env
 .env.*
 *.env
