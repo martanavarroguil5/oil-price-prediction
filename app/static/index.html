@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0c1217" />
+    <title>Estrato · Observatorio del Brent</title>
+    <link rel="icon" href="/marca.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Ir al contenido</a>
+    <header class="mast">
+      <div class="mast-inner">
+        <a class="brand" href="#observatorio" aria-label="Estrato, inicio"
+          ><img src="/marca.svg" width="34" height="34" alt="" />Estrato<span
+            class="brand-dot"
+            >.</span
+          ></a
+        >
+        <nav aria-label="Secciones">
+          <a href="#observatorio">Observatorio</a><a href="#redes">Redes 3D</a
+          ><a href="#validacion">Validación</a
+          ><a href="#ciclos">Ciclo histórico</a>
+        </nav>
+        <button id="open-data" class="data-btn">
+          <i data-icon="database"></i> Datos y modelo
+        </button>
+      </div>
+    </header>
+    <main id="main" tabindex="-1">
+      <section id="observatorio" class="page">
+        <div class="hero">
+          <div class="hero-content">
+            <div class="kicker">
+              <span class="rule"></span> BRENT SPOT
+              <span class="slash">/</span> MAR DEL NORTE
+            </div>
+            <h1>Observatorio del <em>Brent.</em></h1>
+            <p>
+              Precio del crudo y previsiones con redes neuronales recurrentes.
+            </p>
+          </div>
+          <div class="hero-caption">
+            <span class="cross">+</span> PLATAFORMA MARINA
+            <span class="slash">/</span> ILUSTRACIÓN
+          </div>
+        </div>
+        <div class="shell">
+          <div class="quote-strip">
+            <div class="quote">
+              <div class="metric-label">
+                <i data-icon="drop"></i> Último Brent
+              </div>
+              <div class="price">
+                <strong id="spot">—</strong><small>USD/bbl</small>
+              </div>
+              <span class="submetric" id="spot-date"></span>
+            </div>
+            <div class="quote">
+              <div class="metric-label">
+                <i data-icon="trend"></i> Previsión central
+              </div>
+              <div class="price mint">
+                <strong id="pred">—</strong><small>USD/bbl</small>
+              </div>
+              <span class="submetric" id="target"></span>
+            </div>
+            <div class="quote">
+              <div class="metric-label">
+                <i data-icon="activity"></i> Variación prevista
+              </div>
+              <div class="price"><strong id="change">—</strong></div>
+              <span class="submetric" id="delta"></span>
+            </div>
+            <div class="quote">
+              <div class="metric-label">
+                <i data-icon="range"></i> Intervalo del 80 %
+              </div>
+              <div class="price range"><strong id="interval">—</strong></div>
+              <span class="submetric">USD por barril</span>
+            </div>
+          </div>
+          <div class="heading-row">
+            <div class="section-title">
+              <span class="signal"></span>
+              <h2>Panel de previsión</h2>
+            </div>
+            <div
+              class="horizon horizon-control"
+              aria-label="Horizonte de previsión"
+            ></div>
+          </div>
+          <div class="dashboard">
+            <article class="panel chart-panel">
+              <header class="panel-head">
+                <div>
+                  <div class="eyebrow">SERIE TEMPORAL</div>
+                  <h3>Curva del Brent</h3>
+                </div>
+                <div
+                  id="ranges"
+                  class="segments"
+                  aria-label="Periodo del histórico"
+                ></div>
+              </header>
+              <div class="chart-key">
+                <span><b class="key mint-bg"></b>Brent real</span
+                ><span><b class="key dash"></b>Previsión</span
+                ><span><b class="key band"></b>Intervalo 80 %</span>
+              </div>
+              <div class="chart-box">
+                <canvas
+                  id="history-chart"
+                  role="img"
+                  aria-label="Histórico diario y previsión del Brent en dólares por barril"
+                ></canvas>
+              </div>
+              <div class="chart-foot">
+                <span>USD / BARRIL</span>
+                <div>
+                  <label><input type="checkbox" id="ma50" /> Media 50 d</label
+                  ><label
+                    ><input type="checkbox" id="ma200" /> Media 200 d</label
+                  >
+                </div>
+              </div>
+            </article>
+            <article class="panel model-panel">
+              <header class="panel-head">
+                <div>
+                  <div class="eyebrow">MODELO EN USO</div>
+                  <h3 id="mini-title">Red recurrente</h3>
+                </div>
+                <i class="box-icon" data-icon="cube"></i>
+              </header>
+              <div
+                class="mini-stage stage-grid"
+                id="preview-stage"
+                aria-label="Vista esquemática de la red en producción"
+              ></div>
+              <div class="model-caption">
+                <span class="status-dot"></span><span id="mini-spec"></span>
+              </div>
+              <a class="panel-link" href="#redes"
+                >Explorar arquitectura <i data-icon="arrow"></i
+              ></a>
+            </article>
+          </div>
+          <section class="analysis panel">
+            <div class="eyebrow">INTERPRETACIÓN</div>
+            <h3>Lectura de la previsión</h3>
+            <p id="summary"></p>
+            <details>
+              <summary>Fiabilidad y factores de riesgo</summary>
+              <p id="reliability"></p>
+              <ul id="risks"></ul>
+            </details>
+            <details>
+              <summary>Comparar los tres horizontes</summary>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Horizonte</th>
+                      <th>Fecha estimada</th>
+                      <th>Previsión ($)</th>
+                      <th>Variación</th>
+                      <th>Intervalo 80 % ($)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="forecast-list"></tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+        </div>
+      </section>
+      <section id="redes" class="page shell inner" hidden>
+        <div class="kicker">
+          <span class="rule"></span> LABORATORIO DE MODELOS
+        </div>
+        <h1>Arquitecturas <em>recurrentes.</em></h1>
+        <p class="intro">
+          Recorre la señal de una observación a la siguiente en tres tipos de
+          célula.
+        </p>
+        <div class="heading-row">
+          <div class="tabs" id="architectures" aria-label="Arquitectura"></div>
+          <div
+            class="horizon horizon-control"
+            aria-label="Horizonte de la configuración"
+          ></div>
+        </div>
+        <div class="lab-grid">
+          <article class="panel lab-panel">
+            <header class="panel-head">
+              <div>
+                <div class="eyebrow">SIMULACIÓN 3D</div>
+                <h3 id="lab-name"></h3>
+              </div>
+              <div class="scene-tools">
+                <button
+                  id="pause"
+                  class="icon-button"
+                  aria-label="Pausar simulación"
+                >
+                  <i data-icon="pause"></i></button
+                ><button
+                  id="reset"
+                  class="icon-button"
+                  aria-label="Restablecer cámara"
+                >
+                  <i data-icon="reset"></i>
+                </button>
+              </div>
+            </header>
+            <div
+              id="lab-stage"
+              class="stage-grid"
+              tabindex="0"
+              aria-label="Esquema interactivo 3D de la célula. Usa las flechas para girar."
+            ></div>
+            <div class="stage-footer">
+              <span id="scene-help"
+                >Arrastra para girar · rueda para acercar</span
+              ><span>t − 1 → t → t + 1</span>
+            </div>
+          </article>
+          <article class="panel lab-note">
+            <div class="eyebrow">ANATOMÍA DE LA CÉLULA</div>
+            <h3 id="cell-title"></h3>
+            <p id="cell-copy"></p>
+            <dl id="gate-list"></dl>
+          </article>
+        </div>
+        <div class="panel arch-details">
+          <div>
+            <div class="eyebrow">CONFIGURACIÓN ENTRENADA</div>
+            <h3 id="arch-head"></h3>
+          </div>
+          <dl id="arch-stats"></dl>
+          <p>
+            El esquema muestra tres pasos de tiempo con unidades
+            representativas. Los puntos animados ilustran el flujo de
+            información.
+          </p>
+        </div>
+      </section>
+      <section id="validacion" class="page shell inner" hidden>
+        <div class="kicker">
+          <span class="rule"></span> EVALUACIÓN FUERA DE MUESTRA
+        </div>
+        <h1>Validación de <em>modelos.</em></h1>
+        <p class="intro">
+          Contrasta las tres redes con mantener el último precio conocido del
+          Brent.
+        </p>
+        <div class="heading-row">
+          <div class="section-title">
+            <span class="signal"></span>
+            <h2>Comparativa en test</h2>
+          </div>
+          <div
+            class="horizon horizon-control"
+            aria-label="Horizonte de validación"
+          ></div>
+        </div>
+        <div class="panel table-scroll">
+          <table>
+            <caption class="sr">
+              Métricas de las tres redes y de la referencia ingenua
+            </caption>
+            <thead id="table-head"></thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+        <p class="footnote">
+          MAE y RMSE en USD/barril. MSE en (USD/barril)². El R² compara el error
+          cuadrático con el de usar el precio medio observado en el test y puede
+          ser negativo.
+        </p>
+        <article class="panel">
+          <header class="panel-head">
+            <div>
+              <div class="eyebrow">PRUEBA CRONOLÓGICA</div>
+              <h3>Precio real frente a predicción</h3>
+            </div>
+            <select
+              id="validation-net"
+              aria-label="Modelo de la gráfica"
+            ></select>
+          </header>
+          <div class="chart-key">
+            <span><b class="key mint-bg"></b>Real</span
+            ><span><b class="key amber-bg"></b>Modelo</span
+            ><span><b class="key gray-bg"></b>Ingenuo</span>
+          </div>
+          <div class="chart-box">
+            <canvas
+              id="validation-chart"
+              role="img"
+              aria-label="Predicción frente al precio real en las fechas objetivo"
+            ></canvas>
+          </div>
+          <p id="val-status" role="status" class="footnote"></p>
+        </article>
+        <section class="panel analysis">
+          <div class="eyebrow">SELECCIÓN Y ESTABILIDAD</div>
+          <h3>Resultados por año</h3>
+          <div id="years" class="year-grid"></div>
+          <p id="selection"></p>
+          <details>
+            <summary>Cómo se hizo la prueba</summary>
+            <p id="method"></p>
+          </details>
+          <a href="/comparativa.md" download class="text-link"
+            >Descargar informe comparativo <i data-icon="download"></i
+          ></a>
+        </section>
+      </section>
+      <section id="ciclos" class="page shell inner" hidden>
+        <div class="kicker"><span class="rule"></span> ARCHIVO DEL MERCADO</div>
+        <h1>Ciclo <em>histórico.</em></h1>
+        <p class="intro">
+          Los giros del Brent desde 2000, situados en la fecha de su máximo o
+          mínimo observado.
+        </p>
+        <article class="panel">
+          <header class="panel-head">
+            <div>
+              <div class="eyebrow">BRENT SPOT · USD/BARRIL</div>
+              <h3>Picos y caídas</h3>
+            </div>
+            <label class="check"
+              ><input type="checkbox" id="auto-events" /> Giros
+              automáticos</label
+            >
+          </header>
+          <div class="chart-box tall">
+            <canvas
+              id="cycle-chart"
+              role="img"
+              aria-label="Histórico del Brent con picos y caídas"
+            ></canvas>
+          </div>
+        </article>
+        <div class="heading-row"><h2>Episodios del mercado</h2></div>
+        <div id="episodes" class="episodes"></div>
+      </section>
+      <div id="notice" role="status" class="notice" hidden></div>
+    </main>
+    <footer class="site-footer">
+      <span>Estrato <span class="slash">/</span> Observatorio del Brent</span
+      ><span>Fuentes · EIA vía FRED y Yahoo Finance</span>
+    </footer>
+    <dialog id="data-dialog">
+      <div class="dialog-head">
+        <div>
+          <div class="eyebrow">OPERACIONES</div>
+          <h2>Datos y modelo</h2>
+        </div>
+        <button id="close-data" class="icon-button" aria-label="Cerrar">
+          <i data-icon="close"></i>
+        </button>
+      </div>
+      <div class="op-section">
+        <h3>Actualizar observaciones</h3>
+        <p id="data-info"></p>
+        <button class="primary" id="refresh">
+          <i data-icon="download"></i> Descargar datos recientes
+        </button>
+      </div>
+      <div class="op-section">
+        <h3>Reentrenar el modelo</h3>
+        <p id="model-info"></p>
+        <label for="mode">Semillas de entrenamiento</label
+        ><select id="mode">
+          <option value="fast">Rápido · 1 semilla</option>
+          <option value="full">Completo · 5 semillas</option></select
+        ><button class="secondary" id="retrain">Iniciar reentrenamiento</button>
+      </div>
+      <p id="job-info" role="status"></p>
+      <progress id="job-progress" max="1" hidden></progress>
+    </dialog>
+    <noscript
+      >Activa JavaScript para explorar las previsiones y las redes 3D.</noscript
+    >
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
