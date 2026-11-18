@@ -1,0 +1,23 @@
+{
+  "emitida_en": "2026-11-17T23:54:54+01:00",
+  "fecha_del_ultimo_precio_publicado": "2026-11-11",
+  "horizonte_sesiones_brent": 63,
+  "fecha_objetivo_estimada": "2027-02-11",
+  "regla_de_evaluacion": "Precio Brent spot EIA/FRED en la 63.ª observación posterior al origen. Comparar el error absoluto en USD/barril de las cuatro previsiones. Una observación por sí sola no mide el MAE de un modelo.",
+  "precios_usd_barril": {
+    "ingenuo": 92.14,
+    "rnn_publicada": 91.81984000205993,
+    "rnn_menos_diez_por_ciento": 82.63785600185395,
+    "rnn_ajuste_aprendido_antes_de_2022": 91.6486112167561
+  },
+  "factor_porcentual_aprendido": 0.9981351657190864,
+  "intervalo_80_rnn": [
+    62.84051077723503,
+    126.31218094110488
+  ],
+  "huella_modelos_sha256": {
+    "metadata.json": "d026bb66d481b869671fdc23a17afe21449abc3e7d5a94930ba85efc2702915d",
+    "h63.pt": "13a6157e68ebb791887f807db53c4b1710dc433a1b65189cc12abd109ba0c795"
+  },
+  "huella_datos_procesados_sha256": "177355e796d83c3384059068e82d7a60bedb3b3fa2f6ff965de15838ca3e48a4"
+}
