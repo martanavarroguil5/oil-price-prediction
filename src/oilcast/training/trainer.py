@@ -122,9 +122,10 @@ def fit(
     on_epoch: Callable[[int, int], None] | None = None,
     model_factory: Callable[[str, int, HParams, int], nn.Module] = build_model,
     objective: Callable = quantile_objective,
+    validation_score: Callable[[nn.Module, PreparedData, np.ndarray], float] | None = None,
 ) -> FitResult:
-    """Train one network. With ``val_idx`` it early-stops on validation pinball loss and
-    restores the best epoch; without it, it trains exactly ``epochs`` epochs."""
+    """Restore the best validation epoch (pinball by default), or train for a fixed number
+    of epochs when no validation set is supplied."""
     tcfg = cfg["training"]
     device = data.device
     quantiles = cfg["targets"]["quantiles"]
@@ -154,7 +155,12 @@ def fit(
             on_epoch(epoch, epochs)
         if va is None:
             continue
-        v = _loss_on(model, data, va, q, tcfg["eval_batch_size"], objective)
+        if validation_score is None:
+            v = _loss_on(model, data, va, q, tcfg["eval_batch_size"], objective)
+        else:
+            model.eval()
+            with torch.no_grad():
+                v = validation_score(model, data, val_idx)
         if best_val is None or v < best_val - 1e-6:
             best_val, best_epoch = v, epoch
             best_state = copy.deepcopy(model.state_dict())
