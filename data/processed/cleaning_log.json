@@ -1,0 +1,78 @@
+{
+  "rows": 6501,
+  "first_date": "2000-01-04",
+  "last_date": "2026-11-03",
+  "non_positive_or_zero_volume": {
+    "wti": [
+      [
+        "2020-04-20",
+        -36.98
+      ]
+    ],
+    "wti_fut_open": [
+      [
+        "2020-04-21",
+        -14.0
+      ]
+    ],
+    "wti_fut_low": [
+      [
+        "2020-04-20",
+        -40.31999969482422
+      ],
+      [
+        "2020-04-21",
+        -16.739999771118164
+      ]
+    ],
+    "wti_fut_close": [
+      [
+        "2020-04-20",
+        -37.630001068115234
+      ]
+    ],
+    "brent_fut_volume": [
+      "14 días con volumen 0 -> NaN"
+    ],
+    "wti_fut_volume": [
+      "13 días con volumen 0 -> NaN"
+    ]
+  },
+  "first_valid": {
+    "brent": "2000-01-04",
+    "wti": "2000-01-04",
+    "gas": "2000-01-10",
+    "ecb_rate": "2000-01-04",
+    "usd_per_eur": "2000-01-04",
+    "cny_per_usd": "2000-01-04",
+    "vix": "2000-01-04",
+    "brent_fut_open": "2007-07-30",
+    "brent_fut_high": "2007-07-30",
+    "brent_fut_low": "2007-07-30",
+    "brent_fut_close": "2007-07-30",
+    "brent_fut_volume": "2007-07-30",
+    "wti_fut_open": "2000-08-23",
+    "wti_fut_high": "2000-08-23",
+    "wti_fut_low": "2000-08-23",
+    "wti_fut_close": "2000-08-23",
+    "wti_fut_volume": "2000-08-23",
+    "copper": "2000-08-30",
+    "gold": "2000-08-30",
+    "dxy": "2000-01-04"
+  },
+  "missing_before_first_valid": {
+    "gas": 4,
+    "brent_fut_open": 1629,
+    "brent_fut_high": 1629,
+    "brent_fut_low": 1629,
+    "brent_fut_close": 1629,
+    "brent_fut_volume": 1629,
+    "wti_fut_open": 133,
+    "wti_fut_high": 133,
+    "wti_fut_low": 133,
+    "wti_fut_close": 133,
+    "wti_fut_volume": 133,
+    "copper": 137,
+    "gold": 137
+  }
+}
