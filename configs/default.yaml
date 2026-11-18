@@ -79,8 +79,7 @@ training:
   num_threads: 2                 # hilos CPU por proceso (se lanzan varios en paralelo)
 
 tuning:
-  # Configuración adoptada tras los experimentos (docs/experimento-ampliado.md y
-  # docs/experimento-ronda2.md): 80 trials y espacio ampliado, igual para las tres redes.
+  # Presupuesto común documentado en docs/experimento-ronda2.md.
   n_trials: 80                   # mismo presupuesto para las tres arquitecturas
   startup_trials: 15             # trials aleatorios de TPE antes de modelar
   pruner_startup_trials: 10

@@ -5,7 +5,7 @@
 
 ## Punto de partida
 
-La ronda 1 (`docs/experimento-ampliado.md`) adoptó V1 (búsqueda de hiperparámetros ampliada).
+La primera ronda adoptó V1 (búsqueda de hiperparámetros ampliada).
 Analizando sus predicciones **anteriores a 2022** (reentrenos de 2014, 2016, 2018 y 2020, con
 objetivos ya conocidos antes de 2022) se encontraron dos defectos:
 
@@ -60,7 +60,7 @@ diagnostican y la decisión se toma con datos anteriores a 2022.
 ## Resultados (17/11/2026)
 
 Ejecutado en la GPU el 16/11/2026 (W1: 40 min; W2: 52 min). W0 se calculó en local sobre las
-predicciones de V1. Informe completo generado: `reports/results/experiments/ronda2.md`.
+predicciones de V1. La tabla recoge el resultado de cada variante, red y horizonte. [Resultados de la ronda](../reports/experiments/seleccion.csv)
 
 ### Decisión según la regla
 
@@ -102,4 +102,4 @@ los p-valores del test de Diebold-Mariano > 0,1).
 
 ### Modelo integrado
 
-La aplicación utiliza la RNN simple W1 seleccionada en esta ronda para los tres plazos. Los pesos por horizonte, los tiempos de entrenamiento y las métricas están publicados. La repetición posterior de W0 confirmó la elección en desarrollo y permitió comparar qué redes fueron más precisas en cada año posterior. [Pesos y metadatos](../models/) · [Comparativa de la aplicación](../reports/comparativa.md) · [Repetición de W0](../reports/results/experiments/w0_familias/resultado.md)
+La aplicación utiliza la RNN simple W1 seleccionada en esta ronda para los tres plazos. Los pesos por horizonte, los tiempos de entrenamiento y las métricas están publicados. La repetición posterior de W0 confirmó la elección en desarrollo y permitió comparar qué redes fueron más precisas en cada año posterior. [Pesos y metadatos](../models/) · [Comparativa de la aplicación](../reports/comparativa.md) · [Repetición de W0](../reports/experiments/w0/resultado.md)

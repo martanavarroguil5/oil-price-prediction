@@ -1,0 +1,17 @@
+# Reproducción de W0 con los nueve ajustes de hiperparámetros publicados.
+base: default.yaml
+
+paths:
+  results_dir: reports/experiments/w0
+  models_dir: reports/experiments/w0/models
+  figures_dir: reports/experiments/w0/figures
+
+targets:
+  remove_drift: false
+
+evaluation:
+  recalibrate_center: true
+
+selection:
+  arch: null
+  rule: null

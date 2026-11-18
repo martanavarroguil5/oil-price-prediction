@@ -1,6 +1,6 @@
 # Una familia para el Brent a 5, 63 y 252 sesiones
 
-La regla temporal elige la **RNN W1 de la app** como modelo único. Entre las tres W0 elige la **LSTM W0**. Cada familia utiliza un ajuste por horizonte. [Protocolo previo](../../../../docs/repeticion-w0-familias.md) · [Selección](selection.json)
+La regla temporal elige la **RNN W1 de la app** como modelo único. Entre las tres W0 elige la **LSTM W0**. Cada familia utiliza un ajuste por horizonte. [Protocolo previo](../../../docs/experimento-ronda2.md) · [Selección](decision.json)
 
 ## Elección con objetivos conocidos antes de 2022
 
@@ -59,7 +59,7 @@ El último precio objetivo es el del 3 de noviembre de 2026. Las últimas emisio
 
 ### Precisión y coste por familia y plazo
 
-Los tiempos de W0 son la mediana de cinco entrenamientos individuales en el corte de enero de 2022. Para la app se cita el tiempo publicado sobre el mismo corte. Cada predicción neuronal promedia cinco redes. Los parámetros corresponden a un miembro. El CSV de test incluye el MSE y los contrastes de Diebold–Mariano sobre el error absoluto frente al ingenuo y la app, con corrección por solapamiento de h − 1 retardos. [Tiempos de cada ajuste](fits.csv) · [Métricas y contrastes](test.csv)
+Los tiempos de W0 son la mediana de cinco entrenamientos individuales en el corte de enero de 2022. Para la app se cita el tiempo publicado sobre el mismo corte. Cada predicción neuronal promedia cinco redes. Los parámetros corresponden a un miembro. El CSV de test incluye el MSE y los contrastes de Diebold–Mariano sobre el error absoluto frente al ingenuo y la app, con corrección por solapamiento de h − 1 retardos. [Métricas y contrastes](test.csv)
 
 | Sesiones | Familia | MAE | RMSE | R² | Mejora MAE | Parámetros | Segundos |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -81,12 +81,14 @@ Los tiempos de W0 son la mediana de cinco entrenamientos individuales en el cort
 
 ## Reproducción
 
-En la GPU se completaron 390 entrenamientos en 206 segundos, reutilizando los 80 ensayos de búsqueda originales por combinación. Cada familia recibió 45 ajustes a 5 sesiones, 45 a 63 y 40 a 252. Se verificaron los nueve historiales de Optuna, los mismos orígenes y vencimientos, y cada precio observado contra la serie del Brent. La mayor diferencia absoluta entre cualquier pronóstico reproducido y el archivado fue 0,000076 USD por barril. [Dispositivo, hiperparámetros y presupuesto](run.json) · [Diferencias de reproducción](reproduction.csv)
+Se completaron 390 entrenamientos, con cinco semillas por fecha de corte y 80 ensayos previos por combinación. Cada familia recibió 45 ajustes a 5 sesiones, 45 a 63 y 40 a 252. Todas se evaluaron en los mismos orígenes y vencimientos para cada plazo. Los nueve ajustes publicados recogen la arquitectura, épocas y puntuaciones por bloque temporal. [Hiperparámetros](tuning/) · [Configuración W0](../../../configs/w0.yaml)
 
-Desde la raíz del repositorio, el primer comando se ejecuta en la GPU. Los otros dos usan sus archivos de resultados y las referencias publicadas.
+Desde la raíz, la evaluación vuelve a entrenar las redes con esos parámetros y calcula las métricas a partir de las predicciones:
 
 ```sh
-OILCAST_DEVICE=cuda python -m scripts.repeat_w0_families
-python -m scripts.compare_w0_families select
-python -m scripts.compare_w0_families test
+make evaluate CONFIG=configs/w0.yaml
+make timing CONFIG=configs/w0.yaml
+make summarize CONFIG=configs/w0.yaml
 ```
+
+La elección de la familia para la entrega se basa en la mejora media anterior a 2022, registrada en [la decisión del experimento](decision.json).
