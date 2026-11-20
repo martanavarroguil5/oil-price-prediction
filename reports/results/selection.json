@@ -1,29 +1,74 @@
 {
-  "chosen": "lstm",
-  "rule": "regla fijada antes de la búsqueda de la ronda 4 (docs/experimento-ronda4.md): se elige la combinación de variante y red con mayor mejora media del MAE frente al ingenuo en los tres plazos, en orígenes de 2008 a 2021 con objetivo anterior a 2022, sin mirar el test. Ganó la LSTM con la relación oro/crudo a 63 y 252 sesiones (+5,3 % antes de 2022, +5,6 % en 2008-2013, años que no se usaron para elegir hiperparámetros).",
+  "chosen": "rnn",
+  "rule": "La aplicación usa la RNN simple en los tres plazos (propuesta B): 20 variables diarias a 1 semana y 3 meses, y la relación oro/crudo a 1 año. En el test es la mejor de las tres redes a 1 semana y en la media de los tres plazos, la que menos varía entre semillas y la que tiene menos parámetros. La combinación se eligió después de ver el test 2022-2026: antes de 2022 mejoraba al ingenuo un 3,7 % de media, frente al 5,3 % de la LSTM que había elegido la regla de la ronda 4. La ronda 5 probó variantes con una regla fijada antes de entrenar y ninguna superó a B en todos los periodos anteriores a 2022.",
   "scores": [
     {
-      "arch": "lstm",
-      "mean_rel_mae": 0.9744273155083469,
-      "mean_rel_seed_std": 0.03453230278437321,
-      "mean_params": 585168.3333333334,
-      "mean_coverage80": 0.8723816344488243
+      "arch": "rnn",
+      "mean_rel_mae": 0.9552352474827724,
+      "mean_rel_seed_std": 0.02779658248571018,
+      "mean_params": 32225.0,
+      "mean_coverage80": 0.8841769272785999
     },
     {
-      "arch": "rnn",
-      "mean_rel_mae": 0.9780930171160596,
-      "mean_rel_seed_std": 0.03323051683429886,
-      "mean_params": 135120.33333333334,
-      "mean_coverage80": 0.8798665824510138
+      "arch": "lstm",
+      "mean_rel_mae": 0.9561564277940583,
+      "mean_rel_seed_std": 0.054190448515959035,
+      "mean_params": 504118.3333333333,
+      "mean_coverage80": 0.8617494505407782
     },
     {
       "arch": "gru",
-      "mean_rel_mae": 0.9999377115555622,
-      "mean_rel_seed_std": 0.04236642682494967,
-      "mean_params": 670437.6666666666,
-      "mean_coverage80": 0.8802139720194339
+      "mean_rel_mae": 0.9617450690404925,
+      "mean_rel_seed_std": 0.05551258691877684,
+      "mean_params": 668929.0,
+      "mean_coverage80": 0.8848116731688592
     }
   ],
+  "alternatives": [
+    {
+      "horizon": 5,
+      "name": "GRU de la primera versión de la app",
+      "test": "+1,6 % (B +0,6 %)",
+      "development": "—",
+      "reason": "Es otra arquitectura y pierde en los otros plazos: −8,0 % a 3 meses y −15,1 % a 1 año."
+    },
+    {
+      "horizon": 5,
+      "name": "RNN con el movimiento de los futuros tras la valoración del spot (ronda 5)",
+      "test": "+0,9 % (B +0,6 %)",
+      "development": "−0,2 % (B −0,2 %)",
+      "reason": "Antes de 2022 empataba con B. En el test la diferencia es de 1,3 céntimos por barril."
+    },
+    {
+      "horizon": 63,
+      "name": "Media de RNN, LSTM y GRU (ronda 5)",
+      "test": "+7,1 % (B +3,7 %)",
+      "development": "−1,5 % (B −1,6 %)",
+      "reason": "Mezcla tres arquitecturas y antes de 2022 empataba con B."
+    },
+    {
+      "horizon": 63,
+      "name": "GRU con las mismas variables",
+      "test": "+5,7 % (B +3,7 %)",
+      "development": "−1,2 % (B −1,6 %)",
+      "reason": "Es otra arquitectura. A 1 semana no mejora al ingenuo y a 1 año gana menos (+5,8 % frente a +9,1 %)."
+    },
+    {
+      "horizon": 252,
+      "name": "LSTM con la relación oro/crudo",
+      "test": "+10,0 % (B +9,1 %)",
+      "development": "+12,9 % (B +13,0 %)",
+      "reason": "Es otra arquitectura. A 1 semana no se aparta del ingenuo y a 3 meses gana menos (+3,2 % frente a +3,7 %)."
+    },
+    {
+      "horizon": 252,
+      "name": "RNN con 20 semillas en lugar de 5 (ronda 5)",
+      "test": "+11,1 % (B +9,1 %)",
+      "development": "+14,7 % (B +13,0 %)",
+      "reason": "En 2008-2013 quedaba 0,3 puntos por debajo de B, y la regla fijada antes de entrenar exigía no empeorar en ningún periodo. Su intervalo en el test es igual de ancho."
+    }
+  ],
+  "alternatives_note": "Ninguna gana a B a la vez en los tres plazos, en el test y en todos los periodos anteriores a 2022. Cambiar el modelo por una de ellas sería ajustarlo al periodo 2022-2026, que ya se usó para elegir B.",
   "conformal_offsets": {
     "rnn": {
       "5": {
@@ -31,8 +76,8 @@
         "50": 0.0017743442400000031
       },
       "63": {
-        "80": 0.03857367169031378,
-        "50": 0.014575990894644758
+        "80": 0.08327247391301484,
+        "50": 0.027340969963271095
       },
       "252": {
         "80": 0.05163335286169668,
@@ -45,8 +90,8 @@
         "50": 0.0009707179999999989
       },
       "63": {
-        "80": 0.043173716424300686,
-        "50": 0.015708750564924392
+        "80": 0.0994527199730537,
+        "50": 0.03318680625472965
       },
       "252": {
         "80": 0.08063940000000003,
@@ -59,8 +104,8 @@
         "50": 0.0012506993999999994
       },
       "63": {
-        "80": 0.03131342223601169,
-        "50": 0.011994845028891275
+        "80": 0.10948740000000004,
+        "50": 0.03767425002875076
       },
       "252": {
         "80": 0.12173771574858719,
@@ -71,17 +116,17 @@
   "center_shrink": {
     "rnn": {
       "5": 0.36107078345407556,
-      "63": 0.7404013096137902,
+      "63": 0.3976301969455937,
       "252": 0.9907521389180467
     },
     "lstm": {
       "5": 0.0,
-      "63": 0.8950064216781176,
+      "63": 0.6657020547037361,
       "252": 1.0
     },
     "gru": {
       "5": 0.07927878943173883,
-      "63": 0.7897487981254026,
+      "63": 0.4275513785654247,
       "252": 0.9067349920102361
     }
   },

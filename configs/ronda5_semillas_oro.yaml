@@ -1,0 +1,13 @@
+# Ronda 5: redes oro/crudo de la ronda 4 a 252 sesiones con 20 semillas (mismos hiperparámetros).
+base: ronda4.yaml
+
+paths:
+  results_dir: reports/experiments/ronda5/oro_20
+  models_dir: reports/experiments/ronda5/oro_20/models
+  figures_dir: reports/experiments/ronda5/oro_20/figures
+
+targets:
+  horizons: [252]
+
+evaluation:
+  seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]

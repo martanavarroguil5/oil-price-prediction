@@ -1,7 +1,7 @@
 {
-  "arch": "lstm",
-  "arch_label": "LSTM",
-  "trained_at": "2026-11-20T00:02:58+00:00",
+  "arch": "rnn",
+  "arch_label": "RNN simple",
+  "trained_at": "2026-11-20T10:03:04+00:00",
   "last_data_date": "2026-11-03",
   "device": "GPU",
   "seeds": [
@@ -79,17 +79,36 @@
         "dev_ma252",
         "mom_252"
       ],
-      "train_seconds": 18.711916290980298,
-      "n_params": 1339143
+      "train_seconds": 122.61011687404243,
+      "n_params": 5959
     },
     "63": {
-      "n_train": 5991,
+      "n_train": 6127,
       "last_train_origin": "2026-08-05",
       "feature_names": [
-        "oro_crudo"
+        "r_brent",
+        "r_wti",
+        "r_gas",
+        "r_gold",
+        "r_copper",
+        "r_dxy",
+        "r_eurusd",
+        "r_cny",
+        "log_vix",
+        "ecb_rate",
+        "d_ecb_rate",
+        "spread_brent_wti",
+        "wti_basis",
+        "wti_fut_range",
+        "wti_fut_volume",
+        "rv_21",
+        "rv_63",
+        "dev_ma63",
+        "dev_ma252",
+        "mom_252"
       ],
-      "train_seconds": 31.138550625997595,
-      "n_params": 332181
+      "train_seconds": 50.409412706969306,
+      "n_params": 22599
     },
     "252": {
       "n_train": 5802,
@@ -97,42 +116,42 @@
       "feature_names": [
         "oro_crudo"
       ],
-      "train_seconds": 48.27946833393071,
-      "n_params": 84181
+      "train_seconds": 39.05766779300757,
+      "n_params": 68117
     }
   },
   "spec": {
-    "arch": "lstm",
-    "arch_label": "LSTM",
-    "selection_rule": "regla fijada antes de la búsqueda de la ronda 4 (docs/experimento-ronda4.md): se elige la combinación de variante y red con mayor mejora media del MAE frente al ingenuo en los tres plazos, en orígenes de 2008 a 2021 con objetivo anterior a 2022, sin mirar el test. Ganó la LSTM con la relación oro/crudo a 63 y 252 sesiones (+5,3 % antes de 2022, +5,6 % en 2008-2013, años que no se usaron para elegir hiperparámetros).",
+    "arch": "rnn",
+    "arch_label": "RNN simple",
+    "selection_rule": "La aplicación usa la RNN simple en los tres plazos (propuesta B): 20 variables diarias a 1 semana y 3 meses, y la relación oro/crudo a 1 año. En el test es la mejor de las tres redes a 1 semana y en la media de los tres plazos, la que menos varía entre semillas y la que tiene menos parámetros. La combinación se eligió después de ver el test 2022-2026: antes de 2022 mejoraba al ingenuo un 3,7 % de media, frente al 5,3 % de la LSTM que había elegido la regla de la ronda 4. La ronda 5 probó variantes con una regla fijada antes de entrenar y ninguna superó a B en todos los periodos anteriores a 2022.",
     "remove_drift": true,
     "horizons": {
       "5": {
         "hparams": {
-          "hidden_size": 256,
-          "num_layers": 3,
-          "dropout": 0.08587632913132398,
-          "lr": 0.0008910832427946525,
-          "weight_decay": 0.0005344715414645993,
+          "hidden_size": 64,
+          "num_layers": 1,
+          "dropout": 0.49782136436451363,
+          "lr": 0.0006227107978966564,
+          "weight_decay": 1.1455703553767643e-05,
           "batch_size": 128
         },
-        "epochs": 3,
+        "epochs": 25,
         "conformal_offsets": {
-          "80": 0.0026875862014534013,
-          "50": 0.0009707179999999989
+          "80": 0.004863336199999992,
+          "50": 0.0017743442400000031
         },
-        "center_shrink": 0.0,
+        "center_shrink": 0.36107078345407556,
         "test_metrics": {
-          "mae": 3.986748994538197,
-          "mse": 32.92887552456827,
-          "r2": 0.8747015015067305,
-          "rmse": 5.7383687163311725,
-          "skill_mae": 0.0,
-          "skill_rmse": 0.0,
-          "dm_pvalue": NaN,
-          "dir_acc": NaN,
-          "coverage80": 0.7471264367816092,
-          "width80": 10.543318175053084,
+          "mae": 3.9620490909785095,
+          "mse": 32.613250063440674,
+          "r2": 0.8759024959450625,
+          "rmse": 5.710801175267852,
+          "skill_mae": 0.006195500041142776,
+          "skill_rmse": 0.0048040727994463905,
+          "dm_pvalue": 0.1482314386912312,
+          "dir_acc": 0.5328407224958949,
+          "coverage80": 0.7807881773399015,
+          "width80": 10.800015176056387,
           "n_test": 1218,
           "first_origin": "2022-01-03",
           "last_origin": "2026-10-27"
@@ -146,39 +165,39 @@
           "width80": 10.606018532113863
         },
         "skill_by_year": {
-          "2022": 0.0,
-          "2023": 0.0,
-          "2024": 0.0,
-          "2025": 0.0,
-          "2026": 0.0
+          "2022": 0.01002545313399883,
+          "2023": 0.004173801533534194,
+          "2024": 0.01515552980445134,
+          "2025": 0.006828083202403912,
+          "2026": 0.00013710250183418538
         }
       },
       "63": {
         "hparams": {
-          "hidden_size": 128,
+          "hidden_size": 64,
           "num_layers": 3,
-          "dropout": 0.4836727266952246,
-          "lr": 0.0011394387213848002,
-          "weight_decay": 1.1037125602819762e-05,
+          "dropout": 0.4191738204187788,
+          "lr": 0.002079107745490913,
+          "weight_decay": 4.615919003644809e-05,
           "batch_size": 256
         },
-        "epochs": 14,
+        "epochs": 7,
         "conformal_offsets": {
-          "80": 0.043173716424300686,
-          "50": 0.015708750564924392
+          "80": 0.08327247391301484,
+          "50": 0.027340969963271095
         },
-        "center_shrink": 0.8950064216781176,
+        "center_shrink": 0.3976301969455937,
         "test_metrics": {
-          "mae": 12.220715600221508,
-          "mse": 265.4142883972003,
-          "r2": -0.05318631312952471,
-          "rmse": 16.291540393627617,
-          "skill_mae": -0.023170651501057682,
-          "skill_rmse": 0.06571709829634609,
-          "dm_pvalue": 0.4561052926135366,
-          "dir_acc": 0.525,
-          "coverage80": 0.8741379310344828,
-          "width80": 43.13417510662465,
+          "mae": 11.498806029006891,
+          "mse": 293.6007803648178,
+          "r2": -0.16503269387525377,
+          "rmse": 17.134782763864205,
+          "skill_mae": 0.03727070974714297,
+          "skill_rmse": 0.017359060353398625,
+          "dm_pvalue": 0.10511087545852751,
+          "dir_acc": 0.5922413793103448,
+          "coverage80": 0.8758620689655172,
+          "width80": 49.05013685739995,
           "n_test": 1160,
           "first_origin": "2022-01-03",
           "last_origin": "2026-08-05"
@@ -188,51 +207,43 @@
           "rmse": 17.43748011987496,
           "mse": 304.06571293103445,
           "r2": -0.20655852849752043,
-          "coverage80": 0.8405172413793104,
-          "width80": 37.60345977788993
+          "coverage80": 0.8448275862068966,
+          "width80": 38.452217535998905
         },
         "skill_by_year": {
-          "2022": 0.09073059177217713,
-          "2023": 0.041238929734939256,
-          "2024": -0.23687918566534427,
-          "2025": -0.41894663503154295,
-          "2026": 0.11090711791704055
-        },
-        "features": {
-          "valuation": true,
-          "valuation_window": 756,
-          "only": [
-            "oro_crudo"
-          ]
-        },
-        "highway": true
+          "2022": 0.08129525404230586,
+          "2023": 0.03030348529607496,
+          "2024": 0.0912486350547067,
+          "2025": -0.008623175951101514,
+          "2026": 0.01911475176148114
+        }
       },
       "252": {
         "hparams": {
-          "hidden_size": 64,
-          "num_layers": 3,
-          "dropout": 0.10952616700114112,
-          "lr": 0.0025619912673610678,
-          "weight_decay": 0.0033248609714088655,
+          "hidden_size": 256,
+          "num_layers": 1,
+          "dropout": 0.3817183636074951,
+          "lr": 0.0017340128085122242,
+          "weight_decay": 0.0005442127979816405,
           "batch_size": 128
         },
-        "epochs": 22,
+        "epochs": 9,
         "conformal_offsets": {
-          "80": 0.08063940000000003,
-          "50": 0.037146400000000024
+          "80": 0.05163335286169668,
+          "50": 0.034865458696346524
         },
-        "center_shrink": 1.0,
+        "center_shrink": 0.9907521389180467,
         "test_metrics": {
-          "mae": 14.853532955656316,
-          "mse": 319.0048053999755,
-          "r2": -0.5504059085819548,
-          "rmse": 17.860705624358058,
-          "skill_mae": 0.09988870497601732,
-          "skill_rmse": 0.20715013576197883,
-          "dm_pvalue": 0.39569050618165214,
-          "dir_acc": 0.5355303810504635,
+          "mae": 15.003050877775022,
+          "mse": 318.4213638647663,
+          "r2": -0.5475703048913889,
+          "rmse": 17.844365045155467,
+          "skill_mae": 0.09082804776339681,
+          "skill_rmse": 0.20787550609587402,
+          "dm_pvalue": 0.4133808748129001,
+          "dir_acc": 0.5695159629248198,
           "coverage80": 0.995880535530381,
-          "width80": 89.94926500852846,
+          "width80": 88.37983737751598,
           "n_test": 971,
           "first_origin": "2022-01-03",
           "last_origin": "2025-11-04"
@@ -246,10 +257,10 @@
           "width80": 90.14634165239944
         },
         "skill_by_year": {
-          "2022": 0.42425518735792733,
-          "2023": -0.19662167008236153,
-          "2024": -0.9688893601018229,
-          "2025": 0.4294124423529254
+          "2022": 0.45097676450029334,
+          "2023": -0.10464143425677852,
+          "2024": -1.2223776535745414,
+          "2025": 0.47434823871987
         },
         "features": {
           "valuation": true,

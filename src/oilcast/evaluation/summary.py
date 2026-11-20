@@ -276,6 +276,9 @@ def summarize(cfg: Config, paths: Paths) -> dict:
     fixed = cfg.get("selection") or {}
     if fixed.get("arch") in archs:  # choice fixed beforehand (docs/experimento-ronda2.md)
         selection.update(chosen=fixed["arch"], rule=fixed["rule"])
+        if fixed.get("alternatives"):  # variantes que ganan a la elegida en algún plazo del test
+            selection["alternatives"] = fixed["alternatives"]
+            selection["alternatives_note"] = fixed.get("alternatives_note", "")
     selection["conformal_offsets"] = offsets
     selection["center_shrink"] = shrink
     selection["offsets_asof"] = asof.date().isoformat()

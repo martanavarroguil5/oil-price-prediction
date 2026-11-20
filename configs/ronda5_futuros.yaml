@@ -1,0 +1,22 @@
+# Ronda 5 (docs/experimento-ronda5.md), 5 sesiones: las 20 variables de W1 más el movimiento
+# de los futuros después de la valoración del Brent spot (16:30 Londres; los futuros cierran a
+# las 19:30). Mismo espacio de búsqueda, 80 ensayos, pérdida pinball y bloques que W1.
+base: default.yaml
+
+paths:
+  results_dir: reports/experiments/ronda5/futuros
+  models_dir: reports/experiments/ronda5/futuros/models
+  figures_dir: reports/experiments/ronda5/futuros/figures
+
+horizon_overrides: null
+
+features:
+  futures_timing: true
+  optional: [late_bz1, late_bz2]   # BZ=F empieza en 2007: canal de disponibilidad
+
+targets:
+  horizons: [5]
+
+selection:
+  arch: null
+  rule: null

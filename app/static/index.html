@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#0d0c0b" />
     <title>Estrato · Observatorio del Brent</title>
-    <link rel="icon" href="/marca.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/styles.css" />
-    <link rel="stylesheet" href="/decisions.css" />
+    <link rel="icon" href="marca.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="decisions.css" />
   </head>
   <body>
     <a class="skip" href="#main">Ir al contenido</a>
     <header class="mast">
       <a class="brand" href="#observatorio" aria-label="Estrato, inicio"
-        ><img src="/marca.svg" width="22" height="22" alt="" />Estrato</a
+        ><img src="marca.svg" width="22" height="22" alt="" />Estrato</a
       >
       <nav aria-label="Secciones">
         <a href="#observatorio">Previsión</a><a href="#replay">Prueba histórica</a
@@ -324,8 +324,13 @@
           <h3>Resultados por año</h3>
           <div id="years" class="year-grid"></div>
           <p id="selection"></p>
+          <div id="alternatives" class="alternatives" hidden>
+            <h3>Alternativas que ganan a B en este plazo</h3>
+            <ul id="alternatives-list"></ul>
+            <p id="alternatives-note"></p>
+          </div>
           <details><summary>Cómo se hizo la prueba</summary><p id="method"></p></details>
-          <a href="/comparativa.md" download class="quiet-link">Descargar informe comparativo</a>
+          <a href="comparativa.md" download class="quiet-link">Descargar informe comparativo</a>
         </section>
       </section>
 
@@ -371,6 +376,6 @@
       <progress id="job-progress" max="1" hidden></progress>
     </dialog>
     <noscript>Activa JavaScript para explorar las previsiones y las escenas 3D.</noscript>
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="main.js"></script>
   </body>
 </html>

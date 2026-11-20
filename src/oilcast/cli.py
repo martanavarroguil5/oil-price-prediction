@@ -153,6 +153,16 @@ def serve(port: Annotated[int, typer.Option(min=1, max=65535)] = 8501) -> None:
     run(*_ctx(), port)
 
 
+@app.command("export-static")
+def export_static(
+    out: Annotated[Path, typer.Option("--out", help="Carpeta de salida")] = Path("site"),
+) -> None:
+    """Genera la versión estática de la web (GitHub Pages) en ``out``."""
+    from oilcast.static_site import export_static as run
+
+    typer.echo(run(*_ctx(), out))
+
+
 @app.command()
 def forecast() -> None:
     """Muestra la previsión actual para los tres horizontes."""
@@ -292,6 +302,25 @@ def ronda4_test() -> None:
 
     test4(*_ctx())
     typer.echo("reports/experiments/ronda4/test.csv")
+
+
+@app.command("ronda5-decide")
+def ronda5_decide() -> None:
+    """Ronda 5: puntúa las candidatas en desarrollo y guarda la decisión (sin test)."""
+    from oilcast.evaluation.ronda5 import decide5
+
+    d = decide5()
+    for h, c in d["choice"].items():
+        typer.echo(f"h={h}: merecen la pena {c['worth_it']} -> {c['chosen']}")
+
+
+@app.command("ronda5-test")
+def ronda5_test() -> None:
+    """Ronda 5: calcula una sola vez el test de todas las candidatas (tras ronda5-decide)."""
+    from oilcast.evaluation.ronda5 import test5
+
+    test5()
+    typer.echo("reports/experiments/ronda5/test.csv")
 
 
 @app.command("all")

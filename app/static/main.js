@@ -1,3 +1,4 @@
+import { get, isStatic } from "./api.js";
 import { renderMarketViews } from "./market-views.js";
 import { bindDecisions, renderDecisions, renderReturns, renderReplay, cancelReplay } from "./decisions.js";
 import {
@@ -63,17 +64,6 @@ function choices(box, options, selected, change) {
       return b;
     }),
   );
-}
-async function get(url, options) {
-  const res = await fetch(url, options);
-  if (!res.ok) {
-    let body;
-    try {
-      body = await res.json();
-    } catch {}
-    throw Error(body?.error || "La petición no se ha podido completar.");
-  }
-  return res.json();
 }
 let state,
   h = 63,
@@ -305,6 +295,21 @@ async function validationView() {
     names[validationNet] +
     " frente al ingenuo. " +
     state.rule;
+  const alts = (state.alternatives || []).filter((a) => a.horizon === h);
+  $("alternatives").hidden = !alts.length;
+  $("alternatives-list").replaceChildren(
+    ...alts.map((a) => {
+      const item = el("li");
+      const figures = el("div", null, "alt-figures");
+      figures.append(
+        el("span", "Test 2022-2026 " + a.test),
+        el("span", "2008-2021 " + a.development),
+      );
+      item.append(el("strong", a.name), figures, el("p", a.reason));
+      return item;
+    }),
+  );
+  $("alternatives-note").textContent = state.alternativesNote || "";
   $("method").textContent =
     "El test empieza el " +
     date(state.testStart) +
@@ -316,7 +321,7 @@ async function validationView() {
   $("scatter-r2").textContent = $("scatter-r2-naive").textContent = "—";
   try {
     if (!seriesCache.has(key))
-      seriesCache.set(key, await get("/api/validation/" + key));
+      seriesCache.set(key, await get("api/validation/" + key));
     if (tick !== serial || current !== "validacion") return;
     const data = seriesCache.get(key);
     if (!data.length) throw Error("No hay predicciones realizadas.");
@@ -343,7 +348,7 @@ function renderScatter(data) {
   $("scatter-error").textContent = names[validationNet]+" · "+h+" sesiones. MAE: "+format(result.metrics.mae,2)+
     (unit === "precio" ? " USD/barril" : " puntos porcentuales")+". RMSE: "+format(result.metrics.rmse,2)+".";
   $("scatter-download").hidden = !state.diagnostics;
-  if (state.diagnostics) $("scatter-download").href = "/figures/dispersion_"+validationNet+".png?v="+state.diagnostics.fingerprint;
+  if (state.diagnostics) $("scatter-download").href = "figures/dispersion_"+validationNet+".png?v="+state.diagnostics.fingerprint;
 }
 
 function cycleView() {
@@ -425,10 +430,19 @@ function dataLabels() {
     " con datos hasta el " +
     date(state.model.last_data_date) +
     ".";
+  if (isStatic) {
+    // La versión publicada no tiene servidor: no descarga datos ni reentrena.
+    for (const node of [$("refresh"), $("retrain"), $("mode"), document.querySelector('label[for="mode"]')])
+      node.style.display = "none";
+    $("data-info").textContent =
+      "Versión publicada con la serie hasta el " +
+      date(state.date) +
+      ". Para descargar datos nuevos o reentrenar, ejecuta la aplicación en local.";
+  }
 }
 async function load() {
   try {
-    state = await get("/api/state");
+    state = await get("api/state");
     notice("");
     dataLabels();
     syncHorizons();
@@ -448,7 +462,7 @@ function busy(running) {
 async function jobStatus() {
   clearTimeout(timer);
   try {
-    const job = await get("/api/job"),
+    const job = await get("api/job"),
       running = job.status === "running";
     $("job-info").textContent = job.message;
     $("job-progress").hidden = !running;
@@ -473,7 +487,7 @@ async function jobStatus() {
 async function operate(action) {
   busy(true);
   try {
-    await get("/api/" + action, {
+    await get("api/" + action, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mode: $("mode").value }),

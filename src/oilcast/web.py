@@ -33,6 +33,14 @@ from oilcast.training.final import spec_from_metadata, train_final
 
 log = logging.getLogger(__name__)
 
+# Figuras de reports/figures que la web puede mostrar.
+FIGURE_NAMES = frozenset(
+    {"mejora_vs_ingenuo.png", "mejora_por_anio.png", "predicciones_test.png"}
+    | {"brent_velas.png", "violines_precio.png", "violines_retorno.png"}
+    | {f"dispersion_{arch}.png" for arch in ("rnn", "lstm", "gru")}
+    | {f"violines_{unit}_h{h}.png" for unit in ("precio", "retorno") for h in (5, 63, 252)}
+)
+
 
 def records(path: Path) -> list[dict]:
     return json.loads(pd.read_csv(path).to_json(orient="records")) if path.exists() else []
@@ -83,12 +91,15 @@ def snapshot(cfg: Config, paths: Paths) -> dict:
                 "seeds",
             )
         },
-        # variables de entrada por plazo (a 63 y 252 sesiones solo oro/crudo, ronda 4)
+        # variables de entrada por plazo (a 252 sesiones solo oro/crudo, ronda 4)
         "features": {
             hs: len(info.get("feature_names", meta["feature_names"]))
             for hs, info in meta["fit"].items()
         },
         "rule": meta["spec"]["selection_rule"],
+        # variantes que ganan a la red de la app en algún plazo del test y por qué no se usan
+        "alternatives": (cfg.get("selection") or {}).get("alternatives", []),
+        "alternativesNote": (cfg.get("selection") or {}).get("alternatives_note", ""),
         "testStart": cfg["splits"]["test_start"],
         "comparison": records(paths.results / "comparison.csv"),
         "returnMetrics": return_comparison(paths),
@@ -232,12 +243,7 @@ class Observatory:
 
 def handler(observatory: Observatory):
     static = observatory.paths.root / "app" / "static"
-    figure_names = {"mejora_vs_ingenuo.png", "mejora_por_anio.png", "predicciones_test.png"}
-    figure_names |= {"brent_velas.png", "violines_precio.png", "violines_retorno.png"}
-    figure_names |= {f"dispersion_{arch}.png" for arch in ("rnn", "lstm", "gru")}
-    figure_names |= {
-        f"violines_{unit}_h{h}.png" for unit in ("precio", "retorno") for h in (5, 63, 252)
-    }
+    figure_names = FIGURE_NAMES
 
     class Handler(BaseHTTPRequestHandler):
         def send_content(self, status, body, kind):

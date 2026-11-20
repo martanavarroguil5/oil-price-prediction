@@ -1,28 +1,28 @@
 @font-face {
   font-family: Barlow;
-  src: url(/vendor/barlow-latin-400-normal.woff2);
+  src: url(vendor/barlow-latin-400-normal.woff2);
   font-display: swap;
 }
 @font-face {
   font-family: Barlow;
-  src: url(/vendor/barlow-latin-500-normal.woff2);
+  src: url(vendor/barlow-latin-500-normal.woff2);
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
   font-family: Barlow;
-  src: url(/vendor/barlow-latin-600-normal.woff2);
+  src: url(vendor/barlow-latin-600-normal.woff2);
   font-weight: 600;
   font-display: swap;
 }
 @font-face {
   font-family: Plex;
-  src: url(/vendor/ibm-plex-mono-latin-400-normal.woff2);
+  src: url(vendor/ibm-plex-mono-latin-400-normal.woff2);
   font-display: swap;
 }
 @font-face {
   font-family: Plex;
-  src: url(/vendor/ibm-plex-mono-latin-500-normal.woff2);
+  src: url(vendor/ibm-plex-mono-latin-500-normal.woff2);
   font-weight: 500;
   font-display: swap;
 }
@@ -1121,6 +1121,47 @@ details li + li {
   color: var(--text-2);
   font-size: 15px;
   line-height: 1.6;
+}
+.alternatives {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.alternatives h3 {
+  font-size: 15px;
+  color: var(--text);
+}
+.alternatives ul {
+  list-style: none;
+  margin-top: 8px;
+  padding: 0;
+}
+.alternatives li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.alternatives li strong {
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--text);
+}
+.alt-figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 4px;
+  font: 13px var(--mono);
+  color: var(--text-3);
+}
+.alternatives li p,
+#alternatives-note {
+  margin-top: 4px;
+  color: var(--text-2);
+  font-size: 15px;
+  line-height: 1.6;
+}
+#alternatives-note {
+  margin-top: 12px;
 }
 .panel.analysis .quiet-link {
   display: inline-block;

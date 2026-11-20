@@ -1,0 +1,48 @@
+name: Web en GitHub Pages
+
+# Publica la versión estática de la web (previsión, prueba histórica y validación) con los
+# datos, pesos y resultados del repositorio. Se lanza a mano o al publicar en la rama main.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      OILCAST_DEVICE: cpu
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar Poetry
+        run: pipx install poetry
+      - name: Instalar dependencias
+        run: poetry install --no-interaction --only main
+      - name: Generar la web estática
+        run: poetry run python -m oilcast -c configs/default.yaml export-static --out site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

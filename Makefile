@@ -4,7 +4,7 @@ OILCAST := $(PY) -m oilcast
 CONFIG  ?= configs/default.yaml
 
 .PHONY: help install data download build tune evaluate baselines returns diagnostics improve-intervals timing summarize train-final report \
-        forecast app test lint format smoke notebooks
+        forecast app static test lint format smoke notebooks
 
 help:  ## Muestra esta ayuda
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-16s %s\n", $$1, $$2}'
@@ -58,6 +58,9 @@ forecast:  ## Previsión actual en la terminal
 
 app:  ## Lanza el observatorio web local
 	$(OILCAST) -c $(CONFIG) serve
+
+static:  ## Versión estática de la web para GitHub Pages -> site/
+	$(OILCAST) -c $(CONFIG) export-static --out site
 
 test:  ## Tests (CPU, rápidos)
 	poetry run pytest

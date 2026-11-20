@@ -9,7 +9,7 @@ de combustible o un precio ejecutable de cobertura.
 
 1. En **Decisiones**, elegir tres meses y explicar qué fecha de origen utiliza la previsión.
    Los tres plazos muestran su mejora histórica frente a mantener el precio constante.
-   El año no mostró ventaja: esa limitación permanece visible.
+   A un año la mejora depende de pocos episodios, y la previsión explica en qué se basa.
 2. Introducir un volumen equivalente y presupuesto. Mover el porcentaje comprado al precio
    de referencia del 0 al 100 %. Observar el coste central, sus límites y el impacto por cada
    dólar de movimiento del precio final. Abrir los supuestos. El reparto del 100 % fija el
@@ -23,7 +23,8 @@ de combustible o un precio ejecutable de cobertura.
    previsiones y comprobar si el resultado quedó dentro del intervalo. Recorrer fechas
    distintas: un caso aislado no demuestra una ventaja, y el periodo ya se había consultado.
 5. En **Validación**, mostrar que la evaluación en dólares y la evaluación en rentabilidad
-   contestan preguntas distintas. En **Redes**, explicar brevemente las tres arquitecturas;
+   contestan preguntas distintas. Bajo los resultados por año, cada plazo lista las
+   alternativas que ganan a la red de la app en el test y por qué no se usan. En **Redes**, explicar brevemente las tres arquitecturas;
    en **Ciclo histórico**, situar los principales cambios de mercado.
 
 ## Qué significan los intervalos

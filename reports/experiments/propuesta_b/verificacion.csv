@@ -1,0 +1,40 @@
+comprobacion,ok,detalle,valor,n,valor2
+sin datos futuros: 20 variables W1,True,fracción distinta 0.00e+00,,,
+sin datos futuros: oro_crudo,True,fracción distinta 0.00e+00,,,
+h=5: reentrenos sin objetivos posteriores,True,"orígenes antes del reentreno 0, objetivos filtrados 0, reentrenos de test [2022, 2023, 2024, 2025, 2026]",,,
+h=63: reentrenos sin objetivos posteriores,True,"orígenes antes del reentreno 0, objetivos filtrados 0, reentrenos de test [2022, 2023, 2024, 2025, 2026]",,,
+h=252: reentrenos sin objetivos posteriores,True,"orígenes antes del reentreno 0, objetivos filtrados 0, reentrenos de test [2022, 2023, 2024, 2025]",,,
+h=5: búsqueda validada solo en 2014-2021,True,"bloques ['2014-2015', '2016-2017', '2018-2019', '2020-2021']",,,
+h=63: búsqueda validada solo en 2014-2021,True,"bloques ['2014-2015', '2016-2017', '2018-2019', '2020-2021']",,,
+h=252: búsqueda validada solo en 2014-2021,True,"bloques ['2014-2015', '2016-2017', '2018-2019', '2020-2021']",,,
+h=5: recalculo independiente del test,True,+0.62 % (publicado +0.62 %),,,
+h=5: mejora del MAE en test,,,0.006195500041143109,,
+h=63: recalculo independiente del test,True,+3.73 % (publicado +3.73 %),,,
+h=63: mejora del MAE en test,,,0.03727070974714297,,
+h=252: recalculo independiente del test,True,+9.08 % (publicado +9.08 %),,,
+h=252: mejora del MAE en test,,,0.09082804776339681,,
+h=5: año 2022,,,0.010025453133998719,252.0,
+h=5: año 2023,,,0.004173801533534527,251.0,
+h=5: año 2024,,,0.015155529804451118,254.0,
+h=5: año 2025,,,0.006828083202403912,253.0,
+h=5: año 2026,,,0.00013710250183407435,208.0,
+h=5: bootstrap 90 %,,,0.0015032076293251151,0.982,0.011252756942768914
+h=5: semillas (mín-máx),,,0.0038531112738008355,,0.007772178067971036
+h=63: año 2022,,,0.08129525404230586,252.0,
+h=63: año 2023,,,0.030303485296075183,251.0,
+h=63: año 2024,,,0.09124863505470693,254.0,
+h=63: año 2025,,,-0.008623175951101736,253.0,
+h=63: año 2026,,,0.01911475176148114,150.0,
+h=63: bootstrap 90 %,,,0.011145932296152078,0.9905,0.06686039708454387
+h=63: semillas (mín-máx),,,0.01841441263995125,,0.04555454106493817
+h=252: año 2022,,,0.45097676450029334,252.0,
+h=252: año 2023,,,-0.10464143425677874,251.0,
+h=252: año 2024,,,-1.2223776535745414,254.0,
+h=252: año 2025,,,0.47434823871987,214.0,
+h=252: bootstrap 90 %,,,-0.6339379820436027,0.599,0.459366945634515
+h=252: semillas (mín-máx),,,-0.01107239361450918,,0.124423410989014
+h=252: sin orígenes de 2025,,,-0.16043407421777056,,
+h=252: lineal oro/crudo,,,0.07462965977903835,,
+h=252: lineal con el oro de la víspera,,,0.07465818251510703,,
+placebo oro falso: P(≥ lineal real),,,0.19666666666666666,300.0,
+placebo ruido: P(≥ lineal real),,,0.02666666666666667,300.0,

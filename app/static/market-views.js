@@ -15,12 +15,12 @@ export function renderMarketViews(state, h) {
   $("violin-panel").hidden = !meta;
   if (meta) {
     const unit = $("violin-unit").value, suffix = "?v=" + meta.fingerprint;
-    const candleSource = "/figures/brent_velas.png" + suffix;
+    const candleSource = "figures/brent_velas.png" + suffix;
     if ($("candles-image").getAttribute("src") !== candleSource) $("candles-image").src = candleSource;
     $("candles-download").href = candleSource;
     $("candles-period").textContent = meta.candles.source + " · " + meta.candles.sessions +
       " sesiones · " + date(meta.candles.first) + "–" + date(meta.candles.last);
-    const violinSource = "/figures/violines_" + unit + "_h" + h + ".png" + suffix;
+    const violinSource = "figures/violines_" + unit + "_h" + h + ".png" + suffix;
     if ($("violin-image").getAttribute("src") !== violinSource) $("violin-image").src = violinSource;
     $("violin-download").href = violinSource;
     $("violin-image").alt = "Distribución de errores de ingenuo, RNN, LSTM y GRU a " + h +

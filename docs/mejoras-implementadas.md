@@ -1,7 +1,8 @@
 # Mejoras implementadas y siguientes pasos
 
 Estado del proyecto a 18/11/2026. Este registro permite explicar qué se ha añadido y qué
-evidencia aporta cada cambio. La aplicación mantiene la RNN W1 elegida con la regla previa.
+evidencia aporta cada cambio. En esa fecha la aplicación usaba la RNN W1;
+desde el 20/11/2026 usa la propuesta B ([qué modelo se utiliza](../README.md#qué-modelo-se-utiliza)).
 
 ## Mejoras implementadas
 

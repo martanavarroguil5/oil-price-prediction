@@ -1,3 +1,4 @@
+import { get as apiGet } from "./api.js";
 import { calculatePlan } from "./planning.js";
 import { replayChart } from "./charts.js";
 
@@ -20,15 +21,7 @@ const horizons = { 5: "1 semana", 63: "3 meses", 252: "1 año" };
 let access, referenceEdited = false, lastPlan, replaySerial = 0, replayRecord, replayKey;
 const datesCache = new Map();
 
-async function get(url) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    let message;
-    try { message = (await response.json()).error; } catch {}
-    throw Error(message || "No se ha podido cargar la previsión histórica.");
-  }
-  return response.json();
-}
+const get = (url) => apiGet(url, undefined, "No se ha podido cargar la previsión histórica.");
 
 export function bindDecisions(options) {
   access = options;
@@ -202,7 +195,7 @@ export async function renderReplay() {
   $("replay-chart").style.visibility = "hidden";
   $("replay-metrics").replaceChildren();
   try {
-    if (!datesCache.has(key)) datesCache.set(key, (await get("/api/replay/" + key)).origins);
+    if (!datesCache.has(key)) datesCache.set(key, (await get("api/replay/" + key)).origins);
     if (token !== replaySerial) return;
     const origins = datesCache.get(key);
     if (!origins.length) throw Error("No hay previsiones registradas para este plazo.");
@@ -212,7 +205,7 @@ export async function renderReplay() {
       replayKey = key;
     }
     const origin = $("replay-date").value;
-    const record = await get("/api/replay/" + key + "/" + origin);
+    const record = await get("api/replay/" + key + "/" + origin);
     if (token !== replaySerial) return;
     replayRecord = record;
     $("replay-heading").textContent = names[arch] + " · " + horizons[h];
@@ -238,7 +231,7 @@ async function revealReplay() {
   const token = replaySerial, record = replayRecord;
   $("replay-reveal").disabled = true;
   try {
-    const revealed = await get("/api/replay/" + record.model + "/" + record.horizon + "/" + record.origin + "/reveal");
+    const revealed = await get("api/replay/" + record.model + "/" + record.horizon + "/" + record.origin + "/reveal");
     if (token !== replaySerial) return;
     replayRecord = revealed;
     replayChart(revealed);

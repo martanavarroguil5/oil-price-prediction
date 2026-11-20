@@ -1,0 +1,162 @@
+{
+  "decided_at": "2026-11-20T10:54:00+00:00",
+  "rule": "docs/experimento-ronda5.md: mejora >= 0,5 puntos en 2008-2021 frente a B, sin empeorar en 2008-2013 ni en 2014-2021; solo se adoptan candidatas RNN.",
+  "choice": {
+    "5": {
+      "reference": "B: RNN W1",
+      "worth_it": [],
+      "chosen": "B: RNN W1"
+    },
+    "63": {
+      "reference": "B: RNN W1",
+      "worth_it": [],
+      "chosen": "B: RNN W1"
+    },
+    "252": {
+      "reference": "B: RNN oro/crudo",
+      "worth_it": [],
+      "chosen": "B: RNN oro/crudo"
+    }
+  },
+  "development": [
+    {
+      "horizon": 5,
+      "candidate": "B: RNN W1",
+      "2008-2013": -0.003976237978835506,
+      "2008-2021": -0.002259434850190978,
+      "2014-2021": -0.00043329164261840525
+    },
+    {
+      "horizon": 5,
+      "candidate": "Con futuros, tres redes",
+      "2008-2013": -0.002350673245261614,
+      "2008-2021": -0.0007952063896627948,
+      "2014-2021": 0.0008593253301152348
+    },
+    {
+      "horizon": 5,
+      "candidate": "GRU con futuros",
+      "2008-2013": -0.002233348577783456,
+      "2008-2021": -0.0007150591030573583,
+      "2014-2021": 0.0008999274758584308
+    },
+    {
+      "horizon": 5,
+      "candidate": "LSTM con futuros",
+      "2008-2013": -0.002045536797188552,
+      "2008-2021": -0.0011201128237972036,
+      "2014-2021": -0.0001357502752106221
+    },
+    {
+      "horizon": 5,
+      "candidate": "RNN W1, 20 semillas",
+      "2008-2013": -0.003946609282775793,
+      "2008-2021": -0.0020040836235748483,
+      "2014-2021": 6.215797332143058e-05
+    },
+    {
+      "horizon": 5,
+      "candidate": "RNN con futuros",
+      "2008-2013": -0.005381309211151208,
+      "2008-2021": -0.0021323280861311744,
+      "2014-2021": 0.0013235747567728051
+    },
+    {
+      "horizon": 5,
+      "candidate": "W1, tres redes",
+      "2008-2013": -0.0021520248965900546,
+      "2008-2021": -0.0008799509386614446,
+      "2014-2021": 0.00047313910354784827
+    },
+    {
+      "horizon": 5,
+      "candidate": "W1, tres redes, 20 semillas",
+      "2008-2013": -0.001990137764658284,
+      "2008-2021": -0.0008849599090818838,
+      "2014-2021": 0.0002906047205761819
+    },
+    {
+      "horizon": 63,
+      "candidate": "B: RNN W1",
+      "2008-2013": -0.02013773339955094,
+      "2008-2021": -0.01585139734983332,
+      "2014-2021": -0.011642221203793435
+    },
+    {
+      "horizon": 63,
+      "candidate": "RNN W1, 20 semillas",
+      "2008-2013": -0.03296217493568365,
+      "2008-2021": -0.021880120137516057,
+      "2014-2021": -0.010997557462891328
+    },
+    {
+      "horizon": 63,
+      "candidate": "W1, tres redes",
+      "2008-2013": -0.012822170440069058,
+      "2008-2021": -0.01482070239367883,
+      "2014-2021": -0.016783258042293747
+    },
+    {
+      "horizon": 63,
+      "candidate": "W1, tres redes, 20 semillas",
+      "2008-2013": -0.014531707632849056,
+      "2008-2021": -0.015212955309271248,
+      "2014-2021": -0.01588193959698958
+    },
+    {
+      "horizon": 252,
+      "candidate": "B: RNN oro/crudo",
+      "2008-2013": 0.19236085020036964,
+      "2008-2021": 0.12979256320387167,
+      "2014-2021": 0.0784301174559946
+    },
+    {
+      "horizon": 252,
+      "candidate": "Oro/crudo, tres redes",
+      "2008-2013": 0.18141299418999512,
+      "2008-2021": 0.13794596036616047,
+      "2014-2021": 0.10226377576803014
+    },
+    {
+      "horizon": 252,
+      "candidate": "Oro/crudo, tres redes, 20 semillas",
+      "2008-2013": 0.18601123383005957,
+      "2008-2021": 0.13850046128137306,
+      "2014-2021": 0.09949876258362533
+    },
+    {
+      "horizon": 252,
+      "candidate": "RNN oro/crudo, 20 semillas",
+      "2008-2013": 0.18933611691507368,
+      "2008-2021": 0.14707373156576586,
+      "2014-2021": 0.11238044557567362
+    }
+  ],
+  "sha256": {
+    "reports/experiments/ronda3/w1/predictions/rnn_h5.csv": "4f0dffd4b1f11ba77aa1e1c2c4cfdb41d405aca9ba4da54f75661b4a3e34ef79",
+    "reports/experiments/ronda3/w1/predictions/lstm_h5.csv": "cd08254a3befd9551ba721dc4f6536f47d239db97e1492826598fa07dce9f559",
+    "reports/experiments/ronda3/w1/predictions/gru_h5.csv": "3eda7c368f2ce6b80551e574c4be7005f076bd49ddf56a1617739d0163e8b10a",
+    "reports/experiments/ronda5/w1_20/predictions/rnn_h5.csv": "382ab1e7f6f2c39fd0c14d346f5a4416991b6be7631a622a82db683c67aea626",
+    "reports/experiments/ronda5/w1_20/predictions/lstm_h5.csv": "60cda0ceb15d51e83623b637e1e9395675080607e3fdcae274714da557b38cc0",
+    "reports/experiments/ronda5/w1_20/predictions/gru_h5.csv": "d09e33f0b50807f2ebbabb218f3e0cbc94c03f55e39234459583fcbbe91e7c68",
+    "reports/experiments/ronda5/futuros/predictions/rnn_h5.csv": "0b9f00f88ddf88651557dd04264b7e43a0d8dd66f8d4a8334c607ab964d0b81f",
+    "reports/experiments/ronda5/futuros/predictions/lstm_h5.csv": "f260db6a19032cd21c95efbe1e2d439d9c6b643a43f1fa915b8893a71c0e46c2",
+    "reports/experiments/ronda5/futuros/predictions/gru_h5.csv": "09aca50a051bfc9e7ccefd29df1f58ef022059b05193f08ee852d0fd0e690ff8",
+    "reports/experiments/ronda3/w1/predictions/rnn_h63.csv": "21f46692b603379c183e84a40dfa5e343b15bc3bbf3b3672fc5731590bf8d2ee",
+    "reports/experiments/ronda3/w1/predictions/lstm_h63.csv": "bd673bd95d3de06dd2da02efadc885e21ff306cbfbdc10c37a574081503638c9",
+    "reports/experiments/ronda3/w1/predictions/gru_h63.csv": "12c1d2c54b1ad836c81025d621ea313f2eaba2ed37f83b06d0482a675c739865",
+    "reports/experiments/ronda5/w1_20/predictions/rnn_h63.csv": "324cd99ea1458ba9869066e73e29ca55e141eeb02e85d9906f0c676fea50244e",
+    "reports/experiments/ronda5/w1_20/predictions/lstm_h63.csv": "6908c883df7a674d9d0117feef53210a815db9a29cd28cda446391028a233984",
+    "reports/experiments/ronda5/w1_20/predictions/gru_h63.csv": "a7795457ed01bbb5be3566c0783262bdf0b6a2bc0057462cf2125f15f72917fb",
+    "reports/experiments/ronda4/oro/predictions/rnn_h252.csv": "e4fd7416be254a2172741ca630e49870f945d6d9f8506a948fdb77591f605439",
+    "reports/experiments/ronda4/oro/predictions/lstm_h252.csv": "ad29265ed080f04f67ef7bef40519ee3ca4f9b32291b623d048c585bc6e33034",
+    "reports/experiments/ronda4/oro/predictions/gru_h252.csv": "04e1e585d97c2ec85ba703370f7ddc82387ca8107dcdf7124ea6712f4fcddf36",
+    "reports/experiments/ronda5/oro_20/predictions/rnn_h252.csv": "f1c19e32927d214426403ec92a5f6aa85d038def1630e0ccead28f3d5777c2e2",
+    "reports/experiments/ronda5/oro_20/predictions/lstm_h252.csv": "2409bd1182731b2b65919421eca25402d04cca34d49e44151e5552acaaa9b898",
+    "reports/experiments/ronda5/oro_20/predictions/gru_h252.csv": "732e247ddefcbafdb02b0518024017dce4527379c1101bb9648a53463275aed9",
+    "docs/experimento-ronda5.md": "b9b84991b0262b84977a025ce2ef36a4c975bf01e8d739f5a6c19dcb941b3813",
+    "configs/ronda5_futuros.yaml": "8cace97fde4621e62d591231bce55019de987fdb78a23b0ea4ada59366093634",
+    "configs/ronda5_semillas_w1.yaml": "edeacd5c992c733ccabe4e7bee0a81944c0e62117466de3fed3636d6ed14e4d6",
+    "configs/ronda5_semillas_oro.yaml": "8715b70f023a7dbe6f8086ef4ea340fd83d701ea367d186edda882eb50baaf92"
+  }
+}

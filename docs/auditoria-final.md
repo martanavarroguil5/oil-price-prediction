@@ -1,5 +1,8 @@
 # Auditoría y decisión de cierre
 
+> Revisión anterior a la propuesta B: describe la versión con la RNN W1 en los tres plazos.
+> La aplicación usa ahora la propuesta B ([qué modelo se utiliza](../README.md#qué-modelo-se-utiliza)).
+
 Revisión del 19/11/2026 sobre los datos y predicciones ya guardados. No se reentrena ni
 se elige otra familia a partir del periodo de test. El propósito es detectar errores
 comprobables y evaluar la sensibilidad de los resultados a los años incluidos.

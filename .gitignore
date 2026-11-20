@@ -27,3 +27,6 @@ trials.csv
 /reports/experiments/**/DONE
 /reports/experiments/*/logs/
 /reports/experiments/*/piloto/logs/
+
+# Web estática generada (GitHub Pages la construye en CI)
+/site/

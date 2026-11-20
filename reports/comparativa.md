@@ -9,8 +9,8 @@
 
 - **Mismos datos y misma ventana**: las tres redes reciben las mismas
   60 sesiones de entrada en cada plazo.
-  A 5 sesiones, 20 variables estacionarias (rentabilidades, diferenciales, volatilidad, desviaciones a medias móviles).
-  A 63 y 252 sesiones, solo `oro_crudo`: barriles por onza de oro (log) frente a su media de 3 años, con un atajo lineal desde el último día (docs/experimento-ronda4.md).
+  A 5 y 63 sesiones, 20 variables estacionarias (rentabilidades, diferenciales, volatilidad, desviaciones a medias móviles).
+  A 252 sesiones, solo `oro_crudo`: barriles por onza de oro (log) frente a su media de 3 años, con un atajo lineal desde el último día (docs/experimento-ronda4.md).
 - **Misma partición**: CV walk-forward expansiva y purgada en desarrollo (4 bloques de
   validación de 2 años: 2014-15, 2016-17, 2018-19, 2020-21) y test walk-forward desde
   2022-01-01 con reentreno cada 1 de enero, con los hiperparámetros y el nº de épocas
@@ -37,10 +37,10 @@
 | Corto (5 d) | RNN simple | 3.96 | 5.71 | 0.876 | +0.6 % | +0.5 % | 0.148 | 53.3 % | 78.1 % | 10.80 | 19.09 | 5959 | 0.8 |
 | Corto (5 d) | LSTM | 3.99 | 5.74 | 0.875 | +0.0 % | +0.0 % | — | — | 74.7 % | 10.54 | 19.00 | 1339143 | 0.6 |
 | Corto (5 d) | GRU | 3.99 | 5.74 | 0.875 | +0.0 % | +0.0 % | 0.445 | 50.7 % | 78.8 % | 11.41 | 19.16 | 1004807 | 0.4 |
-| Medio (63 d) | Ingenuo | 11.94 | 17.44 | -0.207 | — | — | — | — | 84.1 % | 37.60 | 65.11 | — | — |
-| Medio (63 d) | RNN simple | 12.32 | 16.90 | -0.133 | -3.1 % | +3.1 % | 0.509 | 56.6 % | 86.3 % | 44.47 | 63.31 | 331285 | 2.1 |
-| Medio (63 d) | LSTM | 12.22 | 16.29 | -0.053 | -2.3 % | +6.6 % | 0.456 | 52.5 % | 87.4 % | 43.13 | 58.37 | 332181 | 1.5 |
-| Medio (63 d) | GRU | 12.63 | 16.87 | -0.130 | -5.8 % | +3.2 % | 0.520 | 53.9 % | 86.4 % | 41.87 | 59.84 | 16277 | 0.2 |
+| Medio (63 d) | Ingenuo | 11.94 | 17.44 | -0.207 | — | — | — | — | 84.5 % | 38.45 | 65.21 | — | — |
+| Medio (63 d) | RNN simple | 11.50 | 17.13 | -0.165 | +3.7 % | +1.7 % | 0.105 | 59.2 % | 87.6 % | 49.05 | 75.11 | 22599 | 0.2 |
+| Medio (63 d) | LSTM | 11.57 | 17.33 | -0.192 | +3.2 % | +0.6 % | 0.855 | 60.0 % | 84.2 % | 44.11 | 72.06 | 89031 | 0.2 |
+| Medio (63 d) | GRU | 11.26 | 16.98 | -0.143 | +5.7 % | +2.6 % | 0.427 | 65.3 % | 87.8 % | 47.99 | 74.32 | 11751 | 3.2 |
 | Largo (252 d) | Ingenuo | 16.50 | 22.53 | -1.466 | — | — | — | — | 93.4 % | 90.15 | 97.57 | — | — |
 | Largo (252 d) | RNN simple | 15.00 | 17.84 | -0.548 | +9.1 % | +20.8 % | 0.413 | 57.0 % | 99.6 % | 88.38 | 88.55 | 68117 | 0.3 |
 | Largo (252 d) | LSTM | 14.85 | 17.86 | -0.550 | +10.0 % | +20.7 % | 0.396 | 53.6 % | 99.6 % | 89.95 | 90.17 | 84181 | 1.1 |
@@ -65,9 +65,9 @@ en GPU.
 | Corto (5 d) | RNN simple | 3.96 | 3.94 ± 0.01 | 0.3 % | 73.4 % | 32.6 |
 | Corto (5 d) | LSTM | 3.99 | 3.99 ± 0.01 | 0.3 % | 73.8 % | 32.9 |
 | Corto (5 d) | GRU | 3.99 | 3.99 ± 0.02 | 0.5 % | 77.2 % | 32.9 |
-| Medio (63 d) | RNN simple | 12.32 | 12.92 ± 0.58 | 4.8 % | 81.6 % | 285.5 |
-| Medio (63 d) | LSTM | 12.22 | 12.26 ± 0.30 | 2.6 % | 80.3 % | 265.4 |
-| Medio (63 d) | GRU | 12.63 | 13.02 ± 0.31 | 2.6 % | 81.7 % | 284.7 |
+| Medio (63 d) | RNN simple | 11.50 | 11.52 ± 0.35 | 2.9 % | 77.9 % | 293.6 |
+| Medio (63 d) | LSTM | 11.57 | 13.63 ± 0.97 | 8.1 % | 71.0 % | 300.3 |
+| Medio (63 d) | GRU | 11.26 | 14.10 ± 0.72 | 6.0 % | 71.6 % | 288.2 |
 | Largo (252 d) | RNN simple | 15.00 | 15.19 ± 0.75 | 4.5 % | 98.0 % | 318.4 |
 | Largo (252 d) | LSTM | 14.85 | 15.19 ± 1.12 | 6.8 % | 96.6 % | 319.0 |
 | Largo (252 d) | GRU | 15.55 | 15.92 ± 1.52 | 9.2 % | 94.0 % | 372.3 |
@@ -81,9 +81,9 @@ en GPU.
 | Corto (5 d) | LSTM | +0.0 % | +0.0 % | +0.0 % | +0.0 % | +0.0 % |
 | Corto (5 d) | GRU | +0.1 % | -0.0 % | +0.1 % | -0.0 % | +0.0 % |
 | Corto (5 d) | MAE ingenuo ($) | 5.35 | 3.00 | 2.36 | 2.39 | 7.45 |
-| Medio (63 d) | RNN simple | +12.0 % | +10.5 % | -65.1 % | -21.0 % | +4.6 % |
-| Medio (63 d) | LSTM | +9.1 % | +4.1 % | -23.7 % | -41.9 % | +11.1 % |
-| Medio (63 d) | GRU | +8.7 % | +6.9 % | -58.0 % | -33.9 % | +5.2 % |
+| Medio (63 d) | RNN simple | +8.1 % | +3.0 % | +9.1 % | -0.9 % | +1.9 % |
+| Medio (63 d) | LSTM | -5.7 % | -1.5 % | +30.0 % | +4.6 % | +3.7 % |
+| Medio (63 d) | GRU | +21.9 % | -13.8 % | +7.8 % | +5.9 % | +2.9 % |
 | Medio (63 d) | MAE ingenuo ($) | 12.94 | 8.62 | 4.82 | 9.07 | 32.75 |
 | Largo (252 d) | RNN simple | +45.1 % | -10.5 % | -122.2 % | +47.4 % | — |
 | Largo (252 d) | LSTM | +42.4 % | -19.7 % | -96.9 % | +42.9 % | — |
@@ -98,44 +98,59 @@ en GPU.
 | Modelo | Horizonte | hidden | capas | dropout | lr | weight decay | batch | épocas (fijas) | trials (podados) |
 |---|---|---|---|---|---|---|---|---|---|
 | RNN simple | 5 | 64 | 1 | 0.50 | 6.2e-04 | 1.1e-05 | 128 | 25 | 80 (31) |
-| RNN simple | 63 | 256 | 3 | 0.43 | 1.6e-03 | 2.6e-03 | 64 | 16 | 80 (34) |
+| RNN simple | 63 | 64 | 3 | 0.42 | 2.1e-03 | 4.6e-05 | 256 | 7 | 80 (30) |
 | RNN simple | 252 | 256 | 1 | 0.38 | 1.7e-03 | 5.4e-04 | 128 | 9 | 80 (43) |
 | LSTM | 5 | 256 | 3 | 0.09 | 8.9e-04 | 5.3e-04 | 128 | 3 | 80 (40) |
-| LSTM | 63 | 128 | 3 | 0.48 | 1.1e-03 | 1.1e-05 | 256 | 14 | 80 (24) |
+| LSTM | 63 | 64 | 3 | 0.32 | 2.1e-03 | 5.9e-05 | 256 | 4 | 80 (20) |
 | LSTM | 252 | 64 | 3 | 0.11 | 2.6e-03 | 3.3e-03 | 128 | 22 | 80 (48) |
 | GRU | 5 | 256 | 3 | 0.47 | 2.9e-03 | 9.7e-03 | 128 | 2 | 80 (35) |
-| GRU | 63 | 32 | 3 | 0.35 | 3.0e-03 | 1.5e-06 | 256 | 6 | 80 (6) |
+| GRU | 63 | 32 | 2 | 0.46 | 1.1e-04 | 8.1e-06 | 64 | 37 | 80 (28) |
 | GRU | 252 | 256 | 3 | 0.25 | 1.9e-03 | 7.6e-03 | 64 | 4 | 80 (47) |
 
 
 ## Elección del modelo para la aplicación
 
-Regla aplicada: regla fijada antes de la búsqueda de la ronda 4 (docs/experimento-ronda4.md): se elige la combinación de variante y red con mayor mejora media del MAE frente al ingenuo en los tres plazos, en orígenes de 2008 a 2021 con objetivo anterior a 2022, sin mirar el test. Ganó la LSTM con la relación oro/crudo a 63 y 252 sesiones (+5,3 % antes de 2022, +5,6 % en 2008-2013, años que no se usaron para elegir hiperparámetros).
+La aplicación usa la RNN simple en los tres plazos (propuesta B): 20 variables diarias a 1 semana y 3 meses, y la relación oro/crudo a 1 año. En el test es la mejor de las tres redes a 1 semana y en la media de los tres plazos, la que menos varía entre semillas y la que tiene menos parámetros. La combinación se eligió después de ver el test 2022-2026: antes de 2022 mejoraba al ingenuo un 3,7 % de media, frente al 5,3 % de la LSTM que había elegido la regla de la ronda 4. La ronda 5 probó variantes con una regla fijada antes de entrenar y ninguna superó a B en todos los periodos anteriores a 2022.
 
 | Modelo | MAE relativo medio (modelo/ingenuo) | Desv. relativa entre semillas | Parámetros (media) | Cobertura IC80 media |
 |---|---|---|---|---|
-| LSTM | 0.974 | 3.5 % | 585168 | 87.2 % |
-| RNN simple | 0.978 | 3.3 % | 135120 | 88.0 % |
-| GRU | 1.000 | 4.2 % | 670438 | 88.0 % |
+| RNN simple | 0.955 | 2.8 % | 32225 | 88.4 % |
+| LSTM | 0.956 | 5.4 % | 504118 | 86.2 % |
+| GRU | 0.962 | 5.6 % | 668929 | 88.5 % |
 
-Tiempo total de entrenamiento de los tres horizontes: RNN simple 3 s, LSTM 3 s, GRU 2 s
+Tiempo total de entrenamiento de los tres horizontes: RNN simple 1 s, LSTM 2 s, GRU 5 s
 
-**Modelo elegido: LSTM.**
+**Modelo elegido: RNN simple.**
+
+### Alternativas que ganan en el test
+
+Mejora del MAE frente al ingenuo; entre paréntesis, la de B, la red de la aplicación.
+
+| Plazo | Alternativa | Test 2022-2026 | 2008-2021 | Por qué no se usa |
+|---|---|---|---|---|
+| Corto (5 d) | GRU de la primera versión de la app | +1,6 % (B +0,6 %) | — | Es otra arquitectura y pierde en los otros plazos: −8,0 % a 3 meses y −15,1 % a 1 año. |
+| Corto (5 d) | RNN con el movimiento de los futuros tras la valoración del spot (ronda 5) | +0,9 % (B +0,6 %) | −0,2 % (B −0,2 %) | Antes de 2022 empataba con B. En el test la diferencia es de 1,3 céntimos por barril. |
+| Medio (63 d) | Media de RNN, LSTM y GRU (ronda 5) | +7,1 % (B +3,7 %) | −1,5 % (B −1,6 %) | Mezcla tres arquitecturas y antes de 2022 empataba con B. |
+| Medio (63 d) | GRU con las mismas variables | +5,7 % (B +3,7 %) | −1,2 % (B −1,6 %) | Es otra arquitectura. A 1 semana no mejora al ingenuo y a 1 año gana menos (+5,8 % frente a +9,1 %). |
+| Largo (252 d) | LSTM con la relación oro/crudo | +10,0 % (B +9,1 %) | +12,9 % (B +13,0 %) | Es otra arquitectura. A 1 semana no se aparta del ingenuo y a 3 meses gana menos (+3,2 % frente a +3,7 %). |
+| Largo (252 d) | RNN con 20 semillas en lugar de 5 (ronda 5) | +11,1 % (B +9,1 %) | +14,7 % (B +13,0 %) | En 2008-2013 quedaba 0,3 puntos por debajo de B, y la regla fijada antes de entrenar exigía no empeorar en ningún periodo. Su intervalo en el test es igual de ancho. |
+
+Ninguna gana a B a la vez en los tres plazos, en el test y en todos los periodos anteriores a 2022. Cambiar el modelo por una de ellas sería ajustarlo al periodo 2022-2026, que ya se usó para elegir B.
 
 ![Predicciones en test](figures/predicciones_test.png)
 
 ## Conclusión
 
-**Modelo para la aplicación: LSTM.**
+**Modelo para la aplicación: RNN simple.**
 
-- **Precisión**: su MAE medio es 0,974 veces el del ingenuo, el mejor de las tres redes; RNN simple 0,978, GRU 1,000.
-- **Estabilidad**: desviación relativa del MAE entre semillas 3,5 %.
-- **Coste computacional**: entrenar los tres horizontes cuesta 3,2 s en GPU (RNN simple 3,3 s, GRU 1,7 s); el coste no discrimina entre redes y el reentrenado periódico es viable en CPU.
+- **Precisión**: su MAE medio es 0,955 veces el del ingenuo, el mejor de las tres redes; LSTM 0,956, GRU 0,962.
+- **Estabilidad**: es la red más estable entre semillas (desviación relativa del MAE 2,8 %, LSTM 5,4 %, GRU 5,6 %), es decir, su resultado depende poco de la inicialización aleatoria.
+- **Coste computacional**: entrenar los tres horizontes cuesta 1,4 s en GPU (LSTM 1,9 s, GRU 4,8 s); el coste no discrimina entre redes y el reentrenado periódico es viable en CPU.
 
 **Dónde aporta valor y dónde no**
 
-- **Corto (5 d)**: **coincide con el ingenuo**: la recalibración del centro no ha encontrado errores pasados que justifiquen mover la previsión (las tres redes entre +0,0 % y +0,6 %). No mueve el valor central, así que no hay acierto direccional que medir. El intervalo del 80 % calibrado cubre el 74,7 % de los casos (ingenuo: 76,1 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 19,00 frente a 19,93 del ingenuo: el rango es algo más informativo que el del ingenuo.
-- **Medio (63 d)**: **no aporta valor en el valor central en MAE**: el error absoluto es mayor que el del ingenuo (-2,3 % de MAE, +6,6 % de RMSE, p-valor DM 0,456; las tres redes entre -5,8 % y -2,3 % de MAE); solo mejora en 3 de 5 años. Acierta la dirección en el 52,5 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 56,8 %). El intervalo del 80 % calibrado cubre el 87,4 % de los casos (ingenuo: 84,1 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 58,37 frente a 65,11 del ingenuo: el rango es algo más informativo que el del ingenuo.
-- **Largo (252 d)**: mejora del valor central (+10,0 % de MAE y +20,7 % de RMSE; las tres redes entre +5,7 % y +10,0 % de MAE), positiva en 2 de 4 años, **no significativa** (p-valor DM 0,396). Acierta la dirección en el 53,6 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 67,7 %). El intervalo del 80 % calibrado cubre el 99,6 % de los casos (ingenuo: 93,4 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 90,17 frente a 97,57 del ingenuo: el rango es algo más informativo que el del ingenuo.
+- **Corto (5 d)**: mejora marginal del valor central (+0,6 % de MAE y +0,5 % de RMSE; las tres redes entre +0,0 % y +0,6 % de MAE), positiva en 5 de 5 años, **no significativa** (p-valor DM 0,148). Acierta la dirección en el 53,3 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 50,7 %). El intervalo del 80 % calibrado cubre el 78,1 % de los casos (ingenuo: 76,1 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 19,09 frente a 19,93 del ingenuo: el rango es algo más informativo que el del ingenuo.
+- **Medio (63 d)**: mejora del valor central (+3,7 % de MAE y +1,7 % de RMSE; las tres redes entre +3,2 % y +5,7 % de MAE), positiva en 4 de 5 años, **no significativa** (p-valor DM 0,105). Acierta la dirección en el 59,2 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 56,8 %). El intervalo del 80 % calibrado cubre el 87,6 % de los casos (ingenuo: 84,5 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 75,11 frente a 65,21 del ingenuo: el rango no es mejor que el del ingenuo.
+- **Largo (252 d)**: mejora del valor central (+9,1 % de MAE y +20,8 % de RMSE; las tres redes entre +5,7 % y +10,0 % de MAE), positiva en 2 de 4 años, **no significativa** (p-valor DM 0,413). Acierta la dirección en el 57,0 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 67,7 %). El intervalo del 80 % calibrado cubre el 99,6 % de los casos (ingenuo: 93,4 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 88,55 frente a 97,57 del ingenuo: el rango es algo más informativo que el del ingenuo.
 
-**Interpretación.** A partir solo de precios y variables de mercado pasadas, el precio del crudo se comporta casi como un paseo aleatorio, y el periodo de test incluye dos shocks geopolíticos (Ucrania 2022 y la guerra con Irán en 2026) que ningún modelo de este tipo puede anticipar. El modelo elegido mejora al ingenuo en el valor central a largo (252 d) y no a corto (5 d) ni a medio (63 d), sin que ninguna diferencia sea estadísticamente significativa. Por eso la aplicación muestra siempre el intervalo, indica en cada horizonte si el modelo mejoró o no al «precio no cambia» en el test y presenta la cifra central como referencia donde no lo mejora.
+**Interpretación.** A partir solo de precios y variables de mercado pasadas, el precio del crudo se comporta casi como un paseo aleatorio, y el periodo de test incluye dos shocks geopolíticos (Ucrania 2022 y la guerra con Irán en 2026) que ningún modelo de este tipo puede anticipar. El modelo elegido mejora al ingenuo en el valor central a corto (5 d), medio (63 d) y largo (252 d), sin que ninguna diferencia sea estadísticamente significativa. Por eso la aplicación muestra siempre el intervalo, indica en cada horizonte si el modelo mejoró o no al «precio no cambia» en el test y presenta la cifra central como referencia donde no lo mejora.

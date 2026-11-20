@@ -26,6 +26,10 @@ HORIZON_LABELS = {5: "Corto (5 d)", 63: "Medio (63 d)", 252: "Largo (252 d)"}
 SIGNIFICANCE = 0.05
 
 
+def _spanish_list(items: list[str]) -> str:
+    return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " y " + items[-1]
+
+
 def _join_horizons(hs: list[int]) -> str:
     return " y ".join(str(h) for h in hs) if len(hs) <= 2 else ", ".join(map(str, hs))
 
@@ -129,6 +133,26 @@ def tuning_table(tun: pd.DataFrame) -> str:
             f"{r.final_epochs} | {r.n_trials} ({r.n_pruned}) |\n"
         )
     return out
+
+
+def alternatives_table(selection: dict) -> str:
+    """Variantes que ganan a la red elegida en algún plazo del test y por qué no se usan."""
+    alts = selection.get("alternatives") or []
+    if not alts:
+        return ""
+    out = (
+        "### Alternativas que ganan en el test\n\n"
+        "Mejora del MAE frente al ingenuo; entre paréntesis, la de B, la red de la aplicación.\n\n"
+        "| Plazo | Alternativa | Test 2022-2026 | 2008-2021 | Por qué no se usa |\n"
+        "|---|---|---|---|---|\n"
+    )
+    for a in alts:
+        out += (
+            f"| {HORIZON_LABELS.get(a['horizon'], a['horizon'])} | {a['name']} | {a['test']} | "
+            f"{a['development']} | {a['reason']} |\n"
+        )
+    note = selection.get("alternatives_note")
+    return out + (f"\n{note}\n" if note else "")
 
 
 def conclusion(
@@ -261,7 +285,7 @@ def conclusion(
         "shocks geopolíticos (Ucrania 2022 y la guerra con Irán en 2026) que ningún modelo de "
         "este tipo puede anticipar. "
         + (
-            f"El modelo elegido mejora al ingenuo en el valor central a {' y '.join(wins)}"
+            f"El modelo elegido mejora al ingenuo en el valor central a {_spanish_list(wins)}"
             if wins
             else "El modelo elegido no mejora al ingenuo en el valor central en ningún horizonte"
         )
@@ -549,7 +573,7 @@ en {device}.
 
 ## Elección del modelo para la aplicación
 
-Regla aplicada: {selection["rule"]}
+{selection["rule"][:1].upper() + selection["rule"][1:]}
 
 {score_tbl}
 Tiempo total de entrenamiento de los tres horizontes: """
@@ -558,6 +582,9 @@ Tiempo total de entrenamiento de los tres horizontes: """
 
 **Modelo elegido: {LABELS[chosen]}.**
 
+"""
+        + alternatives_table(selection)
+        + f"""
 ![Predicciones en test]({fig_rel}/predicciones_test.png)
 
 ## Conclusión

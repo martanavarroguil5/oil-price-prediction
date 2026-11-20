@@ -47,6 +47,12 @@ FEATURE_DESCRIPTIONS = {
     "mom_252": "Momentum: variación log del Brent en 252 días",
 }
 
+FUTURES_DESCRIPTIONS = {
+    "late_bz1": "Movimiento del futuro del Brent después de la valoración spot (1 día)",
+    "late_bz2": "Movimiento del futuro del Brent después de la valoración spot (2 días)",
+    "late_cl1": "Movimiento del futuro del WTI frente al Brent spot (1 día)",
+}
+
 VALUATION_DESCRIPTIONS = {
     "oro_crudo": "Barriles por onza de oro (log) frente a su media de 3 años",
 }
@@ -123,6 +129,11 @@ def compute_features(df: pd.DataFrame, cfg: Config) -> pd.DataFrame:
         out[f"dev_ma{w}"] = log_p - np.log(df["brent"].rolling(w, min_periods=w).mean())
     mw = fcfg["momentum_window"]
     out[f"mom_{mw}"] = log_p - log_p.shift(mw)
+    if fcfg.get("futures_timing"):  # ronda 5: los futuros cierran después del Brent spot
+        late_bz = _log(df["brent_fut_close"]).diff() - out["r_brent"]
+        out["late_bz1"] = late_bz
+        out["late_bz2"] = late_bz.rolling(2, min_periods=2).sum()
+        out["late_cl1"] = _log(df["wti_fut_close"]).diff() - out["r_brent"]
     if fcfg.get("valuation"):  # ronda 4: barriles por onza frente a su media (Hanke)
         vw = fcfg.get("valuation_window", 756)
         gold_oil = _log(df["gold"]) - log_p
