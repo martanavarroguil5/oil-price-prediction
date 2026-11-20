@@ -54,13 +54,13 @@ Para reproducirlo en Windows: `.venv\Scripts\python.exe -m oilcast -c configs/in
 ## Versión publicada en GitHub Pages
 
 La web también se publica como página estática en
-<https://martanavarroguil5.github.io/oil-price-prediction/>. `make static` la genera en `site/` con los datos, los pesos y los resultados del repositorio: la previsión de los tres plazos, el simulador de compra, la prueba histórica, la validación y las figuras. Es una foto fija; la previsión no cambia hasta que se publica una versión nueva.
+<https://martanavarroguil5.github.io/oil-price-prediction/>. `make static` la genera en `site/` con los datos, los pesos y los resultados del repositorio: la previsión de los tres plazos, el simulador de compra, la prueba histórica, la validación y las figuras. Cada día a las 06:30 UTC, el flujo de publicación descarga los datos más recientes y vuelve a prever con los pesos guardados, sin reentrenar. Si una fuente falla, publica con la serie del repositorio. Los datos descargados no se guardan en el repositorio.
 
 Diferencias con la aplicación local:
 - No descarga datos nuevos ni reentrena: esos botones solo aparecen con `make app`.
 - En la prueba histórica, los resultados ya están en los ficheros publicados, aunque la página no los muestra hasta pulsar **Ver qué ocurrió**.
 
-El flujo [`pages.yml`](.github/workflows/pages.yml) genera y publica la web al subir cambios a `main`, o a mano desde la pestaña **Actions**. La primera vez hay que elegir **GitHub Actions** como origen en **Settings › Pages** del repositorio. Para probarla en local:
+El flujo [`pages.yml`](.github/workflows/pages.yml) genera y publica la web cada día, al subir cambios a `main` o a mano desde la pestaña **Actions**. GitHub desactiva las tareas diarias de un repositorio público tras 60 días sin actividad; se reactivan desde **Actions**. La primera vez hay que elegir **GitHub Actions** como origen en **Settings › Pages** del repositorio. Para probarla en local:
 
 ```sh
 make static

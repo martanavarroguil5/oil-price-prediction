@@ -156,11 +156,34 @@ def serve(port: Annotated[int, typer.Option(min=1, max=65535)] = 8501) -> None:
 @app.command("export-static")
 def export_static(
     out: Annotated[Path, typer.Option("--out", help="Carpeta de salida")] = Path("site"),
+    refresh: Annotated[
+        bool, typer.Option("--refresh", help="Descarga antes los datos más recientes")
+    ] = False,
 ) -> None:
-    """Genera la versión estática de la web (GitHub Pages) en ``out``."""
+    """Genera la versión estática de la web (GitHub Pages) en ``out``.
+
+    Con ``--refresh`` descarga primero los datos nuevos y prevé con los pesos guardados, sin
+    reentrenar. Si la descarga falla, publica con la serie del repositorio.
+    """
     from oilcast.static_site import export_static as run
 
-    typer.echo(run(*_ctx(), out))
+    cfg, paths = _ctx()
+    if refresh:
+        import shutil
+        from tempfile import TemporaryDirectory
+
+        from oilcast.web import stage_refresh
+
+        try:
+            with TemporaryDirectory(dir=paths.root) as tmp:
+                pairs, message = stage_refresh(cfg, paths, Path(tmp))
+                for src, dst in pairs:
+                    dst.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(src, dst)
+            typer.echo(message)
+        except Exception as exc:  # una fuente caída no debe dejar la web sin publicar
+            typer.echo(f"No se han actualizado los datos: {exc}", err=True)
+    typer.echo(run(cfg, paths, out))
 
 
 @app.command()

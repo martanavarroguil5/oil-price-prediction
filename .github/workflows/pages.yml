@@ -1,11 +1,14 @@
 name: Web en GitHub Pages
 
-# Publica la versión estática de la web (previsión, prueba histórica y validación) con los
-# datos, pesos y resultados del repositorio. Se lanza a mano o al publicar en la rama main.
+# Publica la versión estática de la web (previsión, prueba histórica y validación). Antes
+# descarga los datos más recientes y prevé con los pesos guardados, sin reentrenar; si una
+# fuente falla, publica con la serie del repositorio. Se lanza cada día, al subir a main o a mano.
 on:
   workflow_dispatch:
   push:
     branches: [main]
+  schedule:
+    - cron: "30 6 * * *"  # todos los días a las 06:30 UTC
 
 permissions:
   contents: read
@@ -31,7 +34,7 @@ jobs:
       - name: Instalar dependencias
         run: poetry install --no-interaction --only main
       - name: Generar la web estática
-        run: poetry run python -m oilcast -c configs/default.yaml export-static --out site
+        run: poetry run python -m oilcast -c configs/default.yaml export-static --out site --refresh
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

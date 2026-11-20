@@ -132,6 +132,25 @@ def validation(paths: Paths, arch: str, horizon: int) -> list:
     )
 
 
+def stage_refresh(cfg: Config, paths: Paths, stage: Path) -> tuple[list[tuple[Path, Path]], str]:
+    """Descarga los datos en ``stage`` y devuelve los pares (nuevo, destino) a publicar.
+
+    Falla sin tocar la copia local si el Brent no responde o la serie nueva termina antes.
+    """
+    staged = replace(paths, raw=stage / "raw", processed=stage / "processed")
+    shutil.copytree(paths.raw, staged.raw)
+    sources = download_all(cfg, staged)
+    if not sources.get("brent", "").startswith("ok"):
+        raise ValueError("La fuente del Brent no ha respondido. Se conserva la serie local.")
+    frame = build_dataset(cfg, staged)
+    if frame.index[-1] < load_dataset(paths).index[-1]:
+        raise ValueError("La serie descargada termina antes que la copia local.")
+    pairs = [(p, paths.raw / p.name) for p in staged.raw.glob("*.csv")]
+    pairs += [(staged.cleaning_log, paths.cleaning_log), (staged.dataset_csv, paths.dataset_csv)]
+    ok = sum(s.startswith("ok") for s in sources.values())
+    return pairs, f"Serie hasta el {frame.index[-1]:%d/%m/%Y}. Fuentes: {ok}/{len(sources)}."
+
+
 class Observatory:
     def __init__(self, cfg: Config, paths: Paths):
         self.cfg, self.paths = cfg, paths
@@ -181,26 +200,8 @@ class Observatory:
             with TemporaryDirectory(dir=paths.root) as tmp:
                 stage = Path(tmp)
                 if action == "refresh":
-                    staged = replace(paths, raw=stage / "raw", processed=stage / "processed")
-                    shutil.copytree(paths.raw, staged.raw)
                     self._progress(0.15, "Descargando las últimas observaciones…")
-                    sources = download_all(self.cfg, staged)
-                    if not sources.get("brent", "").startswith("ok"):
-                        raise ValueError(
-                            "La fuente del Brent no ha respondido. Se conserva la serie local."
-                        )
-                    frame = build_dataset(self.cfg, staged)
-                    if frame.index[-1] < load_dataset(paths).index[-1]:
-                        raise ValueError("La serie descargada termina antes que la copia local.")
-                    pairs = [(p, paths.raw / p.name) for p in staged.raw.glob("*.csv")]
-                    pairs += [
-                        (staged.cleaning_log, paths.cleaning_log),
-                        (staged.dataset_csv, paths.dataset_csv),
-                    ]
-                    ok = sum(s.startswith("ok") for s in sources.values())
-                    message = (
-                        f"Serie hasta el {frame.index[-1]:%d/%m/%Y}. Fuentes: {ok}/{len(sources)}."
-                    )
+                    pairs, message = stage_refresh(self.cfg, paths, stage)
                 else:
                     staged = replace(paths, models=stage / "models")
                     seeds = [0] if mode == "fast" else self.cfg["final"]["seeds"]

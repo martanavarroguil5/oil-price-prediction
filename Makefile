@@ -59,8 +59,8 @@ forecast:  ## Previsión actual en la terminal
 app:  ## Lanza el observatorio web local
 	$(OILCAST) -c $(CONFIG) serve
 
-static:  ## Versión estática de la web para GitHub Pages -> site/
-	$(OILCAST) -c $(CONFIG) export-static --out site
+static:  ## Versión estática de la web para GitHub Pages -> site/ (REFRESH=1 descarga antes)
+	$(OILCAST) -c $(CONFIG) export-static --out site $(if $(REFRESH),--refresh)
 
 test:  ## Tests (CPU, rápidos)
 	poetry run pytest
