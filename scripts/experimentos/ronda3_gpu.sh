@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Ronda 3 (docs/experimento-ronda3.md) en la GPU: cuatro carriles en paralelo.
-# Uso: PY=/ruta/al/python scripts/ronda3_gpu.sh   (logs en reports/experiments/ronda3/logs)
+# Uso: PY=/ruta/al/python scripts/experimentos/ronda3_gpu.sh   (logs en reports/experiments/ronda3/logs)
 set -uo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 PY="${PY:-.venv/bin/python}"
 export PYTHONPATH=src
 LOG=reports/experiments/ronda3/logs

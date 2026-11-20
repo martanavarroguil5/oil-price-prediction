@@ -1,6 +1,6 @@
 """Comprobaciones de la propuesta B (RNN W1 a 5 y 63 sesiones, RNN R4 a 252).
 
-Uso: python scripts/verificar_propuesta_b.py
+Uso: python scripts/experimentos/verificar_propuesta_b.py
 Escribe reports/experiments/propuesta_b/verificacion.csv y placebo.csv e imprime un resumen.
 
 1. Ninguna variable mira al futuro: las variables calculadas con datos cortados en una fecha

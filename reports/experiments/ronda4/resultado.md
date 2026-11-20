@@ -59,7 +59,7 @@ elegida. La referencia lineal usa la misma variable y los mismos reentrenos y no
 
 ## Reproducción de la criba y el piloto
 
-- Criba de los 20 predictores: `python scripts/ronda4_criba.py .`
-- Piloto con los hiperparámetros de W1: `python scripts/ronda4_piloto.py P4 lstm 252` (variantes
+- Criba de los 20 predictores: `python scripts/experimentos/ronda4_criba.py .`
+- Piloto con los hiperparámetros de W1: `python scripts/experimentos/ronda4_piloto.py P4 lstm 252` (variantes
   P1-P4). Puntuaciones de desarrollo de todas las variantes, incluida la referencia lineal:
   [piloto/desarrollo.csv](piloto/desarrollo.csv).

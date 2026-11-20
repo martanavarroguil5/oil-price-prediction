@@ -89,9 +89,11 @@ def main() -> None:
                     ),
                 }
             )
-    pd.DataFrame(stability).to_csv(paths.reports / "auditoria-estabilidad.csv", index=False)
+    pd.DataFrame(stability).to_csv(
+        paths.reports / "experiments" / "auditoria" / "estabilidad.csv", index=False
+    )
     write_json(
-        paths.reports / "auditoria-validacion.json",
+        paths.reports / "experiments" / "auditoria" / "validacion.json",
         {
             "scope": (
                 "saved predictions, planned temporal splits, metric reconstruction "
@@ -108,9 +110,7 @@ def main() -> None:
             },
         },
     )
-    print(
-        "Audit completed: reports/auditoria-validacion.json and reports/auditoria-estabilidad.csv"
-    )
+    print("Audit completed: reports/experiments/auditoria/")
 
 
 if __name__ == "__main__":

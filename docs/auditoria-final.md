@@ -67,8 +67,8 @@ independiente. Nada de esta auditoría demuestra que se haya alcanzado el límit
 ## Reproducción
 
 ```sh
-poetry run python scripts/audit_results.py
+poetry run python scripts/experimentos/audit_results.py
 ```
 
-[Controles e identificación de entradas](../reports/auditoria-validacion.json) ·
-[Sensibilidad completa de las nueve combinaciones](../reports/auditoria-estabilidad.csv)
+[Controles e identificación de entradas](../reports/experiments/auditoria/validacion.json) ·
+[Sensibilidad completa de las nueve combinaciones](../reports/experiments/auditoria/estabilidad.csv)

@@ -1,6 +1,6 @@
 """Ronda 4, criba de 20 predictores con regresión lineal recursiva (solo objetivo < 2022).
 
-Uso: python scripts/ronda4_criba.py .   (la ruta es la raíz del proyecto)
+Uso: python scripts/experimentos/ronda4_criba.py .   (la ruta es la raíz del proyecto)
 """
 
 import sys

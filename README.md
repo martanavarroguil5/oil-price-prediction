@@ -2,6 +2,8 @@
 
 Aplicación para prever el precio del Brent a **5, 63 y 252 sesiones de cotización**. Incluye la serie diaria, los pesos entrenados y la validación de RNN simple, LSTM y GRU frente a mantener el último precio conocido. [Enunciado de la práctica](docs/assignment/ENUNCIADO.pdf)
 
+**Web publicada:** <https://martanavarroguil5.github.io/oil-price-prediction/> (se actualiza cada día).
+
 ## Abrir la aplicación
 
 Con Python 3.12 o superior y Poetry, desde la raíz del proyecto:
@@ -12,6 +14,8 @@ make app
 ```
 
 Abre [el observatorio](http://127.0.0.1:8501). La primera previsión utiliza los datos incluidos y funciona sin conexión. En **Datos y modelo** se puede actualizar la serie y generar otra previsión con los pesos existentes. El reentrenamiento es una acción independiente.
+
+## Qué incluye la aplicación
 
 **Decisiones** traduce las previsiones a un presupuesto en USD: volumen equivalente,
 precio de referencia, coste adicional y porcentaje de compra al inicio. Compara comprar
@@ -115,17 +119,6 @@ Los datos diarios proceden de la EIA vía FRED y de Yahoo Finance. El calendario
 
 Las tres redes reciben las mismas 60 sesiones y las mismas variables en cada plazo: 20 a 5 y 63 sesiones y la relación oro/crudo a 252. Se compararon con 80 ensayos por red y horizonte, cuatro bloques de validación cronológica y cinco semillas. En cada corte solo se entrena con objetivos ya realizados. La salida incluye la mediana y los intervalos de predicción. [Cuaderno de comparación](notebooks/02_comparativa_modelos.ipynb)
 
-## Dónde está cada cosa
-
-| Carpeta | Contenido |
-|---|---|
-| `app/` y `src/oilcast/` | Interfaz HTML y Three.js, datos, redes, entrenamiento, evaluación e inferencia. |
-| `data/` y `models/` | Series originales, conjunto preparado y pesos de la familia publicada. |
-| `configs/` | Configuración principal, variante W0 y ejecución de prueba. |
-| `notebooks/` y `docs/` | Los dos cuadernos, el enunciado, la decisión y el registro experimental. |
-| `reports/` | Informe, figuras, resultados de la aplicación y tablas de los experimentos principales. |
-| `scripts/` y `tests/` | Script de descarga facilitado para la práctica y pruebas automáticas. |
-
 ## Reproducir la comparativa
 
 `make forecast` calcula los tres pronósticos. `make report` reconstruye el informe y las figuras con los resultados incluidos. Para repetir el entrenamiento y la evaluación con los hiperparámetros publicados:
@@ -147,3 +140,19 @@ la incertidumbre por bloques y los resultados por año en un directorio independ
 En Windows se puede ejecutar `.venv\Scripts\python.exe -m oilcast -c configs/baselines.yaml baselines`.
 Es una comparación retrospectiva; el periodo desde 2022 ya se había consultado.
 [Protocolo](docs/experimento-baselines.md) · [Resultados](reports/experiments/baselines/resultado.md)
+
+## Estructura del repositorio
+
+| Carpeta | Contenido |
+|---|---|
+| `app/static/` | Web: HTML, CSS, JavaScript y librerías locales. Sus pruebas están en `app/tests/`. |
+| `src/oilcast/` | Paquete de Python: datos, variables, redes, entrenamiento, evaluación, inferencia, servidor y versión estática. |
+| `configs/` | `default.yaml` (aplicación), `smoke.yaml` (prueba rápida) y una configuración por experimento. |
+| `data/` | Series descargadas (`raw/`), conjunto preparado (`processed/`) y el CSV del script de la práctica. |
+| `models/` | Pesos y metadatos del modelo de la aplicación. |
+| `reports/` | Informe comparativo, figuras, resultados de la aplicación (`results/`) y de cada experimento (`experiments/`). |
+| `notebooks/` | Exploración y limpieza de los datos, y comparativa de las tres redes. |
+| `docs/` | Enunciado, protocolo de cada experimento, registro de experimentos y guía de demostración. |
+| `scripts/` | `download_data.py`, el script de descarga de la práctica, y `experimentos/`, con los scripts de las rondas y la auditoría. |
+| `tests/` | Pruebas automáticas (`make test`). |
+| `.github/workflows/` | Pruebas en cada cambio y publicación diaria en GitHub Pages. |

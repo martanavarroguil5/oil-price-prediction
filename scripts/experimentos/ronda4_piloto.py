@@ -1,6 +1,6 @@
 """Ronda 4, piloto solo con desarrollo: W1 (hiperparámetros publicados) + oro_crudo [+ atajo].
 
-Uso: python scripts/ronda4_piloto.py <variante> <red> <h>
+Uso: python scripts/experimentos/ronda4_piloto.py <variante> <red> <h>
 Variantes: P1 = W1 + oro_crudo, P2 = P1 + atajo, P3 = solo oro_crudo, P4 = P3 + atajo.
 Escribe reports/experiments/ronda4/piloto/<variant>/predictions/<arch>_h<h>.csv con las
 predicciones de los reentrenos de calibración (2008-2020). No genera nada del test.

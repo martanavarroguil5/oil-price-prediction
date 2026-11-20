@@ -4,7 +4,7 @@ Propuesta B = RNN simple en los tres plazos: la red W1 publicada a 5 y 63 sesion
 diarias) y la red de la ronda 4 a 252 sesiones (relación oro/crudo con atajo lineal). Se eligió
 **después de ver el test 2022-2026**. [Comparación con las demás redes](../propuestas.md)
 
-Comprobaciones con `python scripts/verificar_propuesta_b.py`.
+Comprobaciones con `python scripts/experimentos/verificar_propuesta_b.py`.
 [Resultados](verificacion.csv) · [Placebos](placebo.csv)
 
 ## 1. No hay trampas en el cálculo
