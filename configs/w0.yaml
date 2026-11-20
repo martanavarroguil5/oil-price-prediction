@@ -1,6 +1,11 @@
 # Reproducción de W0 con los nueve ajustes de hiperparámetros publicados.
 base: default.yaml
 
+# W1 tal como se ejecutó: sin variables por plazo y reentrenos de calibración 2014-2020.
+horizon_overrides: null
+splits:
+  calibration_refits: ["2014-01-01", "2016-01-01", "2018-01-01", "2020-01-01"]
+
 paths:
   results_dir: reports/experiments/w0
   models_dir: reports/experiments/w0/models

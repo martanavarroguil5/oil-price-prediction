@@ -1,0 +1,23 @@
+# Ronda 3 (docs/experimento-ronda3.md): una red por arquitectura para los tres horizontes.
+# Mismo dataset, ventana, variables, espacio de búsqueda y bloques de validación que W1.
+base: default.yaml
+
+paths:
+  results_dir: reports/experiments/ronda3/multi
+  models_dir: reports/experiments/ronda3/multi/models
+  figures_dir: reports/experiments/ronda3/multi/figures
+
+splits:
+  # 2008-2012 no se usaron nunca para validar: amplían el desarrollo a la crisis de 2008.
+  calibration_refits: ["2008-01-01", "2010-01-01", "2012-01-01", "2014-01-01",
+                       "2016-01-01", "2018-01-01", "2020-01-01"]
+
+tuning:
+  n_trials: 80                   # mismo presupuesto por estudio que W1 y para las tres redes
+  # Selección de hiperparámetros y parada temprana por el error de la mediana frente al
+  # ingenuo (media de los tres horizontes), alineada con el MAE con el que se compara.
+  objective: median
+
+selection:
+  arch: null
+  rule: null

@@ -21,3 +21,9 @@ node_modules/
 trials.csv
 /reports/*_smoke/
 /models_smoke/
+
+# Rondas 3 y 4: como en W0, solo se versionan resúmenes e hiperparámetros
+/reports/experiments/ronda*/**/predictions/
+/reports/experiments/**/DONE
+/reports/experiments/*/logs/
+/reports/experiments/*/piloto/logs/

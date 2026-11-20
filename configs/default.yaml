@@ -55,6 +55,15 @@ targets:
     "80": [0.10, 0.90]
     "50": [0.25, 0.75]
 
+# Variables propias de cada plazo (ronda 4, docs/experimento-ronda4.md). A 63 y 252 sesiones
+# las tres redes solo reciben la relación oro/crudo (barriles por onza frente a su media de 3
+# años) y llevan un atajo lineal. A 5 sesiones usan las 20 variables de arriba.
+horizon_overrides:
+  "63": &oro
+    features: {valuation: true, valuation_window: 756, only: [oro_crudo]}
+    highway: true
+  "252": *oro
+
 splits:
   test_start: "2022-01-01"
   # Bloques de validación de 2 años para la CV walk-forward (expanding window, purgada)
@@ -65,7 +74,9 @@ splits:
     - ["2020-01-01", "2022-01-01"]
   # Reentrenos de la evaluación walk-forward. Los anteriores a test_start solo generan
   # predicciones fuera de muestra para calibrar el intervalo (conformal); nunca se reportan.
-  calibration_refits: ["2014-01-01", "2016-01-01", "2018-01-01", "2020-01-01"]
+  # 2008-2012 no se usan nunca para validar ni elegir hiperparámetros (rondas 3 y 4).
+  calibration_refits: ["2008-01-01", "2010-01-01", "2012-01-01", "2014-01-01",
+                       "2016-01-01", "2018-01-01", "2020-01-01"]
   test_refit_every_years: 1
 
 architectures: [rnn, lstm, gru]
@@ -114,11 +125,12 @@ app:
   data_ttl_s: 3600
   history_years_default: 5
 
-# Red de la aplicación, fijada antes de ver el test con la regla de docs/experimento-ronda2.md.
+# Red de la aplicación, fijada antes de ver el test con la regla de docs/experimento-ronda4.md.
 selection:
-  arch: rnn
+  arch: lstm
   rule: >-
-    regla fijada antes de ejecutar la ronda 2 (docs/experimento-ronda2.md): se elige la
-    combinación de configuración y red con mayor mejora media del MAE frente al ingenuo en las
-    predicciones anteriores a 2022 (reentrenos de 2014 a 2020), sin mirar el test. Ganó la RNN
-    simple entrenada sin deriva y con recalibración del centro (+3,8 % antes de 2022).
+    regla fijada antes de la búsqueda de la ronda 4 (docs/experimento-ronda4.md): se elige la
+    combinación de variante y red con mayor mejora media del MAE frente al ingenuo en los tres
+    plazos, en orígenes de 2008 a 2021 con objetivo anterior a 2022, sin mirar el test. Ganó la
+    LSTM con la relación oro/crudo a 63 y 252 sesiones (+5,3 % antes de 2022, +5,6 % en
+    2008-2013, años que no se usaron para elegir hiperparámetros).

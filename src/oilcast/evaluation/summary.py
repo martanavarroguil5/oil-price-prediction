@@ -12,7 +12,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from oilcast.config import Config
+from oilcast.config import Config, for_horizon
 from oilcast.evaluation.conformal import (
     conformal_offset,
     cqr_scores,
@@ -231,7 +231,7 @@ def summarize(cfg: Config, paths: Paths) -> dict:
     comp_rows, seed_rows, year_frames, offsets, shrink = [], [], [], {}, {}
     pred_dir = paths.results / "predictions"
     for h in horizons:
-        naive = naive_predictions(cfg, panel, h)
+        naive = naive_predictions(cfg, Panel.load(paths, for_horizon(cfg, h)), h)
         naive.to_csv(pred_dir / f"naive_h{h}.csv", index=False, float_format="%.6g")
         naive_test = naive[naive["phase"] == "test"]
         comp_rows.append({"model": "naive", "horizon": h, **naive_metrics(naive_test, h, cfg)})

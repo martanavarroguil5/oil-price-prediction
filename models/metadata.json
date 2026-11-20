@@ -1,7 +1,7 @@
 {
-  "arch": "rnn",
-  "arch_label": "RNN simple",
-  "trained_at": "2026-11-17T18:05:01+00:00",
+  "arch": "lstm",
+  "arch_label": "LSTM",
+  "trained_at": "2026-11-20T00:02:58+00:00",
   "last_data_date": "2026-11-03",
   "device": "GPU",
   "seeds": [
@@ -57,164 +57,208 @@
     "5": {
       "n_train": 6185,
       "last_train_origin": "2026-10-27",
-      "train_seconds": 111.79398058500374,
-      "n_params": 5959
+      "feature_names": [
+        "r_brent",
+        "r_wti",
+        "r_gas",
+        "r_gold",
+        "r_copper",
+        "r_dxy",
+        "r_eurusd",
+        "r_cny",
+        "log_vix",
+        "ecb_rate",
+        "d_ecb_rate",
+        "spread_brent_wti",
+        "wti_basis",
+        "wti_fut_range",
+        "wti_fut_volume",
+        "rv_21",
+        "rv_63",
+        "dev_ma63",
+        "dev_ma252",
+        "mom_252"
+      ],
+      "train_seconds": 18.711916290980298,
+      "n_params": 1339143
     },
     "63": {
-      "n_train": 6127,
+      "n_train": 5991,
       "last_train_origin": "2026-08-05",
-      "train_seconds": 46.46817987499526,
-      "n_params": 22599
+      "feature_names": [
+        "oro_crudo"
+      ],
+      "train_seconds": 31.138550625997595,
+      "n_params": 332181
     },
     "252": {
-      "n_train": 5938,
+      "n_train": 5802,
       "last_train_origin": "2025-11-04",
-      "train_seconds": 94.6094027919753,
-      "n_params": 204551
+      "feature_names": [
+        "oro_crudo"
+      ],
+      "train_seconds": 48.27946833393071,
+      "n_params": 84181
     }
   },
   "spec": {
-    "arch": "rnn",
-    "arch_label": "RNN simple",
-    "selection_rule": "regla fijada antes de ejecutar la ronda 2 (docs/experimento-ronda2.md): se elige la combinación de configuración y red con mayor mejora media del MAE frente al ingenuo en las predicciones anteriores a 2022 (reentrenos de 2014 a 2020), sin mirar el test. Ganó la RNN simple entrenada sin deriva y con recalibración del centro (+3,8 % antes de 2022).",
+    "arch": "lstm",
+    "arch_label": "LSTM",
+    "selection_rule": "regla fijada antes de la búsqueda de la ronda 4 (docs/experimento-ronda4.md): se elige la combinación de variante y red con mayor mejora media del MAE frente al ingenuo en los tres plazos, en orígenes de 2008 a 2021 con objetivo anterior a 2022, sin mirar el test. Ganó la LSTM con la relación oro/crudo a 63 y 252 sesiones (+5,3 % antes de 2022, +5,6 % en 2008-2013, años que no se usaron para elegir hiperparámetros).",
     "remove_drift": true,
     "horizons": {
       "5": {
         "hparams": {
-          "hidden_size": 64,
-          "num_layers": 1,
-          "dropout": 0.49782136436451363,
-          "lr": 0.0006227107978966564,
-          "weight_decay": 1.1455703553767643e-05,
+          "hidden_size": 256,
+          "num_layers": 3,
+          "dropout": 0.08587632913132398,
+          "lr": 0.0008910832427946525,
+          "weight_decay": 0.0005344715414645993,
           "batch_size": 128
         },
-        "epochs": 25,
+        "epochs": 3,
         "conformal_offsets": {
-          "80": 0.006380579399999989,
-          "50": 0.002429975464301355
+          "80": 0.0026875862014534013,
+          "50": 0.0009707179999999989
         },
-        "center_shrink": 0.536182814457303,
+        "center_shrink": 0.0,
         "test_metrics": {
-          "mae": 3.951442458129329,
-          "rmse": 5.703273963932233,
-          "skill_mae": 0.008855971734673451,
-          "skill_rmse": 0.006115806448453109,
-          "dm_pvalue": 0.2235838831094259,
-          "dir_acc": 0.5328407224958949,
-          "coverage80": 0.7898193760262726,
-          "width80": 11.035627435035265,
+          "mae": 3.986748994538197,
+          "mse": 32.92887552456827,
+          "r2": 0.8747015015067305,
+          "rmse": 5.7383687163311725,
+          "skill_mae": 0.0,
+          "skill_rmse": 0.0,
+          "dm_pvalue": NaN,
+          "dir_acc": NaN,
+          "coverage80": 0.7471264367816092,
+          "width80": 10.543318175053084,
           "n_test": 1218,
           "first_origin": "2022-01-03",
-          "last_origin": "2026-10-27",
-          "r2": 0.8762294176860338,
-          "mse": 32.527333907667284
+          "last_origin": "2026-10-27"
         },
         "naive_metrics": {
           "mae": 3.9867487684729075,
           "rmse": 5.738368316513031,
-          "coverage80": 0.7610837438423645,
-          "width80": 10.606018532113863,
+          "mse": 32.928870935960596,
           "r2": 0.8747015168837442,
-          "mse": 32.928870935960596
+          "coverage80": 0.7610837438423645,
+          "width80": 10.606018532113863
         },
         "skill_by_year": {
-          "2022": 0.01581360631245632,
-          "2023": 0.006042822105915557,
-          "2024": 0.020499712656991353,
-          "2025": 0.010525833508577054,
-          "2026": -0.0009797283967030168
+          "2022": 0.0,
+          "2023": 0.0,
+          "2024": 0.0,
+          "2025": 0.0,
+          "2026": 0.0
         }
       },
       "63": {
         "hparams": {
-          "hidden_size": 64,
+          "hidden_size": 128,
           "num_layers": 3,
-          "dropout": 0.4191738204187788,
-          "lr": 0.002079107745490913,
-          "weight_decay": 4.615919003644809e-05,
+          "dropout": 0.4836727266952246,
+          "lr": 0.0011394387213848002,
+          "weight_decay": 1.1037125602819762e-05,
           "batch_size": 256
         },
-        "epochs": 7,
+        "epochs": 14,
         "conformal_offsets": {
-          "80": 0.08624330999999996,
-          "50": 0.0313403
+          "80": 0.043173716424300686,
+          "50": 0.015708750564924392
         },
-        "center_shrink": 0.4404348165779649,
+        "center_shrink": 0.8950064216781176,
         "test_metrics": {
-          "mae": 11.468585797212524,
-          "rmse": 17.1169984673291,
-          "skill_mae": 0.03980087698653079,
-          "skill_rmse": 0.0183789494351011,
-          "dm_pvalue": 0.11799681319783561,
-          "dir_acc": 0.5922413793103448,
-          "coverage80": 0.8767241379310344,
-          "width80": 49.660569319407436,
+          "mae": 12.220715600221508,
+          "mse": 265.4142883972003,
+          "r2": -0.05318631312952471,
+          "rmse": 16.291540393627617,
+          "skill_mae": -0.023170651501057682,
+          "skill_rmse": 0.06571709829634609,
+          "dm_pvalue": 0.4561052926135366,
+          "dir_acc": 0.525,
+          "coverage80": 0.8741379310344828,
+          "width80": 43.13417510662465,
           "n_test": 1160,
           "first_origin": "2022-01-03",
-          "last_origin": "2026-08-05",
-          "r2": -0.1626155596928569,
-          "mse": 292.9916365305468
+          "last_origin": "2026-08-05"
         },
         "naive_metrics": {
           "mae": 11.943965517241379,
           "rmse": 17.43748011987496,
-          "coverage80": 0.8448275862068966,
-          "width80": 38.452217535998905,
+          "mse": 304.06571293103445,
           "r2": -0.20655852849752043,
-          "mse": 304.06571293103445
+          "coverage80": 0.8405172413793104,
+          "width80": 37.60345977788993
         },
         "skill_by_year": {
-          "2022": 0.0877446394208461,
-          "2023": 0.032358472437921226,
-          "2024": 0.09688927681230963,
-          "2025": -0.010951616798796193,
-          "2026": 0.02074769584094882
-        }
+          "2022": 0.09073059177217713,
+          "2023": 0.041238929734939256,
+          "2024": -0.23687918566534427,
+          "2025": -0.41894663503154295,
+          "2026": 0.11090711791704055
+        },
+        "features": {
+          "valuation": true,
+          "valuation_window": 756,
+          "only": [
+            "oro_crudo"
+          ]
+        },
+        "highway": true
       },
       "252": {
         "hparams": {
-          "hidden_size": 256,
-          "num_layers": 2,
-          "dropout": 0.46891025202400305,
-          "lr": 0.002535274047733857,
-          "weight_decay": 0.009971340773063218,
+          "hidden_size": 64,
+          "num_layers": 3,
+          "dropout": 0.10952616700114112,
+          "lr": 0.0025619912673610678,
+          "weight_decay": 0.0033248609714088655,
           "batch_size": 128
         },
-        "epochs": 10,
+        "epochs": 22,
         "conformal_offsets": {
-          "80": 0.24964194,
-          "50": 0.07105051999999999
+          "80": 0.08063940000000003,
+          "50": 0.037146400000000024
         },
         "center_shrink": 1.0,
         "test_metrics": {
-          "mae": 17.627335142947054,
-          "rmse": 27.06091381800591,
-          "skill_mae": -0.06820131686567876,
-          "skill_rmse": -0.20125387529496974,
-          "dm_pvalue": 0.11982735045704648,
-          "dir_acc": 0.5427394438722966,
-          "coverage80": 0.8970133882595263,
-          "width80": 113.9393093719493,
+          "mae": 14.853532955656316,
+          "mse": 319.0048053999755,
+          "r2": -0.5504059085819548,
+          "rmse": 17.860705624358058,
+          "skill_mae": 0.09988870497601732,
+          "skill_rmse": 0.20715013576197883,
+          "dm_pvalue": 0.39569050618165214,
+          "dir_acc": 0.5355303810504635,
+          "coverage80": 0.995880535530381,
+          "width80": 89.94926500852846,
           "n_test": 971,
           "first_origin": "2022-01-03",
-          "last_origin": "2025-11-04",
-          "r2": -2.5590419412154906,
-          "mse": 732.2930566655433
+          "last_origin": "2025-11-04"
         },
         "naive_metrics": {
           "mae": 16.50188465499485,
           "rmse": 22.527223464363914,
-          "coverage80": 0.933058702368692,
-          "width80": 89.74293344160958,
+          "mse": 507.47579701338816,
           "r2": -1.466400017135605,
-          "mse": 507.47579701338816
+          "coverage80": 0.9340885684860968,
+          "width80": 90.14634165239944
         },
         "skill_by_year": {
-          "2022": -0.2692094584014031,
-          "2023": -0.04130086091381946,
-          "2024": 0.6410117566534582,
-          "2025": -0.2466479962361956
-        }
+          "2022": 0.42425518735792733,
+          "2023": -0.19662167008236153,
+          "2024": -0.9688893601018229,
+          "2025": 0.4294124423529254
+        },
+        "features": {
+          "valuation": true,
+          "valuation_window": 756,
+          "only": [
+            "oro_crudo"
+          ]
+        },
+        "highway": true
       }
     }
   }

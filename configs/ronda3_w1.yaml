@@ -1,0 +1,10 @@
+# Ronda 3, referencia: la RNN/LSTM/GRU W1 publicadas con los reentrenos de 2008-2012 añadidos.
+base: ronda3.yaml
+
+paths:
+  results_dir: reports/experiments/ronda3/w1
+  models_dir: reports/experiments/ronda3/w1/models
+  figures_dir: reports/experiments/ronda3/w1/figures
+
+# Predicciones W1 publicadas: sin variables por plazo.
+horizon_overrides: null

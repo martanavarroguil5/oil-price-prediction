@@ -1,9 +1,9 @@
 import Chart from "./vendor/chart.js";
 import { scatterData } from "./scatter-stats.js";
 
-const mint = "#83ebc4",
-  amber = "#efb671",
-  gray = "#8c9ba6";
+const mint = "#efe9df",
+  amber = "#e8a33d",
+  gray = "#93a3b1";
 const fmt = new Intl.NumberFormat("es-ES", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
@@ -22,14 +22,14 @@ const trace = (label, data, color, extra = {}) => ({
   ...extra,
 });
 Chart.defaults.font.family = "Barlow, sans-serif";
-Chart.defaults.color = "#acb9bd";
+Chart.defaults.color = "#b5ac9f";
 const instances = new Map();
 export function removeCharts() {
   instances.forEach((c) => c.destroy());
   instances.clear();
 }
 
-function paint(id, datasets, { origin, originLabel = "ÚLTIMO DATO", click, period = 12 } = {}) {
+function paint(id, datasets, { origin, originLabel = "Último dato", click, period = 12 } = {}) {
   const canvas = document.getElementById(id);
   instances.get(id)?.destroy();
   const chart = new Chart(canvas, {
@@ -49,7 +49,7 @@ function paint(id, datasets, { origin, originLabel = "ÚLTIMO DATO", click, peri
         x: {
           type: "linear",
           grid: { display: false },
-          border: { color: "#324049" },
+          border: { color: "#34302b" },
           ticks: {
             count: canvas.parentElement.clientWidth < 440 ? 4 : 6,
             maxRotation: 0,
@@ -65,7 +65,7 @@ function paint(id, datasets, { origin, originLabel = "ÚLTIMO DATO", click, peri
         },
         y: {
           border: { display: false },
-          grid: { color: "#28353b", drawTicks: false },
+          grid: { color: "#25221e", drawTicks: false },
           ticks: {
             count: 5,
             padding: 8,
@@ -79,11 +79,11 @@ function paint(id, datasets, { origin, originLabel = "ÚLTIMO DATO", click, peri
         legend: { display: false },
         tooltip: {
           displayColors: true,
-          backgroundColor: "#1d2c31",
-          titleColor: "#eff5f2",
-          bodyColor: "#cfdbda",
+          backgroundColor: "#1b1916",
+          titleColor: "#efe9df",
+          bodyColor: "#b5ac9f",
           borderWidth: 1,
-          borderColor: "#486057",
+          borderColor: "#3a352f",
           callbacks: {
             title: (items) =>
               date(items[0].parsed.x, {
@@ -112,14 +112,14 @@ function paint(id, datasets, { origin, originLabel = "ÚLTIMO DATO", click, peri
                 px = x.getPixelForValue(origin);
               ctx.save();
               ctx.setLineDash([3, 4]);
-              ctx.strokeStyle = "#708b8399";
+              ctx.strokeStyle = "#8a807299";
               ctx.beginPath();
               ctx.moveTo(px, a.top);
               ctx.lineTo(px, a.bottom);
               ctx.stroke();
               ctx.setLineDash([]);
               ctx.font = "9px Plex, monospace";
-              ctx.fillStyle = "#a8b8b2";
+              ctx.fillStyle = "#b5ac9f";
               ctx.textAlign = "right";
               ctx.fillText(originLabel, px - 5, a.top + 7);
               ctx.restore();
@@ -147,8 +147,8 @@ export function historyChart(state, h, months, ma50, ma200) {
     ),
   ];
   [
-    [ma50, 2, "Media 50 d", "#9ca9e0"],
-    [ma200, 3, "Media 200 d", "#82949f"],
+    [ma50, 2, "Media 50 d", "#c4a978"],
+    [ma200, 3, "Media 200 d", "#7c8790"],
   ].forEach(([show, index, label, color]) => {
     if (show)
       data.push(
@@ -181,8 +181,8 @@ export function replayChart(record) {
   data.push(...forecastPoints(record.targetDate, record.median, record.interval,
     [record.origin, record.price]));
   if (record.outcome) data.push(trace("Brent observado después", record.outcome.future.map(r =>
-    xy(r[0], r[1])), "#a7acff", { borderWidth: 2 }));
-  paint("replay-chart", data, { origin: Date.parse(record.origin), originLabel: "ORIGEN", period: 24 });
+    xy(r[0], r[1])), "#93a3b1", { borderWidth: 2 }));
+  paint("replay-chart", data, { origin: Date.parse(record.origin), originLabel: "Origen", period: 24 });
 }
 
 export function validationChart(rows, name) {
@@ -216,18 +216,18 @@ export function scatterChart(rows, name, unit, compare) {
   const values = [...result.points.flatMap(p=>[p.x,p.y]), ...(compare ? result.naive.map(p=>p.y) : [])];
   const low = Math.min(...values), high = Math.max(...values), pad = Math.max((high-low)*.06, .5);
   const min = low-pad, max = high+pad, label = unit === "retorno" ? "p. p." : "USD/barril";
-  const sets = [{label:name,data:result.points,backgroundColor:"#83ebc480",pointRadius:2.2,pointHoverRadius:5,order:1},
+  const sets = [{label:name,data:result.points,backgroundColor:"#e8a33d99",pointRadius:2.2,pointHoverRadius:5,order:1},
     {type:"line",label:"Predicción perfecta · y = x",data:[{x:min,y:min},{x:max,y:max}],
-      borderColor:"#d7c396",borderDash:[5,5],borderWidth:1.2,pointRadius:0,order:0}];
-  if (compare) sets.push({label:"Ingenuo",data:result.naive,backgroundColor:"#8c9ba64d",pointRadius:2,pointHoverRadius:4,order:2});
+      borderColor:"#efe9df99",borderDash:[5,5],borderWidth:1.2,pointRadius:0,order:0}];
+  if (compare) sets.push({label:"Ingenuo",data:result.naive,backgroundColor:"#93a3b14d",pointRadius:2,pointHoverRadius:4,order:2});
   instances.get("scatter-chart")?.destroy();
-  const axis = title => ({type:"linear",min,max,title:{display:true,text:title+" ("+label+")",color:"#b9cbc7",font:{size:11}},
-    grid:{color:"#28353b"},border:{color:"#324049"},ticks:{maxTicksLimit:6,font:{family:"Plex",size:9},
+  const axis = title => ({type:"linear",min,max,title:{display:true,text:title+" ("+label+")",color:"#b5ac9f",font:{size:11}},
+    grid:{color:"#25221e"},border:{color:"#34302b"},ticks:{maxTicksLimit:6,font:{family:"Plex",size:9},
       callback:v=>Number(v).toLocaleString("es-ES",{maximumFractionDigits:1})}});
   const chart = new Chart(document.getElementById("scatter-chart"),{type:"scatter",data:{datasets:sets},options:{
     responsive:true,maintainAspectRatio:false,animation:false,parsing:false,
     scales:{x:axis("Real observado"),y:axis("Predicción")},
-    plugins:{legend:{display:false},tooltip:{backgroundColor:"#1d2c31",callbacks:{
+    plugins:{legend:{display:false},tooltip:{backgroundColor:"#1b1916",callbacks:{
       title:items=>items[0].raw.date ? date(Date.parse(items[0].raw.date),{day:"numeric",month:"short",year:"numeric"}) : "Referencia ideal",
       label:item=>item.dataset.label+": real "+fmt.format(item.parsed.x)+" · previsto "+fmt.format(item.parsed.y)+" "+label,
     }}},
@@ -257,7 +257,7 @@ export function cycleChart(state, showAuto, open) {
           title: r.title,
           date: r.date,
         })),
-        i ? "#a7acff" : amber,
+        i ? "#93a3b1" : amber,
         {
           type: "scatter",
           pointStyle: "triangle",

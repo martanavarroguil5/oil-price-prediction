@@ -24,19 +24,19 @@
     }
   },
   "input_sha256": {
-    "data\\raw\\brent_fut.csv": "9c97469d5aa31560656f6bc5f1ec2f32d006bce84e0a696f06a297f3f288343f",
-    "reports\\results\\predictions\\naive_h5.csv": "ed5c14fe8b7305c5d0436565c4fc8c29c2ac46cbc8135d9936a59a78f0d6b438",
-    "reports\\results\\predictions\\rnn_h5_ensemble.csv": "4e8e423aefde4afa69b8383ae232fd996907318f27ba97bfa17ad0d33701d736",
-    "reports\\results\\predictions\\lstm_h5_ensemble.csv": "3b8f7b30dd0506ac56d424b9e64e939c7ed8b6bebb7649535df90cc9f1f1a0e6",
-    "reports\\results\\predictions\\gru_h5_ensemble.csv": "33bad20a64293f8b2b8cff953d3cb716ed9237362b1a92dc1773ec9abe0547ec",
-    "reports\\results\\predictions\\naive_h63.csv": "f97920160c7f7fba803ad733958527e74c7f60e478551d6467bf8254bc9dee5e",
-    "reports\\results\\predictions\\rnn_h63_ensemble.csv": "ce0579f399f8afa282cc0fb9577815379d90cd1fd1b0475486c8d70c1d2ccaf6",
-    "reports\\results\\predictions\\lstm_h63_ensemble.csv": "c60115663dd070659e3ee70589493927d8bc7afff59fe3741a572f17152e3b09",
-    "reports\\results\\predictions\\gru_h63_ensemble.csv": "cf76b119c478ab3260d61edc9532f35a961fd2a40b9c6fc0bbf5d76ae90e5bc6",
-    "reports\\results\\predictions\\naive_h252.csv": "8a770e2bd5ea849e7b9eed35bc6d7399bec93fb802091d037d0b08f7c2ea4909",
-    "reports\\results\\predictions\\rnn_h252_ensemble.csv": "3ec5684724937284e30f5e19e23f1b98977ce9f761590127725364c02e302042",
-    "reports\\results\\predictions\\lstm_h252_ensemble.csv": "dae709de275e56bfa0fc88ccebe408e9990bb6d75d127dfc6081cddf3f134a3b",
-    "reports\\results\\predictions\\gru_h252_ensemble.csv": "c656c84510ad3828c38c57c4e6b9b7d9562525dbe64af8f2df35782aced4f3be"
+    "data/raw/brent_fut.csv": "9c97469d5aa31560656f6bc5f1ec2f32d006bce84e0a696f06a297f3f288343f",
+    "reports/results/predictions/naive_h5.csv": "ac01b94c3ec363d4f4a6bbfa11d55f22c6b727705b99c54754332d0ee09df49b",
+    "reports/results/predictions/rnn_h5_ensemble.csv": "69a884e504c749dac1cb5297097d00c516b7010c5c6cbad7a80fff441899e53a",
+    "reports/results/predictions/lstm_h5_ensemble.csv": "5e4e4bdfafe4210904d15513e4563a3bae4f8546cc8dbb64ae2e45403c0df586",
+    "reports/results/predictions/gru_h5_ensemble.csv": "8dc4da6e84823d9bc7e30deb11299844e68d42d201bcf6a73ef6aaabe9ca9784",
+    "reports/results/predictions/naive_h63.csv": "1705922ef8d87fa39baab67f1c78651eab34f3891074adba4ac227a1072ce350",
+    "reports/results/predictions/rnn_h63_ensemble.csv": "a88cc6976073ed8a69ee1dd0f4fe86225a7db4bcb5be0714c4baeca394ba2ef4",
+    "reports/results/predictions/lstm_h63_ensemble.csv": "78eb4f819a971f128aad8b934ccd4c248f645cf1a09be9a03926426a6ea74cc9",
+    "reports/results/predictions/gru_h63_ensemble.csv": "261de7de524433326fdb088ee061a5d87df55f452391133c9da03309df4220ad",
+    "reports/results/predictions/naive_h252.csv": "135244722cabee1c75ecb1fe765077c4f9949a9915f6c9bbe633341d19b9e62e",
+    "reports/results/predictions/rnn_h252_ensemble.csv": "a23c286a1544e90e793d1fd3abecaef7d6430b697d98e0c98277722c0327ab09",
+    "reports/results/predictions/lstm_h252_ensemble.csv": "0dc989afaa335a624a084017e53b27f4e7c79c6a11d4935eeb54c34440e23491",
+    "reports/results/predictions/gru_h252_ensemble.csv": "ef8ffcab9d4b46fd7bc980e9eea5bbbd69e780034da6b338926eae273700256b"
   },
-  "fingerprint": "2f7c5d8bff691591"
+  "fingerprint": "89ebef2becb9591d"
 }

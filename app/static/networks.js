@@ -1,10 +1,10 @@
 import * as T from "./vendor/three.js";
 
 export const palette = {
-  state: "#85ebc6",
-  input: "#edb475",
-  memory: "#aaa4ff",
-  output: "#e3f4eb",
+  state: "#efe9df",
+  input: "#e8a33d",
+  memory: "#93a3b1",
+  output: "#fbf6ee",
 };
 export const anatomy = {
   rnn: {
@@ -259,8 +259,8 @@ export function createScene(container, arch, interactive = false) {
       group.add(m);
       pulses.push(m);
     });
-    scene.add(new T.AmbientLight(0xd6fff2, 1.6));
-    const key = new T.DirectionalLight(0xeefff4, 2.8);
+    scene.add(new T.AmbientLight(0xf3e7d3, 1.6));
+    const key = new T.DirectionalLight(0xffeedd, 2.8);
     key.position.set(3, 6, 5);
     scene.add(key);
     if (interactive) {

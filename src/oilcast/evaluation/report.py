@@ -12,9 +12,9 @@ import numpy as np
 import pandas as pd
 from matplotlib.figure import Figure  # OO API: no pyplot backend side effects
 
-from oilcast.config import Config
+from oilcast.config import Config, horizon_overrides
 from oilcast.data.dataset import load_dataset
-from oilcast.features.engineering import compute_features
+from oilcast.features.engineering import VALUATION_DESCRIPTIONS, compute_features
 from oilcast.models.recurrent import ARCH_LABELS
 from oilcast.paths import Paths
 from oilcast.training.tune import tuning_summary
@@ -24,6 +24,10 @@ LABELS = {**ARCH_LABELS, "naive": "Ingenuo"}
 COLORS = {"rnn": "#8c6bb1", "lstm": "#2b8cbe", "gru": "#41ab5d", "naive": "#969696"}
 HORIZON_LABELS = {5: "Corto (5 d)", 63: "Medio (63 d)", 252: "Largo (252 d)"}
 SIGNIFICANCE = 0.05
+
+
+def _join_horizons(hs: list[int]) -> str:
+    return " y ".join(str(h) for h in hs) if len(hs) <= 2 else ", ".join(map(str, hs))
 
 
 def _fmt(x: float, nd: int = 2, pct: bool = False, signed: bool = False) -> str:
@@ -205,10 +209,18 @@ def conclusion(
         naive_cov = comp[(comp["model"] == "naive") & (comp["horizon"] == h)].iloc[0]
         pval = _fmt(r["dm_pvalue"], 3).replace(".", ",")
         cov = _fmt(r["coverage80"], pct=True).replace(".", ",")
-        if r["skill_mae"] > 0:
+        rmse = _fmt(r["skill_rmse"], pct=True, signed=True).replace(".", ",")
+        if r["skill_mae"] == 0 and r["skill_rmse"] == 0:
             head = (
-                f"mejora marginal del valor central ({skill} de MAE; las tres redes entre {rng}), "
-                f"positiva en {pos_years} de {len(yb)} años, "
+                "**coincide con el ingenuo**: la recalibración del centro no ha encontrado "
+                f"errores pasados que justifiquen mover la previsión (las tres redes entre {rng})."
+            )
+            dir_txt = "no mueve el valor central, así que no hay acierto direccional que medir"
+        elif r["skill_mae"] > 0:
+            size = "mejora marginal" if r["skill_mae"] < 0.02 else "mejora"
+            head = (
+                f"{size} del valor central ({skill} de MAE y {rmse} de RMSE; las tres redes "
+                f"entre {rng} de MAE), positiva en {pos_years} de {len(yb)} años, "
                 + (
                     f"estadísticamente significativa (p-valor DM {pval})."
                     if sig
@@ -217,9 +229,9 @@ def conclusion(
             )
         else:
             head = (
-                f"**no aporta valor en el valor central**: el error es mayor que el del ingenuo "
-                f"({skill} de MAE, p-valor DM {pval}; las tres redes entre {rng}); solo mejora "
-                f"en {pos_years} de {len(yb)} años."
+                f"**no aporta valor en el valor central en MAE**: el error absoluto es mayor que "
+                f"el del ingenuo ({skill} de MAE, {rmse} de RMSE, p-valor DM {pval}; las tres "
+                f"redes entre {rng} de MAE); solo mejora en {pos_years} de {len(yb)} años."
             )
         better_band = r["winkler80"] < naive_cov["winkler80"]
 
@@ -438,6 +450,32 @@ def build_report(cfg: Config, paths: Paths) -> str:
     )
     test_start = cfg["splits"]["test_start"]
     n_features = len(compute_features(load_dataset(paths), cfg).columns)
+    special = [h for h in horizons if horizon_overrides(cfg, h)]
+    inputs_text = (
+        f"\n  A {_join_horizons([h for h in horizons if h not in special])} sesiones, "
+        f"{n_features} variables estacionarias (rentabilidades, diferenciales, volatilidad, "
+        "desviaciones a medias móviles)."
+    )
+    groups: dict[str, list[int]] = {}
+    for h in special:
+        groups.setdefault(repr(horizon_overrides(cfg, h)), []).append(h)
+    for hs in groups.values():
+        ov = horizon_overrides(cfg, hs[0])
+        names = ov.get("features", {}).get("only")
+        if names:
+            inputs_text += (
+                f"\n  A {_join_horizons(hs)} sesiones, solo "
+                + ", ".join(f"`{n}`" for n in names)
+                + ": "
+                + "; ".join(VALUATION_DESCRIPTIONS.get(n, n).lower() for n in names)
+                + (", con un atajo lineal desde el último día" if ov.get("highway") else "")
+                + " (docs/experimento-ronda4.md)."
+            )
+    if not special:
+        inputs_text = (
+            f" {n_features} variables estacionarias (rentabilidades, diferenciales, "
+            "volatilidad, desviaciones a medias móviles)."
+        )
     extra_conditions = ""
     if cfg["targets"].get("remove_drift"):
         extra_conditions += (
@@ -461,9 +499,8 @@ def build_report(cfg: Config, paths: Paths) -> str:
 
 ## Condiciones de la comparación
 
-- **Mismos datos y misma ventana**: {cfg["features"]["window"]} días hábiles de {n_features}
-  variables estacionarias (rentabilidades, diferenciales, volatilidad, desviaciones a medias
-  móviles).
+- **Mismos datos y misma ventana**: las tres redes reciben las mismas
+  {cfg["features"]["window"]} sesiones de entrada en cada plazo.{inputs_text}
 - **Misma partición**: CV walk-forward expansiva y purgada en desarrollo (4 bloques de
   validación de 2 años: 2014-15, 2016-17, 2018-19, 2020-21) y test walk-forward desde
   {test_start} con reentreno cada 1 de enero, con los hiperparámetros y el nº de épocas

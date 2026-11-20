@@ -39,6 +39,7 @@ class RecurrentQuantileNet(nn.Module):
         num_layers: int,
         dropout: float,
         n_quantiles: int,
+        highway: bool = False,
     ) -> None:
         super().__init__()
         if cell not in CELLS:
@@ -52,15 +53,26 @@ class RecurrentQuantileNet(nn.Module):
         )
         self.dropout = nn.Dropout(dropout)
         self.head = nn.Linear(hidden_size, n_quantiles)
+        # Ronda 4: atajo lineal desde las variables del último día (componente lineal de
+        # LSTNet). Empieza en cero, así que al inicio la red es la misma que sin atajo.
+        self.highway = nn.Linear(n_features, n_quantiles) if highway else None
+        if self.highway is not None:
+            nn.init.zeros_(self.highway.weight)
+            nn.init.zeros_(self.highway.bias)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out, _ = self.rnn(x)
-        return self.head(self.dropout(out[:, -1, :]))
+        y = self.head(self.dropout(out[:, -1, :]))
+        if self.highway is not None:
+            y = y + self.highway(x[:, -1, :])
+        return y
 
 
-def build_model(arch: str, n_features: int, hp: HParams, n_quantiles: int) -> RecurrentQuantileNet:
+def build_model(
+    arch: str, n_features: int, hp: HParams, n_quantiles: int, highway: bool = False
+) -> RecurrentQuantileNet:
     return RecurrentQuantileNet(
-        arch, n_features, hp.hidden_size, hp.num_layers, hp.dropout, n_quantiles
+        arch, n_features, hp.hidden_size, hp.num_layers, hp.dropout, n_quantiles, highway
     )
 
 

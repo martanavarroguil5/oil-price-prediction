@@ -14,12 +14,12 @@ import optuna
 import pandas as pd
 import torch
 
-from oilcast.config import Config
+from oilcast.config import Config, for_horizon
 from oilcast.features.windows import Panel
 from oilcast.models.recurrent import HParams
 from oilcast.paths import Paths
 from oilcast.training.splits import cv_folds
-from oilcast.training.trainer import fit, prepare_data
+from oilcast.training.trainer import fit, predict_scaled, prepare_data
 from oilcast.utils import get_device, read_json, write_json
 
 log = logging.getLogger(__name__)
@@ -36,8 +36,23 @@ def suggest_hparams(trial: optuna.Trial, space: dict) -> HParams:
     )
 
 
+def median_score(q50: int):
+    """Validation error of the median relative to the naive forecast (log returns); used when
+    ``tuning.objective`` is 'median' (ronda 3). The forecast is ``y_scale * output``: the
+    training drift is not added back, so it is compared with the uncentred target."""
+
+    def score(model, data, idx: np.ndarray) -> float:
+        pred = predict_scaled(model, data, idx)[:, q50]
+        actual = data.y[torch.as_tensor(idx, device=data.device)].cpu().numpy()
+        actual = actual + data.y_center / data.y_scale
+        return float(np.abs(actual - pred).mean() / np.abs(actual).mean())
+
+    return score
+
+
 def run_study(cfg: Config, paths: Paths, arch: str, h: int) -> dict:
     """Run (or resume) the study for one architecture and horizon; writes ``best.json``."""
+    cfg = for_horizon(cfg, h)
     torch.set_num_threads(cfg["training"]["num_threads"])
     device = get_device()
     panel = Panel.load(paths, cfg)
@@ -45,6 +60,9 @@ def run_study(cfg: Config, paths: Paths, arch: str, h: int) -> dict:
     prepared = [prepare_data(panel, h, f.train, cfg, device) for f in folds]
     for f in folds:
         log.info("%s h=%d fold %s: train=%d val=%d", arch, h, f.name, len(f.train), len(f.val))
+    score_fn = None
+    if cfg["tuning"].get("objective", "pinball") == "median":
+        score_fn = median_score(cfg["targets"]["quantiles"].index(0.5))
 
     def objective(trial: optuna.Trial) -> float:
         hp = suggest_hparams(trial, cfg["tuning"]["space"])
@@ -59,6 +77,7 @@ def run_study(cfg: Config, paths: Paths, arch: str, h: int) -> dict:
                 epochs=cfg["training"]["max_epochs"],
                 seed=cfg["seed"],
                 val_idx=fold.val,
+                validation_score=score_fn,
             )
             losses.append(res.best_val)
             best_epochs.append(res.best_epoch)

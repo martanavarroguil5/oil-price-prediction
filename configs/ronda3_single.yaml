@@ -1,0 +1,10 @@
+# Ronda 3, variante S1: una red por horizonte (como W1) seleccionada por el error de la mediana.
+base: ronda3.yaml
+
+paths:
+  results_dir: reports/experiments/ronda3/single
+  models_dir: reports/experiments/ronda3/single/models
+  figures_dir: reports/experiments/ronda3/single/figures
+
+# Una red por plazo con las 20 variables de W1 (como se ejecutó).
+horizon_overrides: null

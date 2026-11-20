@@ -83,7 +83,11 @@ def snapshot(cfg: Config, paths: Paths) -> dict:
                 "seeds",
             )
         },
-        "features": len(meta["feature_names"]),
+        # variables de entrada por plazo (a 63 y 252 sesiones solo oro/crudo, ronda 4)
+        "features": {
+            hs: len(info.get("feature_names", meta["feature_names"]))
+            for hs, info in meta["fit"].items()
+        },
         "rule": meta["spec"]["selection_rule"],
         "testStart": cfg["splits"]["test_start"],
         "comparison": records(paths.results / "comparison.csv"),

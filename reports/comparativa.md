@@ -7,9 +7,10 @@
 
 ## Condiciones de la comparación
 
-- **Mismos datos y misma ventana**: 60 días hábiles de 20
-  variables estacionarias (rentabilidades, diferenciales, volatilidad, desviaciones a medias
-  móviles).
+- **Mismos datos y misma ventana**: las tres redes reciben las mismas
+  60 sesiones de entrada en cada plazo.
+  A 5 sesiones, 20 variables estacionarias (rentabilidades, diferenciales, volatilidad, desviaciones a medias móviles).
+  A 63 y 252 sesiones, solo `oro_crudo`: barriles por onza de oro (log) frente a su media de 3 años, con un atajo lineal desde el último día (docs/experimento-ronda4.md).
 - **Misma partición**: CV walk-forward expansiva y purgada en desarrollo (4 bloques de
   validación de 2 años: 2014-15, 2016-17, 2018-19, 2020-21) y test walk-forward desde
   2022-01-01 con reentreno cada 1 de enero, con los hiperparámetros y el nº de épocas
@@ -33,17 +34,17 @@
 | Horizonte | Modelo | MAE ($) | RMSE ($) | R² | Mejora MAE vs ingenuo | Mejora RMSE vs ingenuo | p-valor DM | Acierto direccional | Cobertura IC80 | Anchura IC80 ($) | Winkler IC80 | Parámetros | Tiempo entren. (s) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Corto (5 d) | Ingenuo | 3.99 | 5.74 | 0.875 | — | — | — | — | 76.1 % | 10.61 | 19.93 | — | — |
-| Corto (5 d) | RNN simple | 3.95 | 5.70 | 0.876 | +0.9 % | +0.6 % | 0.224 | 53.3 % | 79.0 % | 11.04 | 19.03 | 5959 | 0.9 |
-| Corto (5 d) | LSTM | 3.99 | 5.74 | 0.875 | +0.0 % | +0.0 % | — | — | 75.9 % | 10.83 | 18.91 | 1339143 | 0.6 |
-| Corto (5 d) | GRU | 3.98 | 5.73 | 0.875 | +0.1 % | +0.1 % | 0.372 | 50.7 % | 81.1 % | 11.98 | 19.12 | 1004807 | 0.4 |
-| Medio (63 d) | Ingenuo | 11.94 | 17.44 | -0.207 | — | — | — | — | 84.5 % | 38.45 | 65.21 | — | — |
-| Medio (63 d) | RNN simple | 11.47 | 17.12 | -0.163 | +4.0 % | +1.8 % | 0.118 | 59.2 % | 87.7 % | 49.66 | 75.72 | 22599 | 0.2 |
-| Medio (63 d) | LSTM | 11.55 | 17.32 | -0.191 | +3.3 % | +0.7 % | 0.839 | 60.0 % | 85.7 % | 45.53 | 72.82 | 89031 | 0.2 |
-| Medio (63 d) | GRU | 11.30 | 17.01 | -0.148 | +5.4 % | +2.4 % | 0.487 | 65.3 % | 88.2 % | 48.62 | 75.32 | 11751 | 3.2 |
-| Largo (252 d) | Ingenuo | 16.50 | 22.53 | -1.466 | — | — | — | — | 93.3 % | 89.74 | 97.12 | — | — |
-| Largo (252 d) | RNN simple | 17.63 | 27.06 | -2.559 | -6.8 % | -20.1 % | 0.120 | 54.3 % | 89.7 % | 113.94 | 128.91 | 204551 | 0.7 |
-| Largo (252 d) | LSTM | 20.24 | 27.52 | -2.682 | -22.7 % | -22.2 % | 0.033 | 52.6 % | 88.7 % | 104.82 | 125.67 | 89031 | 0.1 |
-| Largo (252 d) | GRU | 16.61 | 24.73 | -1.972 | -0.7 % | -9.8 % | 0.198 | 54.8 % | 95.3 % | 133.76 | 137.71 | 66887 | 0.1 |
+| Corto (5 d) | RNN simple | 3.96 | 5.71 | 0.876 | +0.6 % | +0.5 % | 0.148 | 53.3 % | 78.1 % | 10.80 | 19.09 | 5959 | 0.8 |
+| Corto (5 d) | LSTM | 3.99 | 5.74 | 0.875 | +0.0 % | +0.0 % | — | — | 74.7 % | 10.54 | 19.00 | 1339143 | 0.6 |
+| Corto (5 d) | GRU | 3.99 | 5.74 | 0.875 | +0.0 % | +0.0 % | 0.445 | 50.7 % | 78.8 % | 11.41 | 19.16 | 1004807 | 0.4 |
+| Medio (63 d) | Ingenuo | 11.94 | 17.44 | -0.207 | — | — | — | — | 84.1 % | 37.60 | 65.11 | — | — |
+| Medio (63 d) | RNN simple | 12.32 | 16.90 | -0.133 | -3.1 % | +3.1 % | 0.509 | 56.6 % | 86.3 % | 44.47 | 63.31 | 331285 | 2.1 |
+| Medio (63 d) | LSTM | 12.22 | 16.29 | -0.053 | -2.3 % | +6.6 % | 0.456 | 52.5 % | 87.4 % | 43.13 | 58.37 | 332181 | 1.5 |
+| Medio (63 d) | GRU | 12.63 | 16.87 | -0.130 | -5.8 % | +3.2 % | 0.520 | 53.9 % | 86.4 % | 41.87 | 59.84 | 16277 | 0.2 |
+| Largo (252 d) | Ingenuo | 16.50 | 22.53 | -1.466 | — | — | — | — | 93.4 % | 90.15 | 97.57 | — | — |
+| Largo (252 d) | RNN simple | 15.00 | 17.84 | -0.548 | +9.1 % | +20.8 % | 0.413 | 57.0 % | 99.6 % | 88.38 | 88.55 | 68117 | 0.3 |
+| Largo (252 d) | LSTM | 14.85 | 17.86 | -0.550 | +10.0 % | +20.7 % | 0.396 | 53.6 % | 99.6 % | 89.95 | 90.17 | 84181 | 1.1 |
+| Largo (252 d) | GRU | 15.55 | 19.29 | -0.809 | +5.7 % | +14.4 % | 0.526 | 61.1 % | 98.9 % | 90.49 | 91.38 | 990229 | 1.1 |
 
 El R² compara el error cuadrático con el que se obtiene usando la media de los precios reales
 del tramo evaluado. Puede ser negativo. El modelo ingenuo usa el último precio conocido.
@@ -61,32 +62,32 @@ en GPU.
 
 | Horizonte | Modelo | MAE ensemble | MAE por semilla (media ± desv.) | Mejora MAE por semilla (desv.) | Cobertura IC80 sin calibrar | MSE |
 |---|---|---|---|---|---|---|
-| Corto (5 d) | RNN simple | 3.95 | 3.94 ± 0.01 | 0.3 % | 73.8 % | 32.5 |
+| Corto (5 d) | RNN simple | 3.96 | 3.94 ± 0.01 | 0.3 % | 73.4 % | 32.6 |
 | Corto (5 d) | LSTM | 3.99 | 3.99 ± 0.01 | 0.3 % | 73.8 % | 32.9 |
-| Corto (5 d) | GRU | 3.98 | 3.99 ± 0.02 | 0.5 % | 77.4 % | 32.9 |
-| Medio (63 d) | RNN simple | 11.47 | 11.52 ± 0.35 | 2.9 % | 77.5 % | 293.0 |
-| Medio (63 d) | LSTM | 11.55 | 13.63 ± 0.97 | 8.1 % | 71.3 % | 300.0 |
-| Medio (63 d) | GRU | 11.30 | 14.10 ± 0.72 | 6.0 % | 71.0 % | 289.4 |
-| Largo (252 d) | RNN simple | 17.63 | 19.80 ± 3.44 | 20.8 % | 77.9 % | 732.3 |
-| Largo (252 d) | LSTM | 20.24 | 22.59 ± 1.66 | 10.0 % | 69.4 % | 757.5 |
-| Largo (252 d) | GRU | 16.61 | 22.52 ± 1.40 | 8.5 % | 76.6 % | 611.4 |
+| Corto (5 d) | GRU | 3.99 | 3.99 ± 0.02 | 0.5 % | 77.2 % | 32.9 |
+| Medio (63 d) | RNN simple | 12.32 | 12.92 ± 0.58 | 4.8 % | 81.6 % | 285.5 |
+| Medio (63 d) | LSTM | 12.22 | 12.26 ± 0.30 | 2.6 % | 80.3 % | 265.4 |
+| Medio (63 d) | GRU | 12.63 | 13.02 ± 0.31 | 2.6 % | 81.7 % | 284.7 |
+| Largo (252 d) | RNN simple | 15.00 | 15.19 ± 0.75 | 4.5 % | 98.0 % | 318.4 |
+| Largo (252 d) | LSTM | 14.85 | 15.19 ± 1.12 | 6.8 % | 96.6 % | 319.0 |
+| Largo (252 d) | GRU | 15.55 | 15.92 ± 1.52 | 9.2 % | 94.0 % | 372.3 |
 
 
 ## Resultados por año (mejora del MAE frente al ingenuo)
 
 | Horizonte | Modelo | 2022 | 2023 | 2024 | 2025 | 2026 |
 |---|---|---|---|---|---|---|
-| Corto (5 d) | RNN simple | +1.6 % | +0.6 % | +2.0 % | +1.1 % | -0.1 % |
+| Corto (5 d) | RNN simple | +1.0 % | +0.4 % | +1.5 % | +0.7 % | +0.0 % |
 | Corto (5 d) | LSTM | +0.0 % | +0.0 % | +0.0 % | +0.0 % | +0.0 % |
-| Corto (5 d) | GRU | +0.2 % | -0.1 % | +0.3 % | -0.0 % | +0.0 % |
+| Corto (5 d) | GRU | +0.1 % | -0.0 % | +0.1 % | -0.0 % | +0.0 % |
 | Corto (5 d) | MAE ingenuo ($) | 5.35 | 3.00 | 2.36 | 2.39 | 7.45 |
-| Medio (63 d) | RNN simple | +8.8 % | +3.2 % | +9.7 % | -1.1 % | +2.1 % |
-| Medio (63 d) | LSTM | -5.4 % | -1.1 % | +30.1 % | +4.7 % | +3.6 % |
-| Medio (63 d) | GRU | +23.4 % | -16.6 % | +5.3 % | +5.8 % | +2.9 % |
+| Medio (63 d) | RNN simple | +12.0 % | +10.5 % | -65.1 % | -21.0 % | +4.6 % |
+| Medio (63 d) | LSTM | +9.1 % | +4.1 % | -23.7 % | -41.9 % | +11.1 % |
+| Medio (63 d) | GRU | +8.7 % | +6.9 % | -58.0 % | -33.9 % | +5.2 % |
 | Medio (63 d) | MAE ingenuo ($) | 12.94 | 8.62 | 4.82 | 9.07 | 32.75 |
-| Largo (252 d) | RNN simple | -26.9 % | -4.1 % | +64.1 % | -24.7 % | — |
-| Largo (252 d) | LSTM | -18.8 % | -141.3 % | +62.8 % | -29.0 % | — |
-| Largo (252 d) | GRU | -11.1 % | -15.6 % | +51.6 % | -12.1 % | — |
+| Largo (252 d) | RNN simple | +45.1 % | -10.5 % | -122.2 % | +47.4 % | — |
+| Largo (252 d) | LSTM | +42.4 % | -19.7 % | -96.9 % | +42.9 % | — |
+| Largo (252 d) | GRU | +38.1 % | -31.4 % | -95.9 % | +38.6 % | — |
 | Largo (252 d) | MAE ingenuo ($) | 19.32 | 7.61 | 11.43 | 29.64 | — |
 
 
@@ -97,44 +98,44 @@ en GPU.
 | Modelo | Horizonte | hidden | capas | dropout | lr | weight decay | batch | épocas (fijas) | trials (podados) |
 |---|---|---|---|---|---|---|---|---|---|
 | RNN simple | 5 | 64 | 1 | 0.50 | 6.2e-04 | 1.1e-05 | 128 | 25 | 80 (31) |
-| RNN simple | 63 | 64 | 3 | 0.42 | 2.1e-03 | 4.6e-05 | 256 | 7 | 80 (30) |
-| RNN simple | 252 | 256 | 2 | 0.47 | 2.5e-03 | 1.0e-02 | 128 | 10 | 80 (27) |
+| RNN simple | 63 | 256 | 3 | 0.43 | 1.6e-03 | 2.6e-03 | 64 | 16 | 80 (34) |
+| RNN simple | 252 | 256 | 1 | 0.38 | 1.7e-03 | 5.4e-04 | 128 | 9 | 80 (43) |
 | LSTM | 5 | 256 | 3 | 0.09 | 8.9e-04 | 5.3e-04 | 128 | 3 | 80 (40) |
-| LSTM | 63 | 64 | 3 | 0.32 | 2.1e-03 | 5.9e-05 | 256 | 4 | 80 (20) |
-| LSTM | 252 | 64 | 3 | 0.33 | 1.4e-03 | 1.4e-04 | 128 | 2 | 80 (38) |
+| LSTM | 63 | 128 | 3 | 0.48 | 1.1e-03 | 1.1e-05 | 256 | 14 | 80 (24) |
+| LSTM | 252 | 64 | 3 | 0.11 | 2.6e-03 | 3.3e-03 | 128 | 22 | 80 (48) |
 | GRU | 5 | 256 | 3 | 0.47 | 2.9e-03 | 9.7e-03 | 128 | 2 | 80 (35) |
-| GRU | 63 | 32 | 2 | 0.46 | 1.1e-04 | 8.1e-06 | 64 | 37 | 80 (28) |
-| GRU | 252 | 64 | 3 | 0.47 | 1.7e-03 | 5.9e-05 | 256 | 2 | 80 (28) |
+| GRU | 63 | 32 | 3 | 0.35 | 3.0e-03 | 1.5e-06 | 256 | 6 | 80 (6) |
+| GRU | 252 | 256 | 3 | 0.25 | 1.9e-03 | 7.6e-03 | 64 | 4 | 80 (47) |
 
 
 ## Elección del modelo para la aplicación
 
-Regla aplicada: regla fijada antes de ejecutar la ronda 2 (docs/experimento-ronda2.md): se elige la combinación de configuración y red con mayor mejora media del MAE frente al ingenuo en las predicciones anteriores a 2022 (reentrenos de 2014 a 2020), sin mirar el test. Ganó la RNN simple entrenada sin deriva y con recalibración del centro (+3,8 % antes de 2022).
+Regla aplicada: regla fijada antes de la búsqueda de la ronda 4 (docs/experimento-ronda4.md): se elige la combinación de variante y red con mayor mejora media del MAE frente al ingenuo en los tres plazos, en orígenes de 2008 a 2021 con objetivo anterior a 2022, sin mirar el test. Ganó la LSTM con la relación oro/crudo a 63 y 252 sesiones (+5,3 % antes de 2022, +5,6 % en 2008-2013, años que no se usaron para elegir hiperparámetros).
 
 | Modelo | MAE relativo medio (modelo/ingenuo) | Desv. relativa entre semillas | Parámetros (media) | Cobertura IC80 media |
 |---|---|---|---|---|
-| GRU | 0.984 | 5.1 % | 361148 | 88.2 % |
-| RNN simple | 1.007 | 7.6 % | 77703 | 85.5 % |
-| LSTM | 1.065 | 5.6 % | 505735 | 83.4 % |
+| LSTM | 0.974 | 3.5 % | 585168 | 87.2 % |
+| RNN simple | 0.978 | 3.3 % | 135120 | 88.0 % |
+| GRU | 1.000 | 4.2 % | 670438 | 88.0 % |
 
-Tiempo total de entrenamiento de los tres horizontes: RNN simple 2 s, LSTM 1 s, GRU 4 s
+Tiempo total de entrenamiento de los tres horizontes: RNN simple 3 s, LSTM 3 s, GRU 2 s
 
-**Modelo elegido: RNN simple.**
+**Modelo elegido: LSTM.**
 
 ![Predicciones en test](figures/predicciones_test.png)
 
 ## Conclusión
 
-**Modelo para la aplicación: RNN simple.**
+**Modelo para la aplicación: LSTM.**
 
-- **Precisión**: su MAE medio es 1,007 veces el del ingenuo; en test la mejor fue GRU (0,984), pero la elección se fijó antes de ver el test, con las predicciones anteriores a 2022 (ver la regla); LSTM 1,065.
-- **Estabilidad**: desviación relativa del MAE entre semillas 7,6 %.
-- **Coste computacional**: entrenar los tres horizontes cuesta 1,8 s en GPU (GRU 3,7 s, LSTM 0,9 s); el coste no discrimina entre redes y el reentrenado periódico es viable en CPU.
+- **Precisión**: su MAE medio es 0,974 veces el del ingenuo, el mejor de las tres redes; RNN simple 0,978, GRU 1,000.
+- **Estabilidad**: desviación relativa del MAE entre semillas 3,5 %.
+- **Coste computacional**: entrenar los tres horizontes cuesta 3,2 s en GPU (RNN simple 3,3 s, GRU 1,7 s); el coste no discrimina entre redes y el reentrenado periódico es viable en CPU.
 
 **Dónde aporta valor y dónde no**
 
-- **Corto (5 d)**: mejora marginal del valor central (+0,9 % de MAE; las tres redes entre +0,0 % y +0,9 %), positiva en 4 de 5 años, **no significativa** (p-valor DM 0,224). Acierta la dirección en el 53,3 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 50,7 %). El intervalo del 80 % calibrado cubre el 79,0 % de los casos (ingenuo: 76,1 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 19,03 frente a 19,93 del ingenuo: el rango es algo más informativo que el del ingenuo.
-- **Medio (63 d)**: mejora marginal del valor central (+4,0 % de MAE; las tres redes entre +3,3 % y +5,4 %), positiva en 4 de 5 años, **no significativa** (p-valor DM 0,118). Acierta la dirección en el 59,2 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 56,8 %). El intervalo del 80 % calibrado cubre el 87,7 % de los casos (ingenuo: 84,5 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 75,72 frente a 65,21 del ingenuo: el rango no es mejor que el del ingenuo.
-- **Largo (252 d)**: **no aporta valor en el valor central**: el error es mayor que el del ingenuo (-6,8 % de MAE, p-valor DM 0,120; las tres redes entre -22,7 % y -0,7 %); solo mejora en 1 de 4 años. Acierta la dirección en el 54,3 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 67,7 %). El intervalo del 80 % calibrado cubre el 89,7 % de los casos (ingenuo: 93,3 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 128,91 frente a 97,12 del ingenuo: el rango no es mejor que el del ingenuo.
+- **Corto (5 d)**: **coincide con el ingenuo**: la recalibración del centro no ha encontrado errores pasados que justifiquen mover la previsión (las tres redes entre +0,0 % y +0,6 %). No mueve el valor central, así que no hay acierto direccional que medir. El intervalo del 80 % calibrado cubre el 74,7 % de los casos (ingenuo: 76,1 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 19,00 frente a 19,93 del ingenuo: el rango es algo más informativo que el del ingenuo.
+- **Medio (63 d)**: **no aporta valor en el valor central en MAE**: el error absoluto es mayor que el del ingenuo (-2,3 % de MAE, +6,6 % de RMSE, p-valor DM 0,456; las tres redes entre -5,8 % y -2,3 % de MAE); solo mejora en 3 de 5 años. Acierta la dirección en el 52,5 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 56,8 %). El intervalo del 80 % calibrado cubre el 87,4 % de los casos (ingenuo: 84,1 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 58,37 frente a 65,11 del ingenuo: el rango es algo más informativo que el del ingenuo.
+- **Largo (252 d)**: mejora del valor central (+10,0 % de MAE y +20,7 % de RMSE; las tres redes entre +5,7 % y +10,0 % de MAE), positiva en 2 de 4 años, **no significativa** (p-valor DM 0,396). Acierta la dirección en el 53,6 % de los casos (apostar siempre por el movimiento más frecuente del periodo, algo que no se sabe de antemano, habría acertado el 67,7 %). El intervalo del 80 % calibrado cubre el 99,6 % de los casos (ingenuo: 93,4 %) y su puntuación de Winkler (anchura + penalización por fallos; menor es mejor) es 90,17 frente a 97,57 del ingenuo: el rango es algo más informativo que el del ingenuo.
 
-**Interpretación.** A partir solo de precios y variables de mercado pasadas, el precio del crudo se comporta casi como un paseo aleatorio, y el periodo de test incluye dos shocks geopolíticos (Ucrania 2022 y la guerra con Irán en 2026) que ningún modelo de este tipo puede anticipar. El modelo elegido mejora al ingenuo en el valor central a corto (5 d) y medio (63 d) y no a largo (252 d), sin que ninguna diferencia sea estadísticamente significativa. Por eso la aplicación muestra siempre el intervalo, indica en cada horizonte si el modelo mejoró o no al «precio no cambia» en el test y presenta la cifra central como referencia donde no lo mejora.
+**Interpretación.** A partir solo de precios y variables de mercado pasadas, el precio del crudo se comporta casi como un paseo aleatorio, y el periodo de test incluye dos shocks geopolíticos (Ucrania 2022 y la guerra con Irán en 2026) que ningún modelo de este tipo puede anticipar. El modelo elegido mejora al ingenuo en el valor central a largo (252 d) y no a corto (5 d) ni a medio (63 d), sin que ninguna diferencia sea estadísticamente significativa. Por eso la aplicación muestra siempre el intervalo, indica en cada horizonte si el modelo mejoró o no al «precio no cambia» en el test y presenta la cifra central como referencia donde no lo mejora.

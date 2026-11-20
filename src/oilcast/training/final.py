@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 import torch
 
-from oilcast.config import Config
+from oilcast.config import Config, horizon_config, horizon_overrides
 from oilcast.features.windows import Panel
 from oilcast.models.recurrent import ARCH_LABELS, HParams, count_parameters
 from oilcast.paths import Paths
@@ -78,6 +78,8 @@ def spec_from_results(cfg: Config, paths: Paths, arch: str | None = None) -> dic
             if len(yb)
             else {},
         }
+        ov = horizon_overrides(cfg, h)  # variables y atajo propios del plazo (ronda 4)
+        horizons[str(h)].update({k: ov[k] for k in ("features", "highway") if k in ov})
     return {
         "arch": arch,
         "arch_label": ARCH_LABELS[arch],
@@ -105,6 +107,7 @@ def train_final(
         cfg = {**cfg, "targets": {**cfg["targets"], "remove_drift": True}}
     device = device or get_device()
     panel = Panel.load(paths, cfg)
+    panels: dict[str, Panel] = {}
     arch = spec["arch"]
     paths.models.mkdir(parents=True, exist_ok=True)
     total = len(spec["horizons"]) * len(seeds)
@@ -113,13 +116,16 @@ def train_final(
     for hs, hspec in spec["horizons"].items():
         h = int(hs)
         hp, epochs = HParams(**hspec["hparams"]), int(hspec["epochs"])
-        train = np.flatnonzero(panel.usable(h))
-        data = prepare_data(panel, h, train, cfg, device)
+        hcfg = horizon_config(cfg, hspec)  # variables y atajo propios del plazo (ronda 4)
+        key = repr(sorted(hcfg["features"].items()))
+        hpanel = panels.setdefault(key, Panel.load(paths, hcfg))
+        train = np.flatnonzero(hpanel.usable(h))
+        data = prepare_data(hpanel, h, train, hcfg, device)
         states, seconds = [], 0.0
         for seed in seeds:
             if progress:
                 progress(done / total, f"Horizonte {h} días · semilla {seed}")
-            res = fit(arch, hp, data, train, cfg, epochs=epochs, seed=seed)
+            res = fit(arch, hp, data, train, hcfg, epochs=epochs, seed=seed)
             states.append({k: v.detach().cpu() for k, v in res.model.state_dict().items()})
             seconds += res.seconds
             done += 1
@@ -130,12 +136,15 @@ def train_final(
                 "states": states,
                 "scaler": data.scaler.to_dict(),
                 "y_scale": data.y_scale,
+                "feature_names": hpanel.feature_names,
+                "highway": bool(hcfg.get("model", {}).get("highway", False)),
             },
             paths.models / f"h{h}.pt",
         )
         info[hs] = {
             "n_train": len(train),
-            "last_train_origin": panel.dates[train[-1]].date(),
+            "last_train_origin": hpanel.dates[train[-1]].date(),
+            "feature_names": hpanel.feature_names,
             "train_seconds": seconds,
             "n_params": count_parameters(res.model),
         }

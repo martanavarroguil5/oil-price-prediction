@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#0c1217" />
+    <meta name="theme-color" content="#0d0c0b" />
     <title>Estrato · Observatorio del Brent</title>
     <link rel="icon" href="/marca.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
@@ -12,427 +12,365 @@
   <body>
     <a class="skip" href="#main">Ir al contenido</a>
     <header class="mast">
-      <div class="mast-inner">
-        <a class="brand" href="#observatorio" aria-label="Estrato, inicio"
-          ><img src="/marca.svg" width="34" height="34" alt="" />Estrato<span
-            class="brand-dot"
-            >.</span
-          ></a
-        >
-        <nav aria-label="Secciones">
-          <a href="#observatorio">Decisiones</a><a href="#replay">Prueba histórica</a
-          ><a href="#validacion">Validación</a><a href="#ciclos">Ciclo histórico</a
-          ><a href="#redes">Redes</a>
-        </nav>
-        <button id="open-data" class="data-btn">
-          <i data-icon="database"></i> Datos y modelo
-        </button>
-      </div>
+      <a class="brand" href="#observatorio" aria-label="Estrato, inicio"
+        ><img src="/marca.svg" width="22" height="22" alt="" />Estrato</a
+      >
+      <nav aria-label="Secciones">
+        <a href="#observatorio">Previsión</a><a href="#replay">Prueba histórica</a
+        ><a href="#validacion">Validación</a><a href="#ciclos">Ciclo histórico</a
+        ><a href="#redes">Redes</a>
+      </nav>
+      <button id="open-data" class="data-btn" type="button">
+        <i data-icon="database"></i><span>Datos y modelo</span>
+      </button>
     </header>
+
     <main id="main" tabindex="-1">
-      <section id="observatorio" class="page">
+      <section id="observatorio" class="page home">
+        <div class="stage" id="stage" aria-hidden="true">
+          <div class="stage-labels" id="stage-labels"></div>
+        </div>
+
         <div class="hero">
-          <div class="hero-content">
-            <div class="kicker">
-              <span class="rule"></span> PLANIFICACIÓN ENERGÉTICA
-              <span class="slash">/</span> BRENT SPOT
+          <div class="hero-copy">
+            <p class="hero-meta">Brent spot · previsión de <span id="hero-model">la red publicada</span></p>
+            <h1>El Brent <span id="hero-when">dentro de 3 meses</span></h1>
+            <div class="hero-figure">
+              <strong id="pred">—</strong><span>$/bbl</span>
             </div>
-            <h1>Del precio al <em>presupuesto.</em></h1>
-            <p>
-              Explora cuánto está en juego y cómo repartir tu exposición al Brent.
-            </p>
-            <div class="hero-actions"><a class="primary" href="#planificador">Explorar mi presupuesto <span aria-hidden="true">↗</span></a><a class="hero-link" href="#replay">Poner el modelo a prueba →</a></div>
+            <dl class="hero-facts">
+              <div><dt>Último dato</dt><dd><b id="spot">—</b> <small id="spot-date"></small></dd></div>
+              <div><dt>Frente a hoy</dt><dd class="price"><b id="change">—</b> <small id="delta"></small></dd></div>
+              <div><dt>Intervalo del 80 %</dt><dd><b id="interval">—</b> <small>$/bbl</small></dd></div>
+              <div><dt>Fecha objetivo</dt><dd><b id="target">—</b></dd></div>
+            </dl>
+            <div class="horizon horizon-control hero-horizon" aria-label="Horizonte de previsión"></div>
+            <div class="hero-actions">
+              <a class="primary" href="#planificador">Calcular el coste de mi compra</a>
+              <a class="quiet-link" href="#replay">Probar el modelo con el pasado</a>
+            </div>
           </div>
-          <div class="hero-caption">
-            <span class="cross">+</span> PLATAFORMA MARINA
-            <span class="slash">/</span> ILUSTRACIÓN
+          <div class="hero-foot">
+            <p class="stage-key">
+              <span><i class="swatch vein"></i>Precio de hoy</span>
+              <span><i class="swatch core"></i>Testigo: mediana, 50 % y 80 %</span>
+              <span>Frente: precio diario · fondo: media de un año</span>
+            </p>
+            <span class="scroll-cue">Desliza para recorrer 26 años</span>
           </div>
         </div>
-        <div class="shell">
-          <div class="quote-strip">
-            <div class="quote">
-              <div class="metric-label">
-                <i data-icon="drop"></i> Último Brent
-              </div>
-              <div class="price">
-                <strong id="spot">—</strong><small>USD/bbl</small>
-              </div>
-              <span class="submetric" id="spot-date"></span>
-            </div>
-            <div class="quote">
-              <div class="metric-label">
-                <i data-icon="trend"></i> Previsión central
-              </div>
-              <div class="price mint">
-                <strong id="pred">—</strong><small>USD/bbl</small>
-              </div>
-              <span class="submetric" id="target"></span>
-            </div>
-            <div class="quote">
-              <div class="metric-label">
-                <i data-icon="activity"></i> Variación prevista
-              </div>
-              <div class="price"><strong id="change">—</strong></div>
-              <span class="submetric" id="delta"></span>
-            </div>
-            <div class="quote">
-              <div class="metric-label">
-                <i data-icon="range"></i> Intervalo del 80 %
-              </div>
-              <div class="price range"><strong id="interval">—</strong></div>
-              <span class="submetric">USD por barril</span>
-            </div>
-          </div>
-          <div class="heading-row">
-            <div class="section-title">
-              <span class="signal"></span>
-            <h2>Un plazo. Una perspectiva.</h2>
-            </div>
-            <div
-              class="horizon horizon-control"
-              aria-label="Horizonte de previsión"
-            ></div>
-          </div>
-          <div id="horizon-evidence" class="evidence-grid" aria-label="Evidencia histórica por horizonte"></div>
-          <section class="planner panel" id="planificador" aria-labelledby="planner-title">
-            <header class="panel-head"><div><div class="eyebrow">01 / TU EXPOSICIÓN</div><h2 id="planner-title">Ponle cifras a la incertidumbre.</h2></div><span class="outline-tag">SIMULACIÓN EN USD</span></header>
-            <p class="section-copy">Introduce un volumen equivalente de Brent y compara el coste de comprar al precio de referencia con dejar una parte para el final del plazo.</p>
-            <form id="plan-form" class="plan-inputs" novalidate>
-              <label>Volumen equivalente <span class="input-wrap"><input id="plan-volume" type="number" min="1" max="1000000000" value="10000" step="1" required inputmode="decimal" /><span>barriles</span></span></label>
-              <label>Presupuesto total <span class="input-wrap"><input id="plan-budget" type="number" min="0" max="1000000000000" value="1100000" step="0.01" required inputmode="decimal" /><span>USD</span></span></label>
-              <label>Precio de referencia ahora <span class="input-wrap"><input id="plan-reference" type="number" min="0.01" max="100000" value="107.03" step="0.01" required inputmode="decimal" /><span>USD/bbl</span></span></label>
-              <label>Coste adicional unitario <span class="input-wrap"><input id="plan-fee" type="number" min="0" max="100000" value="0" step="0.1" required inputmode="decimal" /><span>USD/bbl</span></span></label>
-            </form>
-            <p id="plan-error" class="form-error" role="alert" hidden></p>
-            <div class="allocation"><div><span class="eyebrow">REPARTO QUE ESTÁS EXPLORANDO</span><h3><output id="share-label" for="plan-share">50 %</output> al precio de referencia <span>· el resto al final</span></h3></div><label class="share-control" for="plan-share"><span class="sr">Porcentaje comprado al precio de referencia</span><input id="plan-share" type="range" min="0" max="100" value="50" step="5" /><span>0 % <span aria-hidden="true">────────</span> 100 %</span></label></div>
-            <div class="plan-results" aria-live="polite" aria-atomic="true">
-              <div class="plan-result main-result"><span>Coste en el escenario central</span><strong id="plan-central">—</strong><small>USD · para el reparto elegido</small></div>
-              <div class="plan-result"><span>Rango de coste entre límites</span><strong id="plan-range">—</strong><small>USD · a partir del intervalo nominal del 80 %</small></div>
-              <div class="plan-result"><span id="plan-margin-label">Margen bajo presupuesto</span><strong id="plan-margin">—</strong><small>USD · en el escenario central</small></div>
-            </div>
-            <div class="budget-visual"><div class="budget-track" id="budget-track"><span id="budget-band"></span><i id="budget-center"></i><i id="budget-limit"></i></div><div class="budget-legend"><span><b class="key band"></b>Rango del coste</span><span><b class="budget-dot"></b>Escenario central</span><span><b class="budget-line"></b>Tu presupuesto</span></div><p id="plan-reading"></p></div>
-            <details class="assumptions"><summary>Supuestos del cálculo</summary><p id="plan-assumptions"></p><p>La referencia inicial es el último Brent spot publicado, con retraso: no es una oferta ejecutable. Puedes sustituirla por un precio propio. El coste adicional se aplica una vez a cada barril. La simulación mantiene USD y volumen constantes; no incluye financiación, almacenamiento, derivados ni otros costes salvo el importe introducido. El rango representa precios al final del plazo, no el recorrido diario del mercado.</p></details>
-          </section>
-          <section class="strategies panel" aria-labelledby="strategies-title">
-            <header class="panel-head"><div><div class="eyebrow">02 / TUS OPCIONES</div><h2 id="strategies-title">Mismo mercado. Distinta exposición.</h2></div><button class="secondary" id="export-plan" type="button">Guardar escenario ↓</button></header>
-            <p class="section-copy">Compara tres repartos bajo los mismos precios finales. Comprar antes reduce la exposición a subidas y también la posibilidad de aprovechar bajadas.</p>
-            <div class="stress-control"><label for="plan-shock">Explora un movimiento adicional <strong id="shock-label">+20 %</strong><span>sobre la previsión central; es un escenario manual, sin probabilidad asignada.</span></label><input id="plan-shock" type="range" min="-50" max="50" step="5" value="20" /></div>
-            <div class="table-scroll"><table class="strategy-table"><caption class="sr">Coste total en USD de tres estrategias bajo distintos precios finales</caption><thead><tr><th>Reparto de compra</th><th>Límite inferior</th><th>Central</th><th>Límite superior</th><th id="stress-heading">Manual +20 %</th></tr></thead><tbody id="strategy-body"></tbody></table></div>
-            <div class="strategy-foot"><p id="strategy-reading"></p><p>Comparación de escenarios, sin una estrategia recomendada ni ahorros garantizados. El desempeño de estas políticas de compra aún no está evaluado históricamente.</p></div>
-          </section>
-          <div class="heading-row"><div><div class="eyebrow">03 / EL CONTEXTO</div><h2>La previsión, con su evidencia.</h2></div><a class="text-link" href="#validacion">Ver la comparación completa →</a></div>
-          <div class="dashboard">
-            <article class="panel chart-panel">
-              <header class="panel-head">
-                <div>
-                  <div class="eyebrow">SERIE TEMPORAL</div>
-                  <h3>Curva del Brent</h3>
-                </div>
-                <div
-                  id="ranges"
-                  class="segments"
-                  aria-label="Periodo del histórico"
-                ></div>
-              </header>
-              <div class="chart-key">
-                <span><b class="key mint-bg"></b>Brent real</span
-                ><span><b class="budget-dot"></b>Mediana al vencimiento</span
-                ><span><b class="budget-line"></b>Límites nominales 80 %</span>
-              </div>
-              <div class="chart-box">
-                <canvas
-                  id="history-chart"
-                  role="img"
-                  aria-label="Histórico diario y previsión del Brent en dólares por barril"
-                ></canvas>
-              </div>
-              <div class="chart-foot">
-                <span>USD / BARRIL</span>
-                <div>
-                  <label><input type="checkbox" id="ma50" /> Media 50 d</label
-                  ><label
-                    ><input type="checkbox" id="ma200" /> Media 200 d</label
-                  >
-                </div>
-              </div>
-            <p class="chart-note">Los puntos al vencimiento son previsiones de esa fecha, no una trayectoria diaria.</p></article>
-            <article class="panel model-panel">
-              <header class="panel-head">
-                <div>
-                  <div class="eyebrow">EVIDENCIA HISTÓRICA</div>
-                  <h3 id="evidence-title">Lo que sabemos</h3>
-                </div>
-                <i class="box-icon" data-icon="cube"></i>
-              </header>
-              <div class="evidence-detail" id="evidence-detail"></div>
-              <div class="model-caption">
-                <span class="status-dot"></span><span id="mini-spec"></span>
-              </div>
-              <a class="panel-link" href="#redes"
-                >Explorar la red <i data-icon="arrow"></i
-              ></a>
-            </article>
-          </div>
 
-          <section id="candles-panel" class="panel diagnostic-panel" hidden><header class="panel-head"><div><div class="eyebrow">LECTURA DEL MERCADO / OHLC</div><h2>El precio, sesión a sesión.</h2></div><a id="candles-download" class="text-link" download>Descargar velas ↓</a></header><p class="section-copy">Las mechas muestran el mínimo y máximo; el cuerpo conecta apertura y cierre. Estas velas son de futuros del Brent: la serie spot que predice la red solo publica un precio diario.</p><img id="candles-image" loading="lazy" width="2380" height="1156" alt="Velas diarias y volumen de los futuros continuos del Brent BZ=F" /><p id="candles-period" class="chart-note"></p><p class="chart-note">Futuros continuos: los cambios de contrato pueden afectar la serie. Producto y fechas distintos del Brent spot; no se superpone la previsión spot sobre estas velas.</p></section>
-          <section class="analysis panel">
-            <div class="eyebrow">INTERPRETACIÓN</div>
-            <h3>Lectura de la previsión</h3>
-            <p id="summary"></p>
-            <details>
-              <summary>Fiabilidad y factores de riesgo</summary>
-              <p id="reliability"></p>
-              <ul id="risks"></ul>
-            </details>
-            <details>
-              <summary>Comparar los tres horizontes</summary>
-              <div class="table-scroll">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Horizonte</th>
-                      <th>Fecha estimada</th>
-                      <th>Previsión ($)</th>
-                      <th>Variación</th>
-                      <th>Intervalo 80 % ($)</th>
-                    </tr>
-                  </thead>
-                  <tbody id="forecast-list"></tbody>
-                </table>
+        <div class="story" id="historia">
+          <article class="story-card">
+            <span class="story-step">01</span>
+            <h2>Tres testigos para el futuro</h2>
+            <p>
+              Cada cilindro es la previsión a una fecha: el tramo exterior abarca el intervalo
+              nominal del 80 %, el interior el del 50 % y el disco marca la mediana. La línea
+              discontinua mantiene el precio de hoy, la referencia que la red tiene que batir.
+            </p>
+            <p class="story-note">Son previsiones para tres fechas concretas, no trayectorias diarias.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-step">02</span>
+            <h2>26 años apilados en franjas de 10 $</h2>
+            <p>
+              La altura del bloque es el precio del Brent desde el año 2000. El frente muestra el
+              dato diario y, hacia el fondo, la media móvil se alarga hasta un año. La veta ámbar
+              cruza el bloque a la altura del último precio publicado.
+            </p>
+            <p class="story-note">El eje temporal se comprime hacia el pasado para dar espacio a los últimos meses.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-step">03</span>
+            <h2>Los giros que marcaron el precio</h2>
+            <p>
+              2008, la pandemia, la invasión de Ucrania, el cierre de Ormuz. Cada alfiler señala
+              un episodio del catálogo sobre el frente del bloque. El relato de cada uno está en
+              <a href="#ciclos">Ciclo histórico</a>.
+            </p>
+          </article>
+        </div>
+
+        <div class="content">
+          <section class="block" aria-labelledby="evidence-heading">
+            <header class="block-head">
+              <span class="block-index">01</span>
+              <h2 id="evidence-heading">Lo que ha acertado antes</h2>
+              <p>
+                Reducción del error medio frente a mantener el precio constante, en previsiones
+                fuera de muestra desde 2022. Elige un plazo para ver el detalle.
+              </p>
+            </header>
+            <div class="block-body">
+              <div id="horizon-evidence" class="evidence-grid" aria-label="Evidencia histórica por horizonte"></div>
+              <div class="evidence-panel">
+                <div class="evidence-head">
+                  <h3 id="evidence-title">A 3 meses</h3>
+                  <span class="meta" id="mini-spec"></span>
+                </div>
+                <div class="evidence-detail" id="evidence-detail"></div>
+                <a class="quiet-link" href="#redes">Ver cómo funciona la red</a>
               </div>
-            </details>
+            </div>
+          </section>
+
+          <section class="block planner" id="planificador" aria-labelledby="planner-title">
+            <header class="block-head">
+              <span class="block-index">02</span>
+              <h2 id="planner-title">El coste de tu compra</h2>
+              <p>
+                Introduce un volumen equivalente de Brent y decide qué parte compras hoy al precio
+                de referencia y qué parte dejas para la fecha objetivo.
+              </p>
+            </header>
+            <div class="block-body">
+              <form id="plan-form" class="plan-inputs" novalidate>
+                <label>Volumen equivalente <span class="input-wrap"><input id="plan-volume" type="number" min="1" max="1000000000" value="10000" step="1" required inputmode="decimal" /><span>barriles</span></span></label>
+                <label>Presupuesto total <span class="input-wrap"><input id="plan-budget" type="number" min="0" max="1000000000000" value="1100000" step="0.01" required inputmode="decimal" /><span>USD</span></span></label>
+                <label>Precio de referencia <span class="input-wrap"><input id="plan-reference" type="number" min="0.01" max="100000" value="107.03" step="0.01" required inputmode="decimal" /><span>USD/bbl</span></span></label>
+                <label>Coste adicional <span class="input-wrap"><input id="plan-fee" type="number" min="0" max="100000" value="0" step="0.1" required inputmode="decimal" /><span>USD/bbl</span></span></label>
+              </form>
+              <p id="plan-error" class="form-error" role="alert" hidden></p>
+              <div class="allocation">
+                <p class="allocation-title"><output id="share-label" for="plan-share">50 %</output> comprado hoy <span>· el resto en la fecha objetivo</span></p>
+                <label class="share-control" for="plan-share"><span class="sr">Porcentaje comprado al precio de referencia</span><input id="plan-share" type="range" min="0" max="100" value="50" step="5" /><span class="range-ends"><span>Todo al final</span><span>Todo hoy</span></span></label>
+              </div>
+              <div class="plan-results" aria-live="polite" aria-atomic="true">
+                <div class="plan-result main-result"><span>Coste en el escenario central</span><strong id="plan-central">—</strong><small>USD con el reparto elegido</small></div>
+                <div class="plan-result"><span>Coste entre límites del 80 %</span><strong id="plan-range">—</strong><small>USD</small></div>
+                <div class="plan-result"><span id="plan-margin-label">Margen bajo presupuesto</span><strong id="plan-margin">—</strong><small>USD en el escenario central</small></div>
+              </div>
+              <div class="budget-visual">
+                <div class="budget-track" id="budget-track"><span id="budget-band"></span><i id="budget-center"></i><i id="budget-limit"></i></div>
+                <div class="budget-legend"><span><b class="key band"></b>Rango del coste</span><span><b class="budget-dot"></b>Escenario central</span><span><b class="budget-line"></b>Tu presupuesto</span></div>
+                <p id="plan-reading"></p>
+              </div>
+              <details class="assumptions"><summary>Supuestos del cálculo</summary><p id="plan-assumptions"></p><p>La referencia inicial es el último Brent spot publicado, con retraso: no es una oferta ejecutable. Puedes sustituirla por un precio propio. El coste adicional se aplica una vez a cada barril. La simulación mantiene USD y volumen constantes; no incluye financiación, almacenamiento, derivados ni otros costes salvo el importe introducido. El rango representa precios al final del plazo, no el recorrido diario del mercado.</p></details>
+            </div>
+          </section>
+
+          <section class="block strategies" aria-labelledby="strategies-title">
+            <header class="block-head">
+              <span class="block-index">03</span>
+              <h2 id="strategies-title">Tres formas de repartir la compra</h2>
+              <p>
+                Los mismos precios finales con tres repartos. Comprar antes protege de las subidas y
+                renuncia a las bajadas.
+              </p>
+              <button class="secondary" id="export-plan" type="button"><i data-icon="download"></i>Guardar escenario</button>
+            </header>
+            <div class="block-body">
+              <div class="stress-control"><label for="plan-shock">Movimiento manual sobre la mediana <strong id="shock-label">+20 %</strong><span>Escenario sin probabilidad asignada</span></label><input id="plan-shock" type="range" min="-50" max="50" step="5" value="20" /></div>
+              <div class="table-scroll"><table class="strategy-table"><caption class="sr">Coste total en USD de tres estrategias bajo distintos precios finales</caption><thead><tr><th>Reparto de compra</th><th>Límite inferior</th><th>Central</th><th>Límite superior</th><th id="stress-heading">Manual +20 %</th></tr></thead><tbody id="strategy-body"></tbody></table></div>
+              <div class="strategy-foot"><p id="strategy-reading"></p><p>Comparación de escenarios, sin una estrategia recomendada ni ahorros garantizados. El desempeño de estas políticas de compra aún no está evaluado históricamente.</p></div>
+            </div>
+          </section>
+
+          <section class="block" aria-labelledby="curve-title">
+            <header class="block-head">
+              <span class="block-index">04</span>
+              <h2 id="curve-title">Histórico y previsión</h2>
+              <p>
+                El Brent observado con la mediana y los límites del 80 % en la fecha objetivo. Los
+                puntos finales son previsiones de esa fecha, no una trayectoria diaria.
+              </p>
+            </header>
+            <div class="block-body">
+              <div class="chart-toolbar">
+                <div id="ranges" class="segments" aria-label="Periodo del histórico"></div>
+                <div class="checks"><label><input type="checkbox" id="ma50" /> Media 50 d</label><label><input type="checkbox" id="ma200" /> Media 200 d</label></div>
+              </div>
+              <div class="chart-key"><span><b class="key bone-bg"></b>Brent real</span><span><b class="budget-dot"></b>Mediana al vencimiento</span><span><b class="budget-line"></b>Límites nominales 80 %</span></div>
+              <div class="chart-box tall"><canvas id="history-chart" role="img" aria-label="Histórico diario y previsión del Brent en dólares por barril"></canvas></div>
+              <p class="chart-note">USD por barril</p>
+            </div>
+          </section>
+
+          <section id="candles-panel" class="block diagnostic-panel" hidden aria-labelledby="candles-title">
+            <header class="block-head">
+              <span class="block-index">05</span>
+              <h2 id="candles-title">Futuros del Brent, sesión a sesión</h2>
+              <p>
+                Velas de los futuros continuos BZ=F: la mecha va del mínimo al máximo y el cuerpo
+                une apertura y cierre. La serie spot que predice la red solo publica un precio diario.
+              </p>
+              <a id="candles-download" class="quiet-link" download>Descargar velas</a>
+            </header>
+            <div class="block-body">
+              <img id="candles-image" loading="lazy" width="2380" height="1156" alt="Velas diarias y volumen de los futuros continuos del Brent BZ=F" />
+              <p id="candles-period" class="chart-note"></p>
+              <p class="chart-note">Los cambios de contrato pueden afectar a la serie continua. No se superpone la previsión spot sobre estas velas.</p>
+            </div>
+          </section>
+
+          <section class="block analysis" aria-labelledby="reading-title">
+            <header class="block-head">
+              <span class="block-index">06</span>
+              <h2 id="reading-title">Cómo leer esta previsión</h2>
+            </header>
+            <div class="block-body">
+              <p id="summary" class="lead"></p>
+              <details>
+                <summary>Fiabilidad y factores de riesgo</summary>
+                <p id="reliability"></p>
+                <ul id="risks"></ul>
+              </details>
+              <details>
+                <summary>Los tres plazos</summary>
+                <div class="table-scroll">
+                  <table>
+                    <thead><tr><th>Plazo</th><th>Fecha estimada</th><th>Previsión ($)</th><th>Variación</th><th>Intervalo 80 % ($)</th></tr></thead>
+                    <tbody id="forecast-list"></tbody>
+                  </table>
+                </div>
+              </details>
+            </div>
           </section>
         </div>
       </section>
-      <section id="replay" class="page shell inner" hidden>
-        <div class="kicker"><span class="rule"></span> UNA PREVISIÓN. DESPUÉS, LOS HECHOS.</div>
-        <h1>Antes de saber <em>qué pasó.</em></h1>
-        <p class="intro">Elige una previsión histórica fuera de muestra, examina lo que anticipaba y revela el resultado. Puedes recorrer todos los orígenes disponibles, también los fallos.</p>
-        <div class="replay-controls panel"><label for="replay-model">Red<select id="replay-model"><option value="rnn">RNN simple</option><option value="lstm">LSTM</option><option value="gru">GRU</option></select></label><div><span class="control-label">Plazo</span><div class="horizon horizon-control" aria-label="Plazo de la prueba histórica"></div></div><label for="replay-date">Origen de la previsión<select id="replay-date"></select></label><div class="replay-arrows"><button class="secondary" id="replay-previous" type="button" aria-label="Previsión anterior">←</button><button class="secondary" id="replay-next" type="button" aria-label="Previsión siguiente">→</button></div></div>
+
+      <section id="replay" class="page inner" hidden>
+        <header class="page-head">
+          <p class="hero-meta">Previsiones fuera de muestra</p>
+          <h1>Antes de saber qué pasó</h1>
+          <p class="intro">Elige una previsión registrada, mira lo que anticipaba y después revela el resultado. Están todos los orígenes, también los fallos.</p>
+        </header>
+        <div class="replay-controls"><label for="replay-model">Red<select id="replay-model"><option value="rnn">RNN simple</option><option value="lstm">LSTM</option><option value="gru">GRU</option></select></label><div><span class="control-label">Plazo</span><div class="horizon horizon-control" aria-label="Plazo de la prueba histórica"></div></div><label for="replay-date">Origen de la previsión<select id="replay-date"></select></label><div class="replay-arrows"><button class="secondary icon-only" id="replay-previous" type="button" aria-label="Previsión anterior">←</button><button class="secondary icon-only" id="replay-next" type="button" aria-label="Previsión siguiente">→</button></div></div>
         <p id="replay-status" class="footnote" role="status">Cargando fechas disponibles…</p>
-        <div class="replay-layout"><article class="panel"><header class="panel-head"><div><div class="eyebrow">PREVISIÓN REGISTRADA</div><h2 id="replay-heading">¿Qué anticipaba la red?</h2></div><span id="replay-badge" class="outline-tag">RESULTADO OCULTO</span></header><div class="replay-metrics" id="replay-metrics"></div><div class="chart-key"><span><b class="key mint-bg"></b>Brent conocido hasta el origen</span><span><b class="key amber-bg"></b>Mediana y límites al vencimiento</span><span id="replay-future-key" hidden><b class="key gray-bg"></b>Lo que ocurrió después</span></div><div class="chart-box replay-chart"><canvas id="replay-chart" role="img" aria-label="Previsión histórica y observaciones conocidas hasta su origen"></canvas></div><p class="chart-note">Los puntos al vencimiento son previsiones de esa fecha; no representan una trayectoria diaria.</p></article>
-          <aside class="panel reveal-panel"><div class="eyebrow">TU LECTURA</div><h2>¿Habrías contado con este escenario?</h2><p id="replay-prompt">Compara la mediana, el precio de origen y la amplitud del intervalo antes de revelar el resultado.</p><button class="primary" id="replay-reveal" type="button">Ver qué ocurrió <span aria-hidden="true">↗</span></button><div id="replay-outcome" aria-live="polite" hidden></div></aside></div>
+        <div class="replay-layout">
+          <article class="panel"><header class="panel-head"><div><p class="eyebrow">Previsión registrada</p><h2 id="replay-heading">Qué anticipaba la red</h2></div><span id="replay-badge" class="tag">Resultado oculto</span></header><div class="replay-metrics" id="replay-metrics"></div><div class="chart-key"><span><b class="key bone-bg"></b>Brent conocido hasta el origen</span><span><b class="key accent-bg"></b>Mediana y límites al vencimiento</span><span id="replay-future-key" hidden><b class="key steel-bg"></b>Lo que ocurrió después</span></div><div class="chart-box replay-chart"><canvas id="replay-chart" role="img" aria-label="Previsión histórica y observaciones conocidas hasta su origen"></canvas></div><p class="chart-note">Los puntos al vencimiento son previsiones de esa fecha; no representan una trayectoria diaria.</p></article>
+          <aside class="panel reveal-panel"><p class="eyebrow">Tu lectura</p><h2>¿Habrías contado con este escenario?</h2><p id="replay-prompt">Compara la mediana, el precio de origen y la amplitud del intervalo antes de revelar el resultado.</p><button class="primary" id="replay-reveal" type="button">Ver qué ocurrió</button><div id="replay-outcome" aria-live="polite" hidden></div></aside>
+        </div>
         <div class="replay-caveat"><strong>Qué demuestra esta prueba</strong><p id="replay-provenance"></p><p>Son predicciones guardadas con entrenamiento temporal y objetivos realizados antes de cada ajuste. El periodo ya se consultó durante el desarrollo: este recorrido no constituye un test ciego nuevo ni una reconstrucción exacta de la disponibilidad intradía de todas las fuentes.</p></div>
       </section>
-      <section id="redes" class="page shell inner" hidden>
-        <div class="kicker">
-          <span class="rule"></span> LABORATORIO DE MODELOS
-        </div>
-        <h1>Arquitecturas <em>recurrentes.</em></h1>
-        <p class="intro">
-          Recorre la señal de una observación a la siguiente en tres tipos de
-          célula.
-        </p>
+
+      <section id="redes" class="page inner" hidden>
+        <header class="page-head">
+          <p class="hero-meta">Laboratorio de modelos</p>
+          <h1>Tres células recurrentes</h1>
+          <p class="intro">Sigue la señal de un día al siguiente dentro de cada tipo de célula.</p>
+        </header>
         <div class="heading-row">
           <div class="tabs" id="architectures" aria-label="Arquitectura"></div>
-          <div
-            class="horizon horizon-control"
-            aria-label="Horizonte de la configuración"
-          ></div>
+          <div class="horizon horizon-control" aria-label="Horizonte de la configuración"></div>
         </div>
         <div class="lab-grid">
           <article class="panel lab-panel">
             <header class="panel-head">
-              <div>
-                <div class="eyebrow">SIMULACIÓN 3D</div>
-                <h3 id="lab-name"></h3>
-              </div>
+              <div><p class="eyebrow">Simulación 3D</p><h3 id="lab-name"></h3></div>
               <div class="scene-tools">
-                <button
-                  id="pause"
-                  class="icon-button"
-                  aria-label="Pausar simulación"
-                >
-                  <i data-icon="pause"></i></button
-                ><button
-                  id="reset"
-                  class="icon-button"
-                  aria-label="Restablecer cámara"
-                >
-                  <i data-icon="reset"></i>
-                </button>
+                <button id="pause" class="icon-button" type="button" aria-label="Pausar simulación"><i data-icon="pause"></i></button><button id="reset" class="icon-button" type="button" aria-label="Restablecer cámara"><i data-icon="reset"></i></button>
               </div>
             </header>
-            <div
-              id="lab-stage"
-              class="stage-grid"
-              tabindex="0"
-              aria-label="Esquema interactivo 3D de la célula. Usa las flechas para girar."
-            ></div>
-            <div class="stage-footer">
-              <span id="scene-help"
-                >Arrastra para girar · rueda para acercar</span
-              ><span>t − 1 → t → t + 1</span>
-            </div>
+            <div id="lab-stage" class="stage-grid" tabindex="0" aria-label="Esquema interactivo 3D de la célula. Usa las flechas para girar."></div>
+            <div class="stage-footer"><span id="scene-help">Arrastra para girar · rueda para acercar</span><span>t − 1 → t → t + 1</span></div>
           </article>
           <article class="panel lab-note">
-            <div class="eyebrow">ANATOMÍA DE LA CÉLULA</div>
+            <p class="eyebrow">Anatomía de la célula</p>
             <h3 id="cell-title"></h3>
             <p id="cell-copy"></p>
             <dl id="gate-list"></dl>
           </article>
         </div>
         <div class="panel arch-details">
-          <div>
-            <div class="eyebrow">CONFIGURACIÓN ENTRENADA</div>
-            <h3 id="arch-head"></h3>
-          </div>
+          <div><p class="eyebrow">Configuración entrenada</p><h3 id="arch-head"></h3></div>
           <dl id="arch-stats"></dl>
-          <p>
-            El esquema muestra tres pasos de tiempo con unidades
-            representativas. Los puntos animados ilustran el flujo de
-            información.
-          </p>
+          <p>El esquema muestra tres pasos de tiempo con unidades representativas. Los puntos animados ilustran el flujo de información.</p>
         </div>
       </section>
-      <section id="validacion" class="page shell inner" hidden>
-        <div class="kicker">
-          <span class="rule"></span> EVALUACIÓN FUERA DE MUESTRA
-        </div>
-        <h1>Validación de <em>modelos.</em></h1>
-        <p class="intro">
-          Contrasta las tres redes con mantener el último precio conocido del
-          Brent.
-        </p>
+
+      <section id="validacion" class="page inner" hidden>
+        <header class="page-head">
+          <p class="hero-meta">Evaluación fuera de muestra</p>
+          <h1>Las tres redes frente al precio constante</h1>
+          <p class="intro">Cada red se compara con mantener el último precio conocido del Brent, en las mismas fechas y con el mismo plazo.</p>
+        </header>
         <div class="heading-row">
-          <div class="section-title">
-            <span class="signal"></span>
-            <h2>Comparativa en test</h2>
-          </div>
-          <div
-            class="horizon horizon-control"
-            aria-label="Horizonte de validación"
-          ></div>
+          <h2>Comparativa en test</h2>
+          <div class="horizon horizon-control" aria-label="Horizonte de validación"></div>
         </div>
         <div class="panel table-scroll">
           <table>
-            <caption class="sr">
-              Métricas de las tres redes y de la referencia ingenua
-            </caption>
+            <caption class="sr">Métricas de las tres redes y de la referencia ingenua</caption>
             <thead id="table-head"></thead>
             <tbody id="table-body"></tbody>
           </table>
         </div>
-        <p class="footnote">
-          MAE y RMSE en USD/barril. MSE en (USD/barril)². El R² compara el error
-          cuadrático con el de usar el precio medio observado en el test y puede
-          ser negativo.
-        </p>
+        <p class="footnote">MAE y RMSE en USD/barril. MSE en (USD/barril)². El R² compara el error cuadrático con el de usar el precio medio observado en el test y puede ser negativo.</p>
 
-        <section class="panel return-panel"><header class="panel-head"><div><div class="eyebrow">OTRA FORMA DE MEDIR EL MOVIMIENTO</div><h2>¿Y en rentabilidad?</h2></div><span class="outline-tag">INGENUO = CAMBIO DEL 0 %</span></header><p class="section-copy">Las redes aprenden log(precio futuro / precio de origen). Aquí comparamos las rentabilidades simples: precio futuro / precio de origen − 1. MAE y RMSE se expresan en puntos porcentuales.</p><div class="table-scroll"><table><thead><tr><th>Modelo</th><th>MAE (p. p.)</th><th>RMSE (p. p.)</th><th>Mejora MAE vs 0 %</th></tr></thead><tbody id="return-body"></tbody></table></div><p class="chart-note">Evaluar en rentabilidad da el mismo peso a cada movimiento porcentual. En dólares, los periodos con precios de origen más altos pesan más. El ancho del intervalo no determina la precisión de la previsión central.</p></section>
+        <section class="panel return-panel"><header class="panel-head"><div><p class="eyebrow">Otra unidad de medida</p><h2>En rentabilidad</h2></div><span class="tag">Ingenuo = cambio del 0 %</span></header><p class="section-copy">Las redes aprenden log(precio futuro / precio de origen). Aquí se comparan rentabilidades simples: precio futuro / precio de origen − 1. MAE y RMSE en puntos porcentuales.</p><div class="table-scroll"><table><thead><tr><th>Modelo</th><th>MAE (p. p.)</th><th>RMSE (p. p.)</th><th>Mejora MAE vs 0 %</th></tr></thead><tbody id="return-body"></tbody></table></div><p class="chart-note">En rentabilidad cada movimiento porcentual pesa igual. En dólares pesan más los periodos con precios de origen altos. El ancho del intervalo no determina la precisión de la previsión central.</p></section>
 
-        <section id="violin-panel" class="panel diagnostic-panel" hidden><header class="panel-head"><div><div class="eyebrow">DISTRIBUCIÓN / TODOS LOS ERRORES</div><h2>Más allá del error medio.</h2></div><label for="violin-unit">Unidad del error<select id="violin-unit"><option value="precio">USD por barril</option><option value="retorno">Rentabilidad · puntos porcentuales</option></select></label></header><div class="violin-layout"><img id="violin-image" loading="lazy" width="901" height="1071" alt="Distribución de errores por modelo" /><div class="violin-reading"><h3>Cómo leer un violín</h3><p>Una zona ancha concentra más errores. Un violín estrecho en torno a cero indica errores pequeños; las colas largas muestran fallos extremos.</p><p>Por encima de cero, el modelo sobreestima. Por debajo, subestima. El punto blanco es la mediana y la barra gruesa contiene el 50 % central de los errores.</p><p>El MAE bajo cada modelo resume la magnitud del error. Una mediana cercana a cero puede ocultar errores grandes en ambas direcciones.</p><a id="violin-download" class="text-link" download>Descargar violines ↓</a></div></div><p id="violin-period" class="chart-note"></p></section>
-        <section class="panel interval-panel"><header class="panel-head"><div><div class="eyebrow">PREDECIR UN RANGO / NIVEL NOMINAL 80 %</div><h2>Acertar el rango también tiene un coste.</h2></div></header><p class="section-copy">Los modelos ya predicen cuantiles y calibran sus intervalos con errores pasados. Un rango más amplio puede cubrir más resultados, pero informa menos. Winkler combina la anchura y una penalización cuando el precio real queda fuera: cuanto menor, mejor.</p><div class="table-scroll"><table><thead><tr><th>Modelo</th><th>Cobertura observada</th><th>Anchura media (USD/bbl)</th><th>Winkler (menor es mejor)</th></tr></thead><tbody id="interval-body"></tbody></table></div><p class="chart-note">El intervalo no reduce por sí solo el MAE o RMSE de la mediana. Estos son intervalos de predicción, no intervalos de confianza del error. La cobertura histórica no garantiza el siguiente resultado.</p></section>
+        <section id="violin-panel" class="panel diagnostic-panel" hidden><header class="panel-head"><div><p class="eyebrow">Distribución de todos los errores</p><h2>Más allá del error medio</h2></div><label for="violin-unit">Unidad del error<select id="violin-unit"><option value="precio">USD por barril</option><option value="retorno">Rentabilidad · puntos porcentuales</option></select></label></header><div class="violin-layout"><img id="violin-image" loading="lazy" width="901" height="1071" alt="Distribución de errores por modelo" /><div class="violin-reading"><h3>Cómo leer un violín</h3><p>Una zona ancha concentra más errores. Un violín estrecho en torno a cero indica errores pequeños; las colas largas muestran fallos extremos.</p><p>Por encima de cero, el modelo sobreestima. Por debajo, subestima. El punto blanco es la mediana y la barra gruesa contiene el 50 % central de los errores.</p><p>El MAE bajo cada modelo resume la magnitud del error. Una mediana cercana a cero puede ocultar errores grandes en ambas direcciones.</p><a id="violin-download" class="quiet-link" download>Descargar violines</a></div></div><p id="violin-period" class="chart-note"></p></section>
 
-        <section id="interval-study-panel" class="panel interval-panel" hidden><header class="panel-head"><div><div class="eyebrow">MEJORA DE INTERVALOS / EVALUACIÓN EXPERIMENTAL</div><h2>Calibración, a prueba.</h2></div><span class="outline-tag">PUBLICADO → ELEGIDO EN DESARROLLO</span></header><p class="section-copy">Comparamos la calibración publicada con una variante elegida usando objetivos anteriores a 2022. Las medianas son las mismas. Las cifras siguientes corresponden al periodo posterior, ya consultado durante el desarrollo.</p><div class="table-scroll"><table><thead><tr><th>Red</th><th>Variante elegida</th><th>Cobertura 80 %</th><th>Anchura (USD/bbl)</th><th>Winkler</th><th>Mejora Winkler</th></tr></thead><tbody id="interval-study-body"></tbody></table></div><p id="interval-study-latest" class="chart-note"></p><p class="chart-note">Positivo significa menor Winkler. La elección exige una mejora en desarrollo y mínimos de cobertura; no garantiza una mejora posterior. La comparación experimental no cambia el intervalo publicado que utiliza el simulador de presupuesto.</p></section>
+        <section class="panel interval-panel"><header class="panel-head"><div><p class="eyebrow">Intervalo nominal del 80 %</p><h2>Acertar el rango también tiene un coste</h2></div></header><p class="section-copy">Los modelos predicen cuantiles y calibran sus intervalos con errores pasados. Un rango más amplio cubre más resultados, pero informa menos. Winkler combina la anchura con una penalización cuando el precio real queda fuera: cuanto menor, mejor.</p><div class="table-scroll"><table><thead><tr><th>Modelo</th><th>Cobertura observada</th><th>Anchura media (USD/bbl)</th><th>Winkler</th></tr></thead><tbody id="interval-body"></tbody></table></div><p class="chart-note">El intervalo no reduce por sí solo el MAE o RMSE de la mediana. Son intervalos de predicción, no intervalos de confianza del error. La cobertura histórica no garantiza el siguiente resultado.</p></section>
+
+        <section id="interval-study-panel" class="panel interval-panel" hidden><header class="panel-head"><div><p class="eyebrow">Evaluación experimental</p><h2>Calibración, a prueba</h2></div><span class="tag">Publicado → elegido en desarrollo</span></header><p class="section-copy">La calibración publicada frente a una variante elegida con objetivos anteriores a 2022. Las medianas son las mismas. Las cifras corresponden al periodo posterior, ya consultado durante el desarrollo.</p><div class="table-scroll"><table><thead><tr><th>Red</th><th>Variante elegida</th><th>Cobertura 80 %</th><th>Anchura (USD/bbl)</th><th>Winkler</th><th>Mejora Winkler</th></tr></thead><tbody id="interval-study-body"></tbody></table></div><p id="interval-study-latest" class="chart-note"></p><p class="chart-note">Positivo significa menor Winkler. La elección exige una mejora en desarrollo y mínimos de cobertura; no garantiza una mejora posterior. El simulador de presupuesto sigue usando el intervalo publicado.</p></section>
+
         <article class="panel">
           <header class="panel-head">
-            <div>
-              <div class="eyebrow">PRUEBA CRONOLÓGICA</div>
-              <h3>Precio real frente a predicción</h3>
-            </div>
-            <select
-              id="validation-net"
-              aria-label="Modelo de la gráfica"
-            ></select>
+            <div><p class="eyebrow">Prueba cronológica</p><h3>Precio real frente a predicción</h3></div>
+            <select id="validation-net" aria-label="Modelo de la gráfica"></select>
           </header>
-          <div class="chart-key">
-            <span><b class="key mint-bg"></b>Real</span
-            ><span><b class="key amber-bg"></b>Modelo</span
-            ><span><b class="key gray-bg"></b>Ingenuo</span>
-          </div>
-          <div class="chart-box">
-            <canvas
-              id="validation-chart"
-              role="img"
-              aria-label="Predicción frente al precio real en las fechas objetivo"
-            ></canvas>
-          </div>
+          <div class="chart-key"><span><b class="key bone-bg"></b>Real</span><span><b class="key accent-bg"></b>Modelo</span><span><b class="key steel-bg"></b>Ingenuo</span></div>
+          <div class="chart-box"><canvas id="validation-chart" role="img" aria-label="Predicción frente al precio real en las fechas objetivo"></canvas></div>
           <p id="val-status" role="status" class="footnote"></p>
         </article>
 
-        <section class="panel scatter-panel"><header class="panel-head"><div><div class="eyebrow">TEST FRENTE A REALIDAD / CADA PUNTO ES UNA PREVISIÓN</div><h2>¿Cuánto se acerca a lo que ocurrió?</h2></div><div class="scatter-controls"><label for="scatter-unit">Unidad<select id="scatter-unit"><option value="precio">Precio · USD/barril</option><option value="retorno">Rentabilidad · p. p.</option></select></label><label class="check"><input id="scatter-naive" type="checkbox" checked /> Comparar con ingenuo</label></div></header><div class="chart-key"><span><b class="key mint-bg"></b>Red seleccionada</span><span><b class="key gray-bg"></b>Ingenuo</span><span><b class="key amber-bg"></b>Diagonal de acierto perfecto</span></div><div class="scatter-layout"><div class="scatter-box"><canvas id="scatter-chart" role="img" aria-label="Dispersión del precio observado frente a las predicciones fuera de muestra"></canvas></div><div class="scatter-reading"><div class="scatter-metrics"><div><span>R² de la red</span><strong id="scatter-r2">—</strong></div><div><span>R² del ingenuo</span><strong id="scatter-r2-naive">—</strong></div></div><p id="scatter-error"></p><p>En la diagonal, predicción y realidad coinciden. Por encima, el modelo sobreestima; por debajo, subestima. Los puntos alejados son errores grandes.</p><p>R² = 1 es perfecto; 0 iguala a la media observada en este periodo y un valor negativo pierde frente a esa media. Cuanto más alto, mejor. La media de referencia se conoce después, mientras que el ingenuo usa el precio disponible al emitir cada previsión.</p></div></div><p class="chart-note">El R² se calcula con estas predicciones originales, sin ajustar después una recta a los puntos ni sustituirlo por correlación². La red y el horizonte son los elegidos en la gráfica cronológica.</p><a id="scatter-download" class="text-link chart-note" download hidden>Descargar los tres plazos de esta red ↓</a></section>
+        <section class="panel scatter-panel"><header class="panel-head"><div><p class="eyebrow">Cada punto es una previsión</p><h2>Cuánto se acerca a lo que ocurrió</h2></div><div class="scatter-controls"><label for="scatter-unit">Unidad<select id="scatter-unit"><option value="precio">Precio · USD/barril</option><option value="retorno">Rentabilidad · p. p.</option></select></label><label class="check"><input id="scatter-naive" type="checkbox" checked /> Comparar con ingenuo</label></div></header><div class="chart-key"><span><b class="key accent-bg"></b>Red seleccionada</span><span><b class="key steel-bg"></b>Ingenuo</span><span><b class="key bone-bg"></b>Diagonal de acierto perfecto</span></div><div class="scatter-layout"><div class="scatter-box"><canvas id="scatter-chart" role="img" aria-label="Dispersión del precio observado frente a las predicciones fuera de muestra"></canvas></div><div class="scatter-reading"><div class="scatter-metrics"><div><span>R² de la red</span><strong id="scatter-r2">—</strong></div><div><span>R² del ingenuo</span><strong id="scatter-r2-naive">—</strong></div></div><p id="scatter-error"></p><p>En la diagonal, predicción y realidad coinciden. Por encima, el modelo sobreestima; por debajo, subestima. Los puntos alejados son errores grandes.</p><p>R² = 1 es perfecto; 0 iguala a la media observada en este periodo y un valor negativo pierde frente a esa media. La media de referencia se conoce después, mientras que el ingenuo usa el precio disponible al emitir cada previsión.</p></div></div><p class="chart-note">El R² se calcula con estas predicciones originales, sin ajustar después una recta a los puntos ni sustituirlo por correlación². La red y el horizonte son los elegidos en la gráfica cronológica.</p><a id="scatter-download" class="quiet-link chart-note" download hidden>Descargar los tres plazos de esta red</a></section>
+
         <section class="panel analysis">
-          <div class="eyebrow">SELECCIÓN Y ESTABILIDAD</div>
+          <p class="eyebrow">Selección y estabilidad</p>
           <h3>Resultados por año</h3>
           <div id="years" class="year-grid"></div>
           <p id="selection"></p>
-          <details>
-            <summary>Cómo se hizo la prueba</summary>
-            <p id="method"></p>
-          </details>
-          <a href="/comparativa.md" download class="text-link"
-            >Descargar informe comparativo <i data-icon="download"></i
-          ></a>
+          <details><summary>Cómo se hizo la prueba</summary><p id="method"></p></details>
+          <a href="/comparativa.md" download class="quiet-link">Descargar informe comparativo</a>
         </section>
       </section>
-      <section id="ciclos" class="page shell inner" hidden>
-        <div class="kicker"><span class="rule"></span> ARCHIVO DEL MERCADO</div>
-        <h1>Ciclo <em>histórico.</em></h1>
-        <p class="intro">
-          Los giros del Brent desde 2000, situados en la fecha de su máximo o
-          mínimo observado.
-        </p>
+
+      <section id="ciclos" class="page inner" hidden>
+        <header class="page-head">
+          <p class="hero-meta">Archivo del mercado</p>
+          <h1>Los giros del Brent desde 2000</h1>
+          <p class="intro">Cada episodio se sitúa en la fecha de su máximo o mínimo observado.</p>
+        </header>
         <article class="panel">
           <header class="panel-head">
-            <div>
-              <div class="eyebrow">BRENT SPOT · USD/BARRIL</div>
-              <h3>Picos y caídas</h3>
-            </div>
-            <label class="check"
-              ><input type="checkbox" id="auto-events" /> Giros
-              automáticos</label
-            >
+            <div><p class="eyebrow">Brent spot · USD/barril</p><h3>Picos y caídas</h3></div>
+            <label class="check"><input type="checkbox" id="auto-events" /> Giros automáticos</label>
           </header>
-          <div class="chart-box tall">
-            <canvas
-              id="cycle-chart"
-              role="img"
-              aria-label="Histórico del Brent con picos y caídas"
-            ></canvas>
-          </div>
+          <div class="chart-box tall"><canvas id="cycle-chart" role="img" aria-label="Histórico del Brent con picos y caídas"></canvas></div>
         </article>
         <div class="heading-row"><h2>Episodios del mercado</h2></div>
         <div id="episodes" class="episodes"></div>
       </section>
       <div id="notice" role="status" class="notice" hidden></div>
     </main>
+
     <footer class="site-footer">
-      <span>Estrato <span class="slash">/</span> Observatorio del Brent</span
-      ><span>Fuentes · EIA vía FRED y Yahoo Finance</span>
+      <span>Estrato · Observatorio del Brent</span><span>Fuentes: EIA vía FRED y Yahoo Finance</span>
     </footer>
+
     <dialog id="data-dialog">
       <div class="dialog-head">
-        <div>
-          <div class="eyebrow">OPERACIONES</div>
-          <h2>Datos y modelo</h2>
-        </div>
-        <button id="close-data" class="icon-button" aria-label="Cerrar">
-          <i data-icon="close"></i>
-        </button>
+        <div><p class="eyebrow">Operaciones</p><h2>Datos y modelo</h2></div>
+        <button id="close-data" class="icon-button" type="button" aria-label="Cerrar"><i data-icon="close"></i></button>
       </div>
       <div class="op-section">
         <h3>Actualizar observaciones</h3>
         <p id="data-info"></p>
-        <button class="primary" id="refresh">
-          <i data-icon="download"></i> Descargar datos recientes
-        </button>
+        <button class="primary" id="refresh" type="button"><i data-icon="download"></i> Descargar datos recientes</button>
       </div>
       <div class="op-section">
         <h3>Reentrenar el modelo</h3>
         <p id="model-info"></p>
-        <label for="mode">Semillas de entrenamiento</label
-        ><select id="mode">
-          <option value="fast">Rápido · 1 semilla</option>
-          <option value="full">Completo · 5 semillas</option></select
-        ><button class="secondary" id="retrain">Iniciar reentrenamiento</button>
+        <label for="mode">Semillas de entrenamiento</label><select id="mode"><option value="fast">Rápido · 1 semilla</option><option value="full">Completo · 5 semillas</option></select><button class="secondary" id="retrain" type="button">Iniciar reentrenamiento</button>
       </div>
       <p id="job-info" role="status"></p>
       <progress id="job-progress" max="1" hidden></progress>
     </dialog>
-    <noscript
-      >Activa JavaScript para explorar las previsiones y las redes 3D.</noscript
-    >
+    <noscript>Activa JavaScript para explorar las previsiones y las escenas 3D.</noscript>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

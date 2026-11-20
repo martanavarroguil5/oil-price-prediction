@@ -107,3 +107,34 @@ def build_extra(paths: Paths) -> pd.DataFrame:
 
 def load_extra(paths: Paths) -> pd.DataFrame:
     return pd.read_csv(paths.extra_csv, index_col="date", parse_dates=["date"]).astype(float)
+
+
+# Ronda 3: precios spot diarios de productos refinados (EIA vía FRED, USD por galón). Son
+# series de la misma fuente y con el mismo calendario de publicación que el Brent spot, así
+# que se alinean por fecha de observación igual que él.
+PRODUCTS = {"DGASNYH": "gasoline", "DHOILNYH": "heating_oil"}
+
+
+def download_products(cfg: Config, paths: Paths) -> dict[str, str]:
+    """Gasolina y gasóleo de calefacción de Nueva York (EIA vía FRED) a data/raw/extra."""
+    dcfg = cfg["data"]
+    start, end = dcfg["start_date"], (date.today() + timedelta(days=1)).isoformat()
+    status = {}
+    for series_id, name in PRODUCTS.items():
+        try:
+            s = fetch_fred(series_id, start, end, dcfg["timeout_s"], dcfg["retries"])
+            _save(s, paths.raw / "extra" / f"{name}.csv", name)
+            status[name] = f"ok ({len(s)} filas, última {s.index.max().date()})"
+        except Exception as exc:  # noqa: BLE001
+            status[name] = f"error: {exc}"
+            log.warning("download product %s failed: %s", name, exc)
+    return status
+
+
+def load_products(paths: Paths, calendar: pd.DatetimeIndex) -> pd.DataFrame:
+    """Product prices aligned to the Brent calendar (last value on or before each date)."""
+    df = pd.DataFrame(index=calendar)
+    for name in PRODUCTS.values():
+        s = _raw(paths, name)[name]
+        df[name] = align_to_calendar(s.where(s > 0), calendar)
+    return df

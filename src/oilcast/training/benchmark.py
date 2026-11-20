@@ -11,7 +11,7 @@ import logging
 
 import pandas as pd
 
-from oilcast.config import Config
+from oilcast.config import Config, for_horizon
 from oilcast.features.windows import Panel
 from oilcast.models.recurrent import count_parameters
 from oilcast.paths import Paths
@@ -25,11 +25,13 @@ log = logging.getLogger(__name__)
 
 def run_timing(cfg: Config, paths: Paths) -> pd.DataFrame:
     device = get_device()
-    panel = Panel.load(paths, cfg)
+    base = cfg
     test_start = pd.Timestamp(cfg["splits"]["test_start"])
     rows = []
     warmed = False
-    for h in cfg["targets"]["horizons"]:
+    for h in base["targets"]["horizons"]:
+        cfg = for_horizon(base, h)
+        panel = Panel.load(paths, cfg)
         train = purged_train(panel, h, test_start)
         data = prepare_data(panel, h, train, cfg, device)
         for arch in cfg["architectures"]:

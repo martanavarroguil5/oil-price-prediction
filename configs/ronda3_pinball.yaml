@@ -1,0 +1,10 @@
+# Ronda 3, variante M0: red multihorizonte seleccionada como W1 (pinball de los siete cuantiles).
+base: ronda3.yaml
+
+paths:
+  results_dir: reports/experiments/ronda3/multi_pinball
+  models_dir: reports/experiments/ronda3/multi_pinball/models
+  figures_dir: reports/experiments/ronda3/multi_pinball/figures
+
+tuning:
+  objective: pinball

@@ -53,23 +53,23 @@ Para reproducirlo en Windows: `.venv\Scripts\python.exe -m oilcast -c configs/in
 
 ## Qué modelo se utiliza
 
-La aplicación utiliza la **RNN simple W1** en los tres plazos, con pesos propios para cada uno. Se eligió con precios objetivo anteriores a 2022, dando a cada horizonte el mismo peso en la mejora porcentual del MAE frente al ingenuo. La RNN W1 consiguió **+3,82 %** de media en ese periodo. [Regla de selección](docs/experimento-ronda2.md)
+La aplicación utiliza la **LSTM R4**, con pesos propios para cada plazo. A 5 sesiones recibe las 20 variables diarias. A 63 y 252 sesiones solo recibe la relación oro/crudo: cuántos barriles paga una onza de oro frente a su media de 3 años (el "golden constant" de Steve Hanke), con un atajo lineal. Se eligió con una regla fijada antes de la búsqueda y con precios objetivo anteriores a 2022: **+5,3 %** de media en 2008-2021 y **+5,6 %** en 2008-2013, años que no se usaron para elegir hiperparámetros. [Regla y protocolo](docs/experimento-ronda4.md)
 
-| Horizonte | MAE de la app | MAE del ingenuo | Mejora de la app |
-|---|---:|---:|---:|
-| 5 sesiones | 3,951 | 3,987 | +0,89 % |
-| 63 sesiones | 11,469 | 11,944 | +3,98 % |
-| 252 sesiones | 17,627 | 16,502 | −6,82 % |
+| Horizonte | MAE de la app | MAE del ingenuo | Mejora del MAE | Mejora del RMSE |
+|---|---:|---:|---:|---:|
+| 5 sesiones | 3,987 | 3,987 | 0,0 % | 0,0 % |
+| 63 sesiones | 12,221 | 11,944 | −2,3 % | +6,6 % |
+| 252 sesiones | 14,854 | 16,502 | **+10,0 %** | **+20,7 %** |
 
-El MAE se expresa en USD por barril. La tabla corresponde a emisiones desde enero de 2022 con precio objetivo conocido hasta el 3 de noviembre de 2026. A un año, la ventaja observada en desarrollo se invirtió. Las previsiones diarias a ese plazo comparten buena parte del periodo que pretenden anticipar, lo que limita la evidencia sobre su estabilidad. [Comparativa completa, intervalos y errores por año](reports/comparativa.md)
+El MAE se expresa en USD por barril. La tabla corresponde a emisiones desde enero de 2022 con precio objetivo conocido hasta el 3 de noviembre de 2026. La red anterior (RNN W1) perdía un 6,8 % a un año. **A un año, la mejora depende de un episodio**: casi toda procede de las previsiones emitidas en 2025, que acertaron la subida de 2026 por la guerra con Irán. Sin ellas, la LSTM R4 pierde un 11,6 % frente al ingenuo. A 5 sesiones la previsión es el último precio, y a 63 mejora el error cuadrático pero no el absoluto. [Resultados de la ronda 4](reports/experiments/ronda4/resultado.md) · [Comparativa completa, intervalos y errores por año](reports/comparativa.md)
 
-En la comparación posterior de la app con las tres redes W0, la **GRU W0** ganó a 63 sesiones (**11,099 USD/barril**) y obtuvo la mejor mejora media del grupo en test (**+1,33 %**). Este periodo ya se había consultado. La elección de la familia publicada se mantiene ligada al criterio previo. [Registro de experimentos](docs/registro-experimentos.md) · [Comparación anual de W0](reports/experiments/w0/resultado.md)
+Las rondas 3 y 4 probaron otras ideas de la literatura con el mismo protocolo: una red para los tres plazos, márgenes de refino, selección por la mediana y otros predictores. Solo la relación oro/crudo mejoró al ingenuo a un año en los dos periodos de desarrollo. [Ronda 3](reports/experiments/ronda3/resultado.md) · [Registro de experimentos](docs/registro-experimentos.md)
 
 ## Datos y validación
 
 Los datos diarios proceden de la EIA vía FRED y de Yahoo Finance. El calendario conserva las sesiones con precio Brent observado desde 2000 y alinea las demás series con su última observación fechada hasta ese día. No se reconstruyen todos los instantes de publicación ni versiones históricas: es una limitación de la evaluación operativa. La cesta OPEP quedó fuera por falta de acceso a la serie. El cuaderno de exploración documenta los huecos, el WTI negativo y el tratamiento de extremos. [Exploración y limpieza](notebooks/01_eda_y_limpieza.ipynb) · [Auditoría y decisión de cierre](docs/auditoria-final.md)
 
-Las tres redes reciben las mismas 60 sesiones y 20 variables. Se compararon con 80 ensayos por red y horizonte, cuatro bloques de validación cronológica y cinco semillas. En cada corte solo se entrena con objetivos ya realizados. La salida incluye la mediana y los intervalos de predicción. [Cuaderno de comparación](notebooks/02_comparativa_modelos.ipynb)
+Las tres redes reciben las mismas 60 sesiones y las mismas variables en cada plazo: 20 a 5 sesiones y la relación oro/crudo a 63 y 252. Se compararon con 80 ensayos por red y horizonte, cuatro bloques de validación cronológica y cinco semillas. En cada corte solo se entrena con objetivos ya realizados. La salida incluye la mediana y los intervalos de predicción. [Cuaderno de comparación](notebooks/02_comparativa_modelos.ipynb)
 
 ## Dónde está cada cosa
 

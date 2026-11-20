@@ -1,0 +1,179 @@
+{
+  "decided_at": "2026-11-19T21:31:57+00:00",
+  "rule": "Regla fijada el 19/11/2026 antes de entrenar (docs/experimento-ronda3.md): se elige la combinación de variante y red con mayor mejora media del MAE frente al ingenuo en los tres horizontes, en orígenes de 2008 a 2021 con objetivo anterior a 2022. Sustituye a la RNN W1 solo si la supera en 2008-2021 y no es peor que ella en 2008-2013.",
+  "best": {
+    "variant": "M2",
+    "arch": "lstm",
+    "2008-2013": -0.002733334086856424,
+    "2008-2021": 0.01377131252836128,
+    "2014-2021": 0.02615486543049461
+  },
+  "reference": {
+    "variant": "W1",
+    "arch": "rnn",
+    "2008-2013": -0.1753829808674178,
+    "2008-2021": -0.05740062449239547,
+    "2014-2021": 0.03982046356266855
+  },
+  "adopt": true,
+  "chosen": {
+    "variant": "M2",
+    "arch": "lstm"
+  },
+  "scores": [
+    {
+      "variant": "M0",
+      "arch": "gru",
+      "2008-2013": -0.1263758909884151,
+      "2008-2021": -0.07399481081970867,
+      "2014-2021": -0.031302697501842926
+    },
+    {
+      "variant": "M0",
+      "arch": "lstm",
+      "2008-2013": -0.03418983776077722,
+      "2008-2021": -0.019137326004582473,
+      "2014-2021": -0.006371369865557419
+    },
+    {
+      "variant": "M0",
+      "arch": "rnn",
+      "2008-2013": -0.052844243288987514,
+      "2008-2021": -0.011435562092827034,
+      "2014-2021": 0.023048726916838607
+    },
+    {
+      "variant": "M1",
+      "arch": "gru",
+      "2008-2013": -0.1554345769343921,
+      "2008-2021": -0.07212770798226131,
+      "2014-2021": -0.003716377254589472
+    },
+    {
+      "variant": "M1",
+      "arch": "lstm",
+      "2008-2013": -0.08238293572077,
+      "2008-2021": -0.02664855690530928,
+      "2014-2021": 0.019559938991386194
+    },
+    {
+      "variant": "M1",
+      "arch": "rnn",
+      "2008-2013": -0.10426957542151431,
+      "2008-2021": -0.017806017055111017,
+      "2014-2021": 0.05428179138276198
+    },
+    {
+      "variant": "M2",
+      "arch": "gru",
+      "2008-2013": -0.1928463624130241,
+      "2008-2021": -0.08608140929217105,
+      "2014-2021": 0.0015463321348928953
+    },
+    {
+      "variant": "M2",
+      "arch": "lstm",
+      "2008-2013": -0.002733334086856424,
+      "2008-2021": 0.01377131252836128,
+      "2014-2021": 0.02615486543049461
+    },
+    {
+      "variant": "M2",
+      "arch": "rnn",
+      "2008-2013": -0.17964926318163976,
+      "2008-2021": -0.08321085166447155,
+      "2014-2021": -0.0035213860754940893
+    },
+    {
+      "variant": "S1",
+      "arch": "gru",
+      "2008-2013": -0.04272281227034358,
+      "2008-2021": -0.007792247236356076,
+      "2014-2021": 0.02080943030474473
+    },
+    {
+      "variant": "S1",
+      "arch": "lstm",
+      "2008-2013": -0.13493101500497703,
+      "2008-2021": -0.04736731371713213,
+      "2014-2021": 0.024858339956524533
+    },
+    {
+      "variant": "S1",
+      "arch": "rnn",
+      "2008-2013": -0.08678549033360095,
+      "2008-2021": -0.027742217626240146,
+      "2014-2021": 0.02088121743325866
+    },
+    {
+      "variant": "W1",
+      "arch": "gru",
+      "2008-2013": -0.06091093223240011,
+      "2008-2021": -0.05756262006203613,
+      "2014-2021": -0.0546108449059575
+    },
+    {
+      "variant": "W1",
+      "arch": "lstm",
+      "2008-2013": -0.07334137186789813,
+      "2008-2021": -0.036720699887710095,
+      "2014-2021": -0.007170515408906304
+    },
+    {
+      "variant": "W1",
+      "arch": "rnn",
+      "2008-2013": -0.1753829808674178,
+      "2008-2021": -0.05740062449239547,
+      "2014-2021": 0.03982046356266855
+    }
+  ],
+  "sha256": {
+    "reports/experiments/ronda3/w1/predictions/rnn_h5.csv": "4f0dffd4b1f11ba77aa1e1c2c4cfdb41d405aca9ba4da54f75661b4a3e34ef79",
+    "reports/experiments/ronda3/w1/predictions/rnn_h63.csv": "21f46692b603379c183e84a40dfa5e343b15bc3bbf3b3672fc5731590bf8d2ee",
+    "reports/experiments/ronda3/w1/predictions/rnn_h252.csv": "e9762e6b8d13619e8e063be9a95c6af6513aed69c37ff46a26280bbe16e47b3a",
+    "reports/experiments/ronda3/w1/predictions/lstm_h5.csv": "cd08254a3befd9551ba721dc4f6536f47d239db97e1492826598fa07dce9f559",
+    "reports/experiments/ronda3/w1/predictions/lstm_h63.csv": "bd673bd95d3de06dd2da02efadc885e21ff306cbfbdc10c37a574081503638c9",
+    "reports/experiments/ronda3/w1/predictions/lstm_h252.csv": "0f0757a1d12694e91c1f7bd259edb9d7059990a16be597d0fb43013083bfd11d",
+    "reports/experiments/ronda3/w1/predictions/gru_h5.csv": "3eda7c368f2ce6b80551e574c4be7005f076bd49ddf56a1617739d0163e8b10a",
+    "reports/experiments/ronda3/w1/predictions/gru_h63.csv": "12c1d2c54b1ad836c81025d621ea313f2eaba2ed37f83b06d0482a675c739865",
+    "reports/experiments/ronda3/w1/predictions/gru_h252.csv": "958f62da7a5781b62198fd7345c40114a535da988543e6c04cf1d9b438042933",
+    "reports/experiments/ronda3/single/predictions/rnn_h5.csv": "8c3eb304498e75c54876d957867b2a947137e084028a8ecd0c82cdf4cad19baf",
+    "reports/experiments/ronda3/single/predictions/rnn_h63.csv": "58a72851ca60e4e38caa301e490b036c948fd31caf8cbecea70c6a576f29439c",
+    "reports/experiments/ronda3/single/predictions/rnn_h252.csv": "ee841cb738990bb3acb84a98b2fb5a14ad53385ce9fe79668e1cf9cb3eea33d8",
+    "reports/experiments/ronda3/single/predictions/lstm_h5.csv": "ca4bdd123af777f0fa0569621c79717719b90efa9030c88fe5ee6658e9d3aeb5",
+    "reports/experiments/ronda3/single/predictions/lstm_h63.csv": "b7b960d889016ea654b923d530a3f5216cdd4f5fb7411a4af0ac1e2404929ce6",
+    "reports/experiments/ronda3/single/predictions/lstm_h252.csv": "de44d7db0251b91e7293602a4462009a741599358967022a98a158d5d4520c0f",
+    "reports/experiments/ronda3/single/predictions/gru_h5.csv": "b681e23862a97ec23b4ea6cb9ba8da4652b5168a230b0069e4dddad7694ffdf4",
+    "reports/experiments/ronda3/single/predictions/gru_h63.csv": "dab203386d12d3bd62af9ab7acbc52b09b63400e9bf4a7d16f512649a90693f5",
+    "reports/experiments/ronda3/single/predictions/gru_h252.csv": "d35fa5b692a901db822c1dbdc434a92dd6437cc78f8ef1d99357facbb5eea567",
+    "reports/experiments/ronda3/multi_pinball/predictions/rnn_h5.csv": "3b0d5a53327f78fc50a4c7f3e505a138d68da420d4081fa5f87e9a16a79ac0dd",
+    "reports/experiments/ronda3/multi_pinball/predictions/rnn_h63.csv": "741e1da7298d55662c89abbf9cf84ac3ec8ed10d18c99d2f5dd7996dded55860",
+    "reports/experiments/ronda3/multi_pinball/predictions/rnn_h252.csv": "4e5fd65981d339a91ccabfe799816f78055135c0f4a0755e03d2e7f9b3ec0d57",
+    "reports/experiments/ronda3/multi_pinball/predictions/lstm_h5.csv": "230f39ccd5133068c957fba3bc8d0684b833ed1bcfc8751f3021b12fff3c8229",
+    "reports/experiments/ronda3/multi_pinball/predictions/lstm_h63.csv": "e46c6a74b4748c28188f58ffb60f8ba9ca260f25e9aad1496100f8f0284bcf79",
+    "reports/experiments/ronda3/multi_pinball/predictions/lstm_h252.csv": "fbd64f912a5572ddbaf804244926fb781e374c71a1ea8d3744815e7396672bf5",
+    "reports/experiments/ronda3/multi_pinball/predictions/gru_h5.csv": "aeae7b1569ad2a7686328c6771c58b22f90c06a743aaba36dd0a5389a62aaa74",
+    "reports/experiments/ronda3/multi_pinball/predictions/gru_h63.csv": "4b01dc381a2b3e12c9f0a8bc6aa35dc2e9a289c79622c84cc963e222b30e0a4e",
+    "reports/experiments/ronda3/multi_pinball/predictions/gru_h252.csv": "9c25599dce9b1ceb764ad547ce9ebe07c559cb923db2bdae261c40b34c6b46f7",
+    "reports/experiments/ronda3/multi/predictions/rnn_h5.csv": "c3d22eb6732e195b730042c7106d361e4cca377f0f21b9570ca81a7ddc4dc298",
+    "reports/experiments/ronda3/multi/predictions/rnn_h63.csv": "b9dd8fa65f32d1fbcfc3cf719d75176ed436cbfce487f8edb944b1e661dc7670",
+    "reports/experiments/ronda3/multi/predictions/rnn_h252.csv": "e4ff3e87c1bf9547c68f98ea63cf0311da3d416880b2250b716dd101d066e02c",
+    "reports/experiments/ronda3/multi/predictions/lstm_h5.csv": "72d090443015524d60f71d44cfe9ec61fcf5ae70b8c08e9d5bec98c608aea0c8",
+    "reports/experiments/ronda3/multi/predictions/lstm_h63.csv": "cb62081c5c88c5097cca39b93e5da685d5b218f5d8bdbbfb7509e84eb15f11c7",
+    "reports/experiments/ronda3/multi/predictions/lstm_h252.csv": "b7dc4281e04be75b2aeb56c5fcbb3cce4b38066ef8ee43753d38eee8d2f3e5e4",
+    "reports/experiments/ronda3/multi/predictions/gru_h5.csv": "6285bff5d9a01d3e7d4ac992df0887a168c00bfb9c4c2a37c49bcbf4dfc280b9",
+    "reports/experiments/ronda3/multi/predictions/gru_h63.csv": "b84b8fcb6fb63c7658d2849013d955c86ab173c1609c76a95eeb30fe1b7086ba",
+    "reports/experiments/ronda3/multi/predictions/gru_h252.csv": "c936682fdc4e1711865dac55b4180d950ff6db069de5726849dc62423ff4aa34",
+    "reports/experiments/ronda3/productos/predictions/rnn_h5.csv": "921016e19560cd328facc6b1f49dafd996553665caa1f312b8f50b884e045a2f",
+    "reports/experiments/ronda3/productos/predictions/rnn_h63.csv": "63fc2a18729a42c78cbe027e6d64468fd395a04824af9d297164a7a24622a693",
+    "reports/experiments/ronda3/productos/predictions/rnn_h252.csv": "de0b565bbbe30dfe4d7d703094ed2433be546faf58a434c032e00a20122fc0a8",
+    "reports/experiments/ronda3/productos/predictions/lstm_h5.csv": "741a6c57b80046c73f9d7788aab4b7c190fe9fbecc6a2345778d8a0344c8d096",
+    "reports/experiments/ronda3/productos/predictions/lstm_h63.csv": "9fd95f88dbcb87209748484a729690b2b1cc6ba13c81c9ca902070ab3146bf40",
+    "reports/experiments/ronda3/productos/predictions/lstm_h252.csv": "1f6d7f4e0c28d7eb2af0f2a074efec59e0cbad91f91861d57a7e894eb1b44b36",
+    "reports/experiments/ronda3/productos/predictions/gru_h5.csv": "7a65abc86b20647966628595d75b3770446f6b383236c0473d3886aaf6089824",
+    "reports/experiments/ronda3/productos/predictions/gru_h63.csv": "97f830624a621a37acddf0ed216cc294f36830b028b14202ce701740d337d015",
+    "reports/experiments/ronda3/productos/predictions/gru_h252.csv": "b1bc09f2c9de76c5b5886af340652b78e084f007b629f89cdfaac99bbb2a989e",
+    "docs/experimento-ronda3.md": "55f881983c48535726b37df601fe8326fdb5b940f01fba73ca4e6780ae151244",
+    "configs/ronda3.yaml": "d143a75a3ed9267729de1c26098f722f02e38d48857733c765c0fa6f2ce86043"
+  }
+}

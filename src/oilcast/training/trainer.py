@@ -11,6 +11,7 @@ import copy
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from functools import partial
 
 import numpy as np
 import torch
@@ -31,6 +32,7 @@ class PreparedData:
     scaler: Scaler
     y_scale: float
     window: int
+    y_center: float = 0.0  # training mean removed from the target (remove_drift)
 
     @property
     def device(self) -> torch.device:
@@ -56,6 +58,7 @@ def prepare_data(
         scaler=scaler,
         y_scale=y_scale,
         window=panel.window,
+        y_center=y_center,
     )
 
 
@@ -120,7 +123,7 @@ def fit(
     seed: int,
     val_idx: np.ndarray | None = None,
     on_epoch: Callable[[int, int], None] | None = None,
-    model_factory: Callable[[str, int, HParams, int], nn.Module] = build_model,
+    model_factory: Callable[[str, int, HParams, int], nn.Module] | None = None,
     objective: Callable = quantile_objective,
     validation_score: Callable[[nn.Module, PreparedData, np.ndarray], float] | None = None,
 ) -> FitResult:
@@ -130,6 +133,8 @@ def fit(
     device = data.device
     quantiles = cfg["targets"]["quantiles"]
     set_seed(seed)
+    if model_factory is None:
+        model_factory = partial(build_model, highway=cfg.get("model", {}).get("highway", False))
     model = model_factory(arch, data.features.shape[1], hp, len(quantiles)).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=hp.lr, weight_decay=hp.weight_decay)
     q = torch.tensor(quantiles, dtype=torch.float32, device=device)

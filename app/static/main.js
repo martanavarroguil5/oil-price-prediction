@@ -8,6 +8,7 @@ import {
   removeCharts,
 } from "./charts.js";
 import { anatomy, palette, createScene } from "./networks.js";
+import { createStratum } from "./stratum.js";
 
 const $ = (id) => document.getElementById(id);
 const format = (value, n = 2) =>
@@ -83,7 +84,25 @@ let state,
   lab,
   serial = 0,
   timer,
-  jobPending = false;
+  jobPending = false,
+  stratum;
+const whenText = { 5: "dentro de 1 semana", 63: "dentro de 3 meses", 252: "dentro de 1 año" };
+function sceneScroll() {
+  const t = scrollY / Math.max(1, innerHeight);
+  document.body.classList.toggle("at-top", current === "observatorio" && scrollY < 24);
+  if (!stratum) return;
+  stratum.setScroll(t);
+  // La escena deja de dibujarse cuando el contenido la tapa por completo
+  const end = document.querySelector(".content").offsetTop / Math.max(1, innerHeight);
+  if (current === "observatorio" && t < end) stratum.start();
+  else stratum.stop();
+}
+function selectHorizon(value) {
+  h = value;
+  syncHorizons();
+  stratum?.setHorizon(h);
+  renderPage(false);
+}
 function notice(message) {
   $("notice").hidden = !message;
   $("notice").replaceChildren(document.createTextNode(message || ""));
@@ -103,11 +122,7 @@ function syncHorizons() {
         [252, "1 año"],
       ],
       h,
-      (value) => {
-        h = value;
-        syncHorizons();
-        renderPage(false);
-      },
+      selectHorizon,
     ),
   );
 }
@@ -117,11 +132,13 @@ function forecastView() {
   $("spot").textContent = format(last[1]);
   $("pred").textContent = format(f.price);
   $("spot-date").textContent = date(last[0]);
-  $("target").textContent = "≈ " + date(f.date);
+  $("target").textContent = date(f.date);
+  $("hero-when").textContent = whenText[h];
+  $("hero-model").textContent = state.model.arch_label;
   $("change").textContent = signed(f.changePct * 100) + " %";
   $("change").parentElement.className =
     "price " + (f.change >= 0 ? "mint" : "amber");
-  $("delta").textContent = signed(f.change) + " USD/barril";
+  $("delta").textContent = signed(f.change) + " $";
   $("interval").textContent = f.intervals["80"]
     .map((v) => format(v, 1))
     .join(" – ");
@@ -197,7 +214,7 @@ function labView(reset) {
   $("arch-head").textContent = info.name + " a " + h + " días";
   const metrics = [
     ["Ventana", state.model.window + " días"],
-    ["Variables", state.features],
+    ["Variables", state.features?.[h] ?? state.features],
     ["Capas", fit?.num_layers],
     ["Unidades por capa", fit?.hidden_size],
     ["Cuantiles", state.model.quantiles.length],
@@ -394,6 +411,7 @@ function route() {
     }[active];
   renderPage();
   window.scrollTo(0, 0);
+  sceneScroll();
 }
 function dataLabels() {
   $("data-info").textContent =
@@ -414,6 +432,10 @@ async function load() {
     notice("");
     dataLabels();
     syncHorizons();
+    if (!stratum) stratum = createStratum($("stage"), $("stage-labels"));
+    stratum.setData(state);
+    stratum.setHorizon(h);
+    sceneScroll();
     renderPage();
   } catch (e) {
     notice(e.message);
@@ -463,9 +485,8 @@ async function operate(action) {
     busy(false);
   }
 }
-bindDecisions({ state: () => state, horizon: () => h, selectHorizon: value => {
-  h = value; syncHorizons(); renderPage(false);
-} });
+bindDecisions({ state: () => state, horizon: () => h, selectHorizon });
+addEventListener("scroll", sceneScroll, { passive: true });
 $("refresh").onclick = () => operate("refresh");
 $("retrain").onclick = () => operate("retrain");
 $("open-data").onclick = () => {

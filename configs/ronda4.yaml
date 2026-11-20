@@ -1,0 +1,30 @@
+# Ronda 4 (docs/experimento-ronda4.md): redes a 63 y 252 sesiones que solo reciben la
+# relación oro/crudo (barriles por onza frente a su media de 3 años), con atajo lineal.
+# A 5 sesiones se mantiene la red W1. Mismo espacio de búsqueda, presupuesto, semilla,
+# bloques de validación y pérdida pinball que W1.
+base: default.yaml
+
+paths:
+  results_dir: reports/experiments/ronda4/oro
+  models_dir: reports/experiments/ronda4/oro/models
+  figures_dir: reports/experiments/ronda4/oro/figures
+
+features:
+  valuation: true
+  valuation_window: 756
+  only: [oro_crudo]
+
+model:
+  highway: true
+
+targets:
+  horizons: [63, 252]
+
+splits:
+  # Como en la ronda 3: 2008-2012 nunca se usan para validar ni para elegir hiperparámetros.
+  calibration_refits: ["2008-01-01", "2010-01-01", "2012-01-01", "2014-01-01",
+                       "2016-01-01", "2018-01-01", "2020-01-01"]
+
+selection:
+  arch: null
+  rule: null

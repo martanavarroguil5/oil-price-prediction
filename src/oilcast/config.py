@@ -36,3 +36,28 @@ def load_config(path: str | Path | None = None) -> Config:
     if base:
         cfg = _deep_merge(load_config(path.parent / base), cfg)
     return cfg
+
+
+def horizon_config(cfg: Config, hspec: dict) -> Config:
+    """Config of one production horizon: its own input variables and linear shortcut (ronda 4).
+
+    ``hspec`` is a horizon entry of the production spec. Without ``features``/``highway`` keys
+    the horizon uses the global configuration unchanged.
+    """
+    out = cfg
+    if hspec.get("features"):
+        out = {**out, "features": _deep_merge(out["features"], hspec["features"])}
+    if "highway" in hspec:
+        out = {**out, "model": {**out.get("model", {}), "highway": bool(hspec["highway"])}}
+    return out
+
+
+def horizon_overrides(cfg: Config, h: int) -> dict:
+    """``horizon_overrides`` entry of horizon ``h`` (``features`` and ``highway``), or {}."""
+    overrides = cfg.get("horizon_overrides") or {}
+    return overrides.get(str(h)) or overrides.get(h) or {}
+
+
+def for_horizon(cfg: Config, h: int) -> Config:
+    """Config used to train and evaluate horizon ``h`` (``horizon_overrides`` in the YAML)."""
+    return horizon_config(cfg, horizon_overrides(cfg, h))

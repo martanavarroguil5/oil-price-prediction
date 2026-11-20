@@ -64,6 +64,7 @@ function renderEvidence(state, h) {
       card.append(node("strong", signed(metrics.skill_mae * 100) + " %",
         metrics.skill_mae < 0 ? "amber" : ""));
       card.append(node("span", metrics.skill_mae < 0 ? "Sin ventaja histórica" :
+        metrics.skill_mae === 0 ? "Igual que el precio constante" :
         metrics.skill_mae < 0.02 ? "Ganancia histórica marginal" : "Ganancia histórica modesta"));
     } else card.append(node("strong", "Sin evaluación"));
     card.append(node("small", "Reducción del MAE frente al precio constante"));
@@ -195,8 +196,8 @@ export async function renderReplay() {
   $("replay-outcome").hidden = true;
   $("replay-future-key").hidden = true;
   $("replay-reveal").hidden = false;
-  $("replay-reveal").textContent = "Ver qué ocurrió ↗";
-  $("replay-badge").textContent = "RESULTADO OCULTO";
+  $("replay-reveal").textContent = "Ver qué ocurrió";
+  $("replay-badge").textContent = "Resultado oculto";
   $("replay-status").textContent = "Cargando la previsión registrada…";
   $("replay-chart").style.visibility = "hidden";
   $("replay-metrics").replaceChildren();
@@ -243,10 +244,10 @@ async function revealReplay() {
     replayChart(revealed);
     $("replay-future-key").hidden = false;
     $("replay-reveal").hidden = true;
-    $("replay-badge").textContent = "RESULTADO REVELADO";
+    $("replay-badge").textContent = "Resultado revelado";
     const outcome = revealed.outcome, box = $("replay-outcome");
     box.hidden = false;
-    box.replaceChildren(node("span", "BRENT OBSERVADO AL VENCIMIENTO", "eyebrow"),
+    box.replaceChildren(node("span", "Brent observado al vencimiento", "eyebrow"),
       node("strong", num(outcome.actual, 2) + " USD/bbl", "outcome-price"));
     for (const [label, value] of [["Error de la red", num(outcome.modelError, 2) + " USD/bbl"],
       ["Error del ingenuo", num(outcome.naiveError, 2) + " USD/bbl"],

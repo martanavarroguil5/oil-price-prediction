@@ -216,6 +216,84 @@ def build_extra() -> None:
     run(_ctx()[1])
 
 
+@app.command("download-products")
+def download_products() -> None:
+    """Ronda 3: descarga gasolina y gasóleo de calefacción (EIA vía FRED)."""
+    from oilcast.data.extra import download_products as run
+
+    for name, msg in run(*_ctx()).items():
+        typer.echo(f"{name}: {msg}")
+
+
+@app.command("multi-tune")
+def multi_tune(arch: ArchOpt = None) -> None:
+    """Ronda 3: búsqueda de hiperparámetros de la red multihorizonte (-c configs/ronda3*.yaml)."""
+    from oilcast.training.multitask import run_study
+
+    cfg, paths = _ctx()
+    for a in arch or cfg["architectures"]:
+        run_study(cfg, paths, a)
+
+
+@app.command("multi-evaluate")
+def multi_evaluate(arch: ArchOpt = None) -> None:
+    """Ronda 3: predicciones walk-forward de la red multihorizonte."""
+    from oilcast.training.multitask import run_evaluation
+
+    cfg, paths = _ctx()
+    for a in arch or cfg["architectures"]:
+        run_evaluation(cfg, paths, a)
+
+
+@app.command("extend-published")
+def extend_published_cmd(
+    arch: ArchOpt = None,
+    horizon: HorizonOpt = None,
+    source: Annotated[str, typer.Option(help="Resultados publicados")] = "reports/results",
+) -> None:
+    """Ronda 3: añade los reentrenos de 2008-2012 a las predicciones publicadas (W1)."""
+    from oilcast.training.multitask import extend_published
+
+    for a, h in _grid(arch, horizon):
+        extend_published(*_ctx(), a, h, source)
+
+
+@app.command("ronda3-decide")
+def ronda3_decide() -> None:
+    """Ronda 3: aplica la regla con datos de desarrollo y guarda la decisión (sin test)."""
+    from oilcast.evaluation.ronda3 import decide
+
+    d = decide(_ctx()[0])
+    typer.echo(f"mejor: {d['best']}\nadoptar: {d['adopt']} -> {d['chosen']}")
+
+
+@app.command("ronda3-test")
+def ronda3_test() -> None:
+    """Ronda 3: calcula una sola vez el test de todas las variantes (tras ronda3-decide)."""
+    from oilcast.evaluation.ronda3 import test_report
+
+    test_report(*_ctx())
+    typer.echo("reports/experiments/ronda3/test.csv")
+
+
+@app.command("ronda4-decide")
+def ronda4_decide() -> None:
+    """Ronda 4: aplica la regla con datos de desarrollo y guarda la decisión (sin test)."""
+    from oilcast.evaluation.ronda4 import decide4
+
+    d = decide4(_ctx()[0])
+    typer.echo(f"mejor: {d['best']}\nadoptar: {d['adopt']} -> {d['chosen']}")
+
+
+@app.command("ronda4-test")
+def ronda4_test() -> None:
+    """Ronda 4: calcula una sola vez el test (tras ronda4-decide) y la referencia lineal."""
+    from oilcast.evaluation.ronda4 import test4
+
+    test4(*_ctx())
+    typer.echo("reports/experiments/ronda4/test.csv")
+
+
 @app.command("all")
 def run_all(skip_download: bool = True) -> None:
     """Pipeline completo en secuencia."""

@@ -56,6 +56,13 @@ def reliability_text(
             "diferencia en error cuadrático es significativa en el contraste original. "
             "Es una evaluación retrospectiva, no una garantía de precisión futura."
         )
+    elif skill == 0:
+        level = "igual que el ingenuo"
+        head = (
+            f"En el periodo de prueba ({period}), la recalibración no encontró errores pasados "
+            f"que justificaran mover la previsión de la red {arch_label}: a este horizonte la "
+            "cifra central es el último precio publicado. Fíjese sobre todo en el rango."
+        )
     elif skill > 0:
         level = "mejora no concluyente"
         head = (
@@ -90,7 +97,15 @@ def reliability_text(
     return head + body, level
 
 
-def risks_for(h: int, recent_vol_pct: float | None) -> list[str]:
+GOLD_OIL_RISK = (
+    "A este plazo la red solo mira cuántos barriles paga una onza de oro frente a su media de "
+    "3 años. Si el oro sube por motivos propios (por ejemplo, compras de los bancos centrales), "
+    "el crudo parece barato sin que tenga por qué subir: en 2024 eso llevó a la red a prever "
+    "una recuperación que no llegó."
+)
+
+
+def risks_for(h: int, recent_vol_pct: float | None, inputs: list[str] | None = None) -> list[str]:
     risks = [
         "Acontecimientos geopolíticos (conflictos en Oriente Medio, el estrecho de Ormuz, "
         "sanciones) que cambian de golpe la oferta disponible.",
@@ -103,6 +118,8 @@ def risks_for(h: int, recent_vol_pct: float | None) -> list[str]:
             "monetaria, tipo de cambio del dólar, inventarios, transición energética), "
             "que el modelo solo ve a través del pasado reciente."
         )
+    if inputs and "oro_crudo" in inputs:
+        risks.append(GOLD_OIL_RISK)
     if recent_vol_pct is not None and recent_vol_pct >= 0.9:
         risks.append(
             f"La volatilidad del último mes está en el percentil "
@@ -141,4 +158,11 @@ def explain(
         {int(k): v for k, v in hspec.get("skill_by_year", {}).items()},
         arch_label,
     )
-    return Explanation(summary, reliability, level, risks_for(fc.horizon, recent_vol_pct))
+    inputs = (hspec.get("features") or {}).get("only")
+    if inputs and "oro_crudo" in inputs:
+        summary += (
+            " A este plazo la red se basa en la relación entre el oro y el crudo: cuando el "
+            "barril está barato medido en onzas de oro respecto a los últimos 3 años, prevé que "
+            "se recupere."
+        )
+    return Explanation(summary, reliability, level, risks_for(fc.horizon, recent_vol_pct, inputs))

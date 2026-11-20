@@ -1,0 +1,89 @@
+{
+  "decided_at": "2026-11-19T23:55:23+00:00",
+  "rule": "Regla fijada el 20/11/2026 antes de la búsqueda (docs/experimento-ronda4.md): se elige la combinación de variante y red con mayor mejora media del MAE frente al ingenuo en los tres horizontes, en orígenes de 2008 a 2021 con objetivo anterior a 2022. Sustituye a la RNN W1 solo si la supera en 2008-2021 y no es peor que ella en 2008-2013.",
+  "best": {
+    "variant": "R4",
+    "arch": "lstm",
+    "2008-2013": 0.05598856842575554,
+    "2008-2021": 0.052939675482127746,
+    "2014-2021": 0.04972038391848255
+  },
+  "reference": {
+    "variant": "W1",
+    "arch": "rnn",
+    "2008-2013": -0.1753829808674178,
+    "2008-2021": -0.05740062449239547,
+    "2014-2021": 0.03982046356266855
+  },
+  "adopt": true,
+  "chosen": {
+    "variant": "R4",
+    "arch": "lstm"
+  },
+  "scores": [
+    {
+      "variant": "R4",
+      "arch": "gru",
+      "2008-2013": 0.07921754317987784,
+      "2008-2021": 0.049721601829994154,
+      "2014-2021": 0.02394533554183013
+    },
+    {
+      "variant": "R4",
+      "arch": "lstm",
+      "2008-2013": 0.05598856842575554,
+      "2008-2021": 0.052939675482127746,
+      "2014-2021": 0.04972038391848255
+    },
+    {
+      "variant": "R4",
+      "arch": "rnn",
+      "2008-2013": 0.064169770606187,
+      "2008-2021": 0.043274449898674384,
+      "2014-2021": 0.026161864005121622
+    },
+    {
+      "variant": "W1",
+      "arch": "gru",
+      "2008-2013": -0.06091093223240011,
+      "2008-2021": -0.05756262006203613,
+      "2014-2021": -0.0546108449059575
+    },
+    {
+      "variant": "W1",
+      "arch": "lstm",
+      "2008-2013": -0.07334137186789813,
+      "2008-2021": -0.036720699887710095,
+      "2014-2021": -0.007170515408906304
+    },
+    {
+      "variant": "W1",
+      "arch": "rnn",
+      "2008-2013": -0.1753829808674178,
+      "2008-2021": -0.05740062449239547,
+      "2014-2021": 0.03982046356266855
+    }
+  ],
+  "sha256": {
+    "reports/experiments/ronda3/w1/predictions/rnn_h5.csv": "4f0dffd4b1f11ba77aa1e1c2c4cfdb41d405aca9ba4da54f75661b4a3e34ef79",
+    "reports/experiments/ronda3/w1/predictions/rnn_h63.csv": "21f46692b603379c183e84a40dfa5e343b15bc3bbf3b3672fc5731590bf8d2ee",
+    "reports/experiments/ronda3/w1/predictions/rnn_h252.csv": "e9762e6b8d13619e8e063be9a95c6af6513aed69c37ff46a26280bbe16e47b3a",
+    "reports/experiments/ronda3/w1/predictions/lstm_h5.csv": "cd08254a3befd9551ba721dc4f6536f47d239db97e1492826598fa07dce9f559",
+    "reports/experiments/ronda3/w1/predictions/lstm_h63.csv": "bd673bd95d3de06dd2da02efadc885e21ff306cbfbdc10c37a574081503638c9",
+    "reports/experiments/ronda3/w1/predictions/lstm_h252.csv": "0f0757a1d12694e91c1f7bd259edb9d7059990a16be597d0fb43013083bfd11d",
+    "reports/experiments/ronda3/w1/predictions/gru_h5.csv": "3eda7c368f2ce6b80551e574c4be7005f076bd49ddf56a1617739d0163e8b10a",
+    "reports/experiments/ronda3/w1/predictions/gru_h63.csv": "12c1d2c54b1ad836c81025d621ea313f2eaba2ed37f83b06d0482a675c739865",
+    "reports/experiments/ronda3/w1/predictions/gru_h252.csv": "958f62da7a5781b62198fd7345c40114a535da988543e6c04cf1d9b438042933",
+    "reports/experiments/ronda4/oro/predictions/rnn_h5.csv": "4f0dffd4b1f11ba77aa1e1c2c4cfdb41d405aca9ba4da54f75661b4a3e34ef79",
+    "reports/experiments/ronda4/oro/predictions/rnn_h63.csv": "91c331d8a57286ec17d6d76cf97698471753a9a0622e2cc299dd1527e3afba30",
+    "reports/experiments/ronda4/oro/predictions/rnn_h252.csv": "e4fd7416be254a2172741ca630e49870f945d6d9f8506a948fdb77591f605439",
+    "reports/experiments/ronda4/oro/predictions/lstm_h5.csv": "cd08254a3befd9551ba721dc4f6536f47d239db97e1492826598fa07dce9f559",
+    "reports/experiments/ronda4/oro/predictions/lstm_h63.csv": "1705d73998e4c7f9ad2b395768a7d26e63a1705d30e6bd1038b1c6abfcf8804c",
+    "reports/experiments/ronda4/oro/predictions/lstm_h252.csv": "ad29265ed080f04f67ef7bef40519ee3ca4f9b32291b623d048c585bc6e33034",
+    "reports/experiments/ronda4/oro/predictions/gru_h5.csv": "3eda7c368f2ce6b80551e574c4be7005f076bd49ddf56a1617739d0163e8b10a",
+    "reports/experiments/ronda4/oro/predictions/gru_h63.csv": "d44a4d3cbd19c773bdce4ad4857c36d0417de49586da0e3301cd84a2a27973cd",
+    "reports/experiments/ronda4/oro/predictions/gru_h252.csv": "04e1e585d97c2ec85ba703370f7ddc82387ca8107dcdf7124ea6712f4fcddf36",
+    "docs/experimento-ronda4.md": "f5cc9ab4b8b90238c28aac22754ba98d02154d53acd20fce6f3f7ec4b6152cd4",
+    "configs/ronda4.yaml": "96abc5559307f9ecdacb3067bf724462a570efe49c266c2da22158faa3056eb8"
+  }
+}

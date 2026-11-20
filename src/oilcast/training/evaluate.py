@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 import torch
 
-from oilcast.config import Config
+from oilcast.config import Config, for_horizon
 from oilcast.features.windows import Panel
 from oilcast.models.naive import naive_quantiles
 from oilcast.paths import Paths
@@ -47,6 +47,7 @@ def _frame(
 
 def run_evaluation(cfg: Config, paths: Paths, arch: str, h: int) -> pd.DataFrame:
     """Predict every refit block with every seed; writes ``predictions/{arch}_h{h}.csv``."""
+    cfg = for_horizon(cfg, h)
     torch.set_num_threads(cfg["training"]["num_threads"])
     device = get_device()
     panel = Panel.load(paths, cfg)

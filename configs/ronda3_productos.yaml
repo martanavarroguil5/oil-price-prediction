@@ -1,0 +1,10 @@
+# Ronda 3, variante con márgenes de refino (gasolina y gasóleo de Nueva York, EIA vía FRED).
+base: ronda3.yaml
+
+paths:
+  results_dir: reports/experiments/ronda3/productos
+  models_dir: reports/experiments/ronda3/productos/models
+  figures_dir: reports/experiments/ronda3/productos/figures
+
+features:
+  products: true

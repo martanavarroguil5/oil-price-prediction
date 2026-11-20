@@ -47,6 +47,16 @@ FEATURE_DESCRIPTIONS = {
     "mom_252": "Momentum: variación log del Brent en 252 días",
 }
 
+VALUATION_DESCRIPTIONS = {
+    "oro_crudo": "Barriles por onza de oro (log) frente a su media de 3 años",
+}
+
+GALLONS_PER_BARREL = 42.0
+PRODUCT_DESCRIPTIONS = {
+    "crack_gas": "Margen log de la gasolina de Nueva York frente al Brent",
+    "crack_ho": "Margen log del gasóleo de calefacción de Nueva York frente al Brent",
+}
+
 # Extra features of the extended experiment (only when listed in ``features.extra``).
 EXTRA_DESCRIPTIONS = {
     "gpr": "Riesgo geopolítico (índice Caldara-Iacoviello, media 7 días, log)",
@@ -113,8 +123,17 @@ def compute_features(df: pd.DataFrame, cfg: Config) -> pd.DataFrame:
         out[f"dev_ma{w}"] = log_p - np.log(df["brent"].rolling(w, min_periods=w).mean())
     mw = fcfg["momentum_window"]
     out[f"mom_{mw}"] = log_p - log_p.shift(mw)
+    if fcfg.get("valuation"):  # ronda 4: barriles por onza frente a su media (Hanke)
+        vw = fcfg.get("valuation_window", 756)
+        gold_oil = _log(df["gold"]) - log_p
+        out["oro_crudo"] = gold_oil - gold_oil.rolling(vw, min_periods=252).mean()
+    if fcfg.get("products"):  # ronda 3: márgenes de refino (hipótesis de Verleger)
+        out["crack_gas"] = _log(df["gasoline"] * GALLONS_PER_BARREL) - log_p
+        out["crack_ho"] = _log(df["heating_oil"] * GALLONS_PER_BARREL) - log_p
     if fcfg.get("extra"):
         out = out.join(compute_extra_features(df, fcfg["extra"]))
     for name in fcfg.get("optional", []):  # late-starting base series (long history)
         out[f"{name}_disp"] = out[name].notna().astype(float)
+    if fcfg.get("only"):  # ronda 4: subconjunto de variables (igual para las tres redes)
+        out = out[list(fcfg["only"])]
     return out
